@@ -1,0 +1,10 @@
+{
+  "help": "shows all commands",
+  "current": "shows the current number",
+  "target": "shows the target number",
+  "user": "shows your statistics",
+  "shop": "shows items in the shop",
+  "balance": "shows your crown and coin balance",
+  "convert": "converts 1 crown to 100 coins",
+  "buy <item>": "buys item from the shop"
+}

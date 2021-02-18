@@ -4,14 +4,82 @@ const client = new Discord.Client();
 
 const { token, prefix } = require("./config.json");
 
+const shop = require("./shop.json");
+
 const fs = require("fs");
+const { toNamespacedPath } = require("path");
 
 const WIN = 70;
+const CONVERSION_RATE = 100;
 
 let data;
 
 const getRandomInt = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
+}
+
+const reroll = () => {
+  data.win = getRandomInt(WIN);
+}
+
+const zeroOut = () => {
+  data.number = 0;
+}
+
+const helpMsgBuilder = () => {
+  const commands = require("./commands.json");
+  let output = "```\n";
+  for (cmd in commands) {
+    output += `${prefix}${cmd}: ${commands[cmd]}\n`;
+  }
+  output += "```";
+  return output;
+}
+
+const helpMsg = helpMsgBuilder();
+
+const shopListBuilder = () => {
+  let list = "```\n";
+  for (item in shop) {
+    list += `${item} costs ${shop[item]}c\n`;
+  }
+  list += `Purchase and use an item with ${prefix}buy <item>\n`
+  list += "```";
+  return list;
+}
+
+const shopList = shopListBuilder();
+
+const shopBuy = (user_id, item, callback, errorCallback) => {
+  // check item in shop
+  if (!(item in shop) && errorCallback) errorCallback(`${item} is not in the shop.`);
+  if (user.coins >= shop[item]) {
+    const price = shop[item];
+    data[user_id].coins -= price;
+    switch (item) {
+      case "reroll": reroll(); break;
+      case "zero": zeroOut(); break;
+    }
+    if (callback) callback();
+  }
+  else {
+    if (errorCallback) errorCallback("Not enough coins.");
+  }
+}
+
+const convert = (user_id, callback, errorCb) => {
+  if (data.users[user_id].crowns >= 1) {
+    data.users[user_id].crowns--;
+    data.users[user_id].coins += CONVERSION_RATE;
+    if (callback) callback();
+  } else {
+    if (errorCb) errorCb("Not enough crowns.");
+  }
+}
+
+const balance = (user_id) => {
+  user = data.users[user_id];
+  return `Crowns: ${user.crowns}; Coins: ${user.coins}.`
 }
 
 fs.stat("data.json", (err, _) => {
@@ -20,6 +88,16 @@ fs.stat("data.json", (err, _) => {
     data = { number: 0, users: {}, last: null, channel: null, win: 0 };
   } else {
     data = require("./data.json");
+    for (user in data.users) {
+      if (!("crowns" in data.users[user])) {
+        data.users[user].crowns = data.users[user].wins;
+        console.log(user);
+      }
+      if (!("coins" in data.users[user])) {
+        data.users[user].coins = 0;
+        console.log(user);
+      }
+    }
     console.log("Read in data:\n" + JSON.stringify(data));
   }
 });
@@ -30,26 +108,35 @@ client.once("ready", () => {
   console.log("Logged in.");
 });
 
+const tokenize = (str) => {
+  return str.toLowerCase().trim().split(" ");
+}
+
+const bind = (messageObj, callback, errorCb) => {
+  const tokens = tokenize(messageObj.content);
+  if (message.member.hasPermission("MANAGE_GUILD") && tokens.length > 1) {
+    channelId = tokens[1].trim().replace(/\D/g, "");
+    channel = client.channels
+      .fetch(channelId)
+      .catch((e) => {errorCb ? errorCb(e) : console.error(e);})
+      .then(() => {data.channel = channelId;});
+    if (callback) callback();
+  } else {
+    if (errorCb) errorCb();
+  }
+}
+
 client.on("message", (message) => {
   try {
     if (message.author.bot) return; // message from bot
     if (!message.guild) return; // DM
 
-    const tokens = message.content.toLowerCase().trim().split(" ");
+    const tokens = tokenize(message.content);
     if (message.content.startsWith(prefix)) {
       const command = tokens[0].substr(prefix.length);
-      if (
-        message.member.hasPermission("MANAGE_GUILD") &&
-        tokens.length > 1 &&
-        command === "bind"
-      ) {
-        channelId = tokens[1].trim().replace(/\D/g, "");
-        channel = client.channels
-          .fetch(channelId)
-          .catch((e) => console.log(e))
-          .then(() => (data.channel = channelId));
+      if (command === "bind") {
+        bind(message)
       }
-
       if (!data.channel) {
         // unbound
         message.channel.send(
@@ -58,12 +145,11 @@ client.on("message", (message) => {
         return;
       }
 
-      if (message.channel.id !== data.channel) return;
-      // not bound channel
+      if (message.channel.id !== data.channel) return; // wrong channel
       else console.log(message.channel.id, data.channel);
       switch (command) {
         case "help":
-          // message.author.dmChannel.send("Help is on the way!");
+          message.channel.send(helpMsg);
           return;
         case "current":
           message.channel.send(`Current number is ${data.number}.`);
@@ -76,6 +162,28 @@ client.on("message", (message) => {
           message.channel.send(
             `${message.author}, you have ${user.count} correct counts and ${user.wins} wins.`
           );
+          return;
+        case "shop":
+          message.channel.send(shopList);
+          return;
+        case "buy":
+          shopBuy(message.author.id, tokens.length > 1 ? tokens[1] : "", () => {
+            message.channel.send(`${message.author} successfully purchased ${tokens[1]}!`);
+          }, (errorMsg) => {
+            message.channel.send(`${message.author}: ${errorMsg}`);
+          });
+          return;
+        case "convert":
+          convert(message.author.id, () => {
+            message.channel.send(`${message.author} converted 1 crown to ${CONVERSION_RATE} coins. Your balance is now ${data.users[message.author.id].coins}c.`);
+          }, (errorMsg) => {
+            message.channel.send(`${message.author}: ${errorMsg}`);
+          });
+          return;
+        case "balance":
+          const result = balance(message.author.id);
+          if (result) message.channel.send(result);
+          return;
         default:
           return;
       }
@@ -94,13 +202,14 @@ client.on("message", (message) => {
           data.users[message.author.id].count++;
         } else {
           console.log(`New user ${message.author}.`);
-          data.users[message.author.id] = { count: 1, wins: 0 };
+          data.users[message.author.id] = { count: 1, wins: 0, crowns: 0, coins: 0, miscount: 0 };
         }
 
         // check if win
         if (Math.abs(number) == data.win) {
           console.log("Winner. Resetting number.");
           data.users[message.author.id].wins++;
+          data.users[message.author.id].crowns++;
           data.win = getRandomInt(WIN);
           message.react("👑");
           message.channel.send(
