@@ -11,6 +11,9 @@ const { toNamespacedPath } = require("path");
 
 const WIN = 70;
 const CONVERSION_RATE = 100;
+const COIN_RATE = 0.01;
+const COIN_LOSS = 25;
+const COIN_GAIN = 10;
 
 let data;
 
@@ -88,16 +91,6 @@ fs.stat("data.json", (err, _) => {
     data = { number: 0, users: {}, last: null, channel: null, win: 0 };
   } else {
     data = require("./data.json");
-    for (user in data.users) {
-      if (!("crowns" in data.users[user])) {
-        data.users[user].crowns = data.users[user].wins;
-        console.log(user);
-      }
-      if (!("coins" in data.users[user])) {
-        data.users[user].coins = 0;
-        console.log(user);
-      }
-    }
     console.log("Read in data:\n" + JSON.stringify(data));
   }
 });
@@ -193,6 +186,12 @@ client.on("message", (message) => {
       if (Math.abs(number - data.number) === 1) {
         if (data.last === message.author.id) { // user sent previous message
           message.react("❌");
+          data.users[message.author.id].miscount++;
+          data.users[message.author.id].coins -= COIN_LOSS;
+          
+          if (data.users[message.author.id].coins < 0) {
+            data.users[message.author.id].coins = 0;
+          }
           return;
         }
 
@@ -220,12 +219,20 @@ client.on("message", (message) => {
         } else {
           data.number = number;
           data.last = message.author.id;
-          
-          message.react("✅");
+          if (Math.random() <= COIN_RATE) {
+            data.users[message.author.id].coins += COIN_GAIN;
+            message.react("💰");
+          } else {
+            message.react("✅");
+          }
         }
 
       } else {
-        console.log("Invalid number.");
+        data.users[message.author.id].miscount++;
+        data.users[message.author.id].coins -= COIN_LOSS;
+        if (data.users[message.author.id].coins < 0) {
+          data.users[message.author.id].coins = 0;
+        }
         message.react("❌");
       }
     }
