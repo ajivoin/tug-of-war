@@ -1,7 +1,6 @@
 {
   "help": "shows all commands",
-  "current": "shows the current number",
-  "target": "shows the target number",
+  "info": "shows the current number and target number",
   "user": "shows your statistics",
   "shop": "shows items in the shop",
   "balance": "shows your crown and coin balance",

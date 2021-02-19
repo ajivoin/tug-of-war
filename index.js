@@ -25,7 +25,7 @@ fs.stat("data.json", (err, _) => {
       users: {},
       last: null,
       channel: null,
-      win: getRandomInt(1, WIN),
+      win: getRandomInt(WIN, 1),
     };
   } else {
     data = require("./data.json");
@@ -44,7 +44,7 @@ const getRandomInt = (max, min) => {
   if (isNullUndefinedNaN(min)) {
     min = -1;
   }
-  Math.max(min, Math.floor(Math.random() * Math.floor(max)));
+  return Math.max(min, Math.floor(Math.random() * Math.floor(max)));
 };
 
 const addCoins = (userId, amount) => {
@@ -60,7 +60,7 @@ const addCrowns = (userId, amount) => {
 };
 
 const teleport = (cb) => {
-  distance = getRandomInt(TP_MIN, TP_MAX);
+  distance = getRandomInt(TP_MAX, TP_MIN);
   if (Math.random() < 0.5) {
     distance = -distance;
   }
@@ -69,7 +69,7 @@ const teleport = (cb) => {
 };
 
 const reroll = (cb) => {
-  data.win = getRandomInt(1, WIN);
+  data.win = getRandomInt(WIN, 1);
   if (data.win === data.number) data.win++;
   if (cb) cb(`🎲 Reroll! Target number is now ${data.win}.`);
 };
@@ -155,7 +155,7 @@ const balance = (userId) => {
 
 client.once("ready", () => {
   if (data.win === undefined || data.win === null || isNaN(data.win)) {
-    data.win = getRandomInt(WIN);
+    data.win = getRandomInt(WIN, 1);
   }
   console.log("Logged in.");
 });
@@ -212,23 +212,33 @@ client.on("message", (message) => {
 
       // heavy-lifting for commands
       switch (command) {
+        case "h":
+        case "?":
         case "help":
           message.channel.send(helpMsg);
           return;
-        case "current":
-          message.channel.send(`Current number is ${data.number}.`);
-          return;
         case "target":
-          message.channel.send(`Current target is ±${data.win}.`);
-          return;
-        case "user":
+        case "current":
+        case "i":
+        case "info":
           message.channel.send(
-            `${author}, you have ${user.count} correct counts and ${user.wins} wins.`
+            `Current number is ${data.number}. Target: ${data.win}.`
           );
           return;
+        case "u":
+        case "stats":
+        case "stat":
+        case "user":
+          message.channel.send(
+            `${author}: ${user.count} numbers counted, ${user.wins} wins, ${user.miscount} goofs.`
+          );
+          return;
+        case "s":
+        case "store":
         case "shop":
           message.channel.send(shopList);
           return;
+        case "$":
         case "buy":
           shopBuy(
             userId,
@@ -252,6 +262,8 @@ client.on("message", (message) => {
             }
           );
           return;
+        case "b":
+        case "bal":
         case "balance":
           const result = balance(userId);
           if (result) message.channel.send(`${author}: ${result}`);
@@ -293,14 +305,14 @@ client.on("message", (message) => {
           console.log("Winner. Resetting number.");
           user.wins++;
           addCrowns(userId, 1);
-          data.win = getRandomInt(1, WIN);
+          data.win = getRandomInt(WIN, 1);
           message.react("👑");
           message.channel.send(
             `🤴 Congrats ${author}! New target: ±${data.win}.`
           );
           data.last = null;
         } else {
-          data.last = userId;
+          data.last = Math.abs(number - data.win) > 1 ? userId : null;
           if (Math.random() <= COIN_RATE) {
             addCoins(userId, COIN_GAIN);
             message.react("💰");
