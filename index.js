@@ -150,7 +150,7 @@ const convert = (userId, callback, errorCb) => {
 
 const balance = (userId) => {
   user = getUser(userId);
-  return `${user.crowns}👑; ${user.coins}c`;
+  return `${user.crowns} Crowns; ${user.coins}c`;
 };
 
 client.once("ready", () => {
