@@ -1,4 +1,5 @@
 {
-  "reroll": 250,
-  "zero": 500
+  "reroll": 50,
+  "teleport": 75,
+  "zero": 50
 }
