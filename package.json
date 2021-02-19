@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "test": "test"
+    "test": "test",
+    "lint": "prettier -c .",
+    "fix": "prettier -c -w ."
   },
   "repository": {
     "type": "git",
@@ -18,7 +20,9 @@
   },
   "homepage": "https://github.com/ajivoin/tug-of-war#readme",
   "dependencies": {
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0"
+    "discord.js": "^12.5.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
   }
 }
