@@ -29,6 +29,7 @@ fs.stat("data.json", (err, _) => {
     };
   } else {
     data = require("./data.json");
+    if (isNullUndefinedNaN(data.emoji)) data.emoji = "✅";
     console.log("Read in data");
   }
 });
@@ -38,6 +39,10 @@ fs.stat("data.json", (err, _) => {
 const client = new Discord.Client();
 
 const isNullUndefinedNaN = (o) => o === null || o === undefined || isNaN(o);
+
+const setReactEmoji = (emoji) => {
+  data.emoji = emoji;
+};
 
 // max is the only required argument. 0 < min < max
 const getRandomInt = (max, min) => {
@@ -123,6 +128,18 @@ const shopBuy = (userId, item, callback, errorCallback) => {
         break;
       case "teleport":
         teleport(callback);
+        break;
+      case "skin-default":
+        setReactEmoji("✅");
+        if (callback) callback("✅ New reaction emoji!");
+        break;
+      case "skin-monke":
+        setReactEmoji("🐵");
+        if (callback) callback("🐵 New reaction emoji!");
+        break;
+      case "skin-pancake":
+        setReactEmoji("🥞");
+        if (callback) callback("🥞 New reaction emoji!");
         break;
       default:
         if (errorCallback) {
@@ -222,7 +239,7 @@ client.on("message", (message) => {
         case "i":
         case "info":
           message.channel.send(
-            `Current number is ${data.number}. Target: ${data.win}.`
+            `Current number is ${data.number}. Target: ±${data.win}.`
           );
           return;
         case "u":
@@ -317,7 +334,7 @@ client.on("message", (message) => {
             addCoins(userId, COIN_GAIN);
             message.react("💰");
           } else {
-            message.react("✅");
+            message.react(data.emoji);
           }
         }
       } else {

@@ -1,5 +1,8 @@
 {
   "reroll": 50,
   "teleport": 75,
-  "zero": 50
+  "zero": 50,
+  "skin-default": 500,
+  "skin-monke": 500,
+  "skin-pancake": 500
 }
