@@ -70,12 +70,13 @@ const teleport = (cb) => {
     distance = -distance;
   }
   data.number += distance;
+  if (Math.abs(data.number) === data.win) data.number++;
   if (cb) cb(`🧙‍♂️ Teleport! Current number is now ${data.number}.`);
 };
 
 const reroll = (cb) => {
   data.win = getRandomInt(WIN, 1);
-  if (data.win === data.number) data.win++;
+  if (data.win === Math.abs(data.number)) data.win++;
   if (cb) cb(`🎲 Reroll! Target number is now ${data.win}.`);
 };
 
@@ -293,7 +294,7 @@ client.on("message", (message) => {
 
     number = parseInt(tokens[0]);
     if (data.channel && data.channel === message.channel.id && !isNaN(number)) {
-      if (Math.abs(number - data.number) === 1) {
+      if (Math.abs(Math.abs(number) - Math.abs(data.number)) === 1) {
         if (data.last === userId) {
           // user sent previous message
           message.react("❌");
@@ -329,7 +330,7 @@ client.on("message", (message) => {
           );
           data.last = null;
         } else {
-          data.last = Math.abs(number - data.win) > 1 ? userId : null;
+          data.last = Math.abs(Math.abs(number) - data.win) > 1 ? userId : null;
           if (Math.random() <= COIN_RATE) {
             addCoins(userId, COIN_GAIN);
             message.react("💰");
