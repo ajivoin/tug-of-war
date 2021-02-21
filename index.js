@@ -212,7 +212,7 @@ const tokenize = (str) => {
 
 const bind = (messageObj, callback, errorCb) => {
   const tokens = tokenize(messageObj.content);
-  if (message.member.hasPermission("MANAGE_GUILD") && tokens.length > 1) {
+  if (messageObj.member.hasPermission("MANAGE_GUILD") && tokens.length > 1) {
     channelId = tokens[1].trim().replace(/\D/g, "");
     channel = client.channels
       .fetch(channelId)
