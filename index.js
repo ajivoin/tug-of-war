@@ -15,6 +15,16 @@ const COIN_GAIN = 10;
 const [TP_MIN, TP_MAX] = [5, 50];
 //#endregion
 
+const createUser = () => {
+  return {
+    count: 0,
+    wins: 0,
+    crowns: 0,
+    coins: 0,
+    miscount: 0,
+  };
+};
+
 //#region data setup
 let data;
 fs.stat("data.json", (err, _) => {
@@ -29,7 +39,6 @@ fs.stat("data.json", (err, _) => {
     };
   } else {
     data = require("./data.json");
-    if (isNullUndefinedNaN(data.emoji)) data.emoji = "✅";
     console.log("Read in data");
   }
 });
@@ -38,7 +47,15 @@ fs.stat("data.json", (err, _) => {
 // Discord client
 const client = new Discord.Client();
 
-const isNullUndefinedNaN = (o) => o === null || o === undefined || isNaN(o);
+const isNullUndefined = (o) => o === null || o === undefined;
+
+const fliparoo = (cb) => {
+  [data.win, data.number] = [
+    Math.abs(data.number),
+    Math.sign(data.number) * data.win,
+  ];
+  if (cb) cb("😵 Fliparoo! Current number and target are now swapped!");
+};
 
 const setReactEmoji = (emoji) => {
   data.emoji = emoji;
@@ -113,7 +130,7 @@ const shopList = shopListBuilder();
 
 const shopBuy = (userId, item, callback, errorCallback) => {
   const user = getUser(userId);
-  if (!(item in shop)) {
+  if (!shop.hasOwnProperty(item)) {
     if (errorCallback) errorCallback(`${item} is not in the shop.`);
     return;
   }
@@ -130,6 +147,9 @@ const shopBuy = (userId, item, callback, errorCallback) => {
       case "teleport":
         teleport(callback);
         break;
+      case "fliparoo":
+        fliparoo(callback);
+        break;
       case "skin-default":
         setReactEmoji("✅");
         if (callback) callback("✅ New reaction emoji!");
@@ -141,6 +161,14 @@ const shopBuy = (userId, item, callback, errorCallback) => {
       case "skin-pancake":
         setReactEmoji("🥞");
         if (callback) callback("🥞 New reaction emoji!");
+        break;
+      case "skin-brain":
+        setReactEmoji("🧠");
+        if (callback) callback("🧠 New reaction emoji!");
+        break;
+      case "skin-flex":
+        setReactEmoji("💪");
+        if (callback) callback("💪 Weird flex, but okay.");
         break;
       default:
         if (errorCallback) {
@@ -203,11 +231,13 @@ const bind = (messageObj, callback, errorCb) => {
 client.on("message", (message) => {
   try {
     const author = message.author;
-    const userId = author.id;
-    const user = getUser(userId);
     if (author.bot) return; // message from bot
     if (!message.guild) return; // DM
-
+    const userId = author.id;
+    if (!(userId in data.users)) {
+      data.users[userId] = createUser();
+    }
+    const user = getUser(userId);
     const tokens = tokenize(message.content);
 
     //#region command
@@ -294,9 +324,15 @@ client.on("message", (message) => {
 
     number = parseInt(tokens[0]);
     if (data.channel && data.channel === message.channel.id && !isNaN(number)) {
+      if (data.last === userId) {
+        message.react("⏳");
+        user.miscount++;
+        return;
+      }
       if (Math.abs(Math.abs(number) - Math.abs(data.number)) === 1) {
         if (data.last === userId) {
           // user sent previous message
+          data.last = userId;
           message.react("❌");
           user.miscount++;
           addCoins(userId, -COIN_LOSS);
@@ -308,13 +344,7 @@ client.on("message", (message) => {
           user.count++;
         } else {
           console.log(`New user ${author.username}.`);
-          data.users[userId] = {
-            count: 1,
-            wins: 0,
-            crowns: 0,
-            coins: 0,
-            miscount: 0,
-          };
+          data.users[userId] = createUser();
         }
 
         // check if win
@@ -339,6 +369,7 @@ client.on("message", (message) => {
           }
         }
       } else {
+        data.last = userId;
         user.miscount++;
         addCoins(userId, -COIN_LOSS);
         message.react("❌");

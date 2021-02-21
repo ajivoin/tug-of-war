@@ -1,8 +1,11 @@
 {
   "reroll": 50,
-  "teleport": 75,
+  "teleport": 50,
   "zero": 50,
+  "fliparoo": 50,
   "skin-default": 500,
   "skin-monke": 500,
-  "skin-pancake": 500
+  "skin-pancake": 500,
+  "skin-brain": 500,
+  "skin-flex": 1000
 }
