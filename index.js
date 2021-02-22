@@ -96,7 +96,7 @@ const helpMsg = helpMsgBuilder();
 
 const shopListBuilder = () => {
   let output = '```\n';
-  output += Object.keys(shop).reduce((acc, item) => `${item} costs ${shop[item]}c\n`, '');
+  output += Object.keys(shop).reduce((acc, item) => `${acc}${item} costs ${shop[item]}c\n`, '');
   output += `Purchase and use an item with ${prefix}buy <item>\n`;
   output += '```';
   return output;
@@ -152,8 +152,10 @@ const shopBuy = (userId, item, callback, errorCallback) => {
 };
 
 const convert = (userId, callback, errorCb) => {
-  if (data.getCrowns() >= 1) {
+  if (data.getCrowns(userId) >= 1) {
+    console.log(data.getCrowns(userId));
     data.removeCrowns(userId, 1);
+    console.log(data.getCrowns(userId));
     data.addCoins(userId, constants.CONVERSION_RATE);
     if (callback) callback("👑💨 You've gained 100c!");
   } else if (errorCb) errorCb('Not enough crowns to convert to coins.');
@@ -161,29 +163,28 @@ const convert = (userId, callback, errorCb) => {
 
 const handleConvert = (userId, arg, callback, errorCb) => {
   const number = parseInt(arg, 10);
-  const user = data.getUser(userId);
   if (isNullUndefined(arg)) {
     convert(userId, callback, errorCb);
     return;
   }
   if (!Number.isNaN(number)) {
     if (number <= 0) return;
-    if (user.crowns >= number) {
+    if (data.getCrowns(userId) >= number) {
       const increase = number * constants.CONVERSION_RATE;
-      user.crowns -= number;
-      user.coins += increase;
+      data.removeCrowns(userId, number);
+      data.addCoins(userId, increase);
       if (callback) {
         callback(`👑💨 You've gained ${increase}c!`);
       }
     } else if (errorCb) {
       errorCb(
-        `Oopsies! You have ${user.crowns} Crowns and tried to convert ${number}.`,
+        `Oopsies! You have ${data.getCrowns(userId)} Crowns and tried to convert ${number}.`,
       );
     }
-  } else if (arg.toLowerCase() === 'all' && user.crowns > 0) {
-    const increase = user.crowns * constants.CONVERSION_RATE;
-    user.coins += increase;
-    user.crowns = 0;
+  } else if (arg.toLowerCase() === 'all' && data.getCrowns(userId) > 0) {
+    const increase = data.getCrowns(userId) * constants.CONVERSION_RATE;
+    data.addCoins(userId, increase);
+    data.removeCrowns(userId, data.getCrowns(userId));
     if (callback) {
       callback(`👑💨 You've gained ${increase}c!`);
     }
@@ -234,7 +235,6 @@ client.on('message', (message) => {
     if (!data.hasUser(userId)) {
       data.createUser(userId);
     }
-    const user = data.getUser(userId);
     const tokens = tokenize(message.content);
 
     // #region command
@@ -274,7 +274,7 @@ client.on('message', (message) => {
         case 'stat':
         case 'user':
           message.channel.send(
-            `${author}: ${user.count} numbers counted, ${user.wins} wins, ${user.miscount} goofs.`,
+            `${author}: ${data.getCount(userId)} numbers counted, ${data.getWins(userId)} wins, ${data.getMiscount(userId)} goofs.`,
           );
           return;
         case 's':
@@ -336,27 +336,23 @@ client.on('message', (message) => {
     // #endregion
 
     const number = parseInt(tokens[0], 10);
+    console.log(`${data.getLastUserId()} - ${author.id}`);
+
     if (data.getChannelId() === message.channel.id && !Number.isNaN(number)) {
       if (data.getLastUserId() === userId) {
+        console.log(`${data.getLastUserId()} - ${author.id}`);
         message.react('⏳');
         data.incrementMiscount(userId);
+        data.removeCoins(userId, constants.COIN_LOSS);
         return;
       }
       if (Math.abs(number - data.getCurrentNumber()) === 1) {
-        if (data.getLastUserId() === userId) {
-          // user sent previous message
-          data.setLastUserId(userId);
-          message.react(data.getIncorrectEmoji());
-          data.incrementMiscount(userId);
-          data.removeCoins(userId, constants.COIN_LOSS);
-          return;
-        }
-
         // increment user count
         data.incrementCount(userId);
 
         // check if win
         data.setCurrentNumber(number);
+        console.log(`HELLO ${number}, ${data.getTargetNumber()}`);
         if (Math.abs(number) === data.getTargetNumber()) {
           console.log('Winner. Resetting number.');
           data.incrementWins(userId);
@@ -368,9 +364,12 @@ client.on('message', (message) => {
           );
           data.clearLastUserId();
         } else {
-          data.setLastUserId(
-            Math.abs(Math.abs(number) - data.getTargetNumber()) > 1 ? userId : null,
-          );
+          const lastUser = Math.abs(Math.abs(number) - data.getTargetNumber()) > 1 ? userId : null;
+          if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
+            data.setLastUserId(userId);
+          } else {
+            data.clearLastUserId();
+          }
           if (Math.random() <= constants.COIN_RATE) {
             const gain = utils.getRandomInt(100, 10);
             data.addCoins(userId, gain);

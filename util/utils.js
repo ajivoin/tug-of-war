@@ -5,7 +5,6 @@ const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, pro
 // max is the only required argument. 0 < min < max
 /**
  * Behavior only guaranteed if max > min.
- * 
  * @param {Number} max
  * @param {Number?} min
  */

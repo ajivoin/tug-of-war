@@ -5,12 +5,12 @@ const skins = require('./skins.json');
 const FIVE_MINUTES = 1000 * 60 * 5;
 
 let data;
-fs.stat('data.json', (err) => {
+fs.stat('./data.json', (err) => {
   if (err) {
     data = utils.getDataSchema();
     console.log('Using new data base.');
   } else {
-    data = JSON.parse(fs.readFileSync('data.json'));
+    data = JSON.parse(fs.readFileSync('./data.json'));
     console.log('Read in data');
   }
 });
@@ -61,14 +61,16 @@ const hasUser = (userId) => utils.hasProperty(data.users, userId);
  * @param {function?} errorCallback
  * @returns {object} Read-only user object
  */
-const getUser = (userId, errorCallback) => {
-  const user = data.users[userId];
-  if (user) return Object.freeze(user);
-  if (errorCallback) errorCallback(`User with ID ${userId} not found.`);
-  return undefined;
-};
 
-const getUserWritable = (userId) => data.users[userId] || undefined;
+const getUserWritable = (userId) => data.users[userId];
+
+const getUser = (userId) => getUserWritable(userId);
+
+const getCount = (userId) => getUser(userId).count;
+
+const getWins = (userId) => getUser(userId).wins;
+
+const getMiscount = (userId) => getUser(userId).miscount;
 
 /**
  * @param {string} userId
@@ -143,7 +145,8 @@ const removeCoins = (userId, nCoins, callback, errorCallback) => {
   if (user) {
     const coins = Math.max(0, nCoins);
     user.coins -= coins;
-    if (callback) callback(`Added ${coins}c to user with ID ${userId}.`);
+    if (user.coins < 0) user.coins = 0;
+    if (callback) callback(`Removed ${coins}c to user with ID ${userId}.`);
   } else if (errorCallback) {
     errorCallback(`User with ID ${userId} not found.`);
   }
@@ -160,7 +163,7 @@ const removeCrowns = (userId, nCrowns, callback, errorCallback) => {
   if (user) {
     const crowns = Math.max(0, nCrowns);
     user.crowns -= crowns;
-    if (callback) callback(`Added ${crowns}c to user with ID ${userId}.`);
+    if (callback) callback(`Removed ${crowns}c to user with ID ${userId}.`);
   } else if (errorCallback) {
     errorCallback(`User with ID ${userId} not found.`);
   }
@@ -356,6 +359,9 @@ module.exports = {
   hasUser,
   getEmojiForReactionId,
   getCrowns,
+  getWins,
+  getCount,
+  getMiscount,
   // modifiers
   addCoins,
   addCrowns,
