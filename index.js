@@ -5,6 +5,7 @@ const { isNull } = require("util");
 
 const { token, prefix } = require("./config.json");
 const shop = require("./shop.json");
+const skins = require("./skins.json");
 //#endregion
 
 //#region constants
@@ -82,8 +83,52 @@ const fliparoo = (cb) => {
   if (cb) cb("😵 Fliparoo! Current number and target are now swapped!");
 };
 
-const setReactEmoji = (emoji) => {
-  data.emoji = emoji;
+const buyReactSkin = (userId, reactionId, callback, errorCb) => {
+  const user = getUser(userId);
+
+  // check if user owns react
+  if (
+    !user.reactions.hasOwnProperty(reactionId) &&
+    shop.hasOwnProperty(reactionId)
+  ) {
+    for (let reaction in user.reactions) {
+      user.reactions[reaction] = false;
+    }
+    user.reactions[reactionId] = true;
+    const emoji = skins[reactionId];
+    if (callback) callback(`${emoji} You bought a reaction skin!`);
+  } else {
+    if (errorCb) errorCb("You already have this reaction or it doesn't exist.");
+  }
+};
+
+const disableReactions = (userId) => {
+  const user = getUser(userId);
+
+  for (let reaction in user.reactions) {
+    user.reactions[reaction] = false;
+  }
+};
+
+const setReactEmoji = (userId, reactionId, callback, errorCb) => {
+  const user = getUser(userId);
+  if (isNullUndefined(reactionId)) return;
+  if (user.reactions.hasOwnProperty(reactionId)) {
+    disableReactions(userId);
+    user.reactions[reactionId] = true;
+    const emoji = skins[reactionId];
+    if (callback) callback(`${emoji} You equipped a reaction skin!`);
+  } else {
+    if (errorCb) errorCb("You do not own this reaction skin.");
+  }
+};
+
+const getReactEmoji = (userId) => {
+  const user = getUser(userId);
+  for (let reaction in user.reactions) {
+    if (user.reactions[reaction]) return skins[reaction];
+  }
+  return data.correctEmoji;
 };
 
 // max is the only required argument. 0 < min < max
@@ -176,24 +221,22 @@ const shopBuy = (userId, item, callback, errorCallback) => {
         fliparoo(callback);
         break;
       case "skin-default":
-        setReactEmoji("✅");
-        if (callback) callback("✅ New reaction emoji!");
+        buyReactSkin(userId, "skin-default", callback, errorCallback);
         break;
       case "skin-monke":
-        setReactEmoji("🐵");
-        if (callback) callback("🐵 New reaction emoji!");
+        buyReactSkin(userId, "skin-monke", callback, errorCallback);
         break;
       case "skin-pancake":
-        setReactEmoji("🥞");
-        if (callback) callback("🥞 New reaction emoji!");
+        buyReactSkin(userId, "skin-pancake", callback, errorCallback);
         break;
       case "skin-brain":
-        setReactEmoji("🧠");
-        if (callback) callback("🧠 New reaction emoji!");
+        buyReactSkin(userId, "skin-brain", callback, errorCallback);
         break;
       case "skin-flex":
-        setReactEmoji("💪");
-        if (callback) callback("💪 Weird flex, but okay.");
+        buyReactSkin(userId, "skin-flex", callback, errorCallback);
+        break;
+      case "skin-sparkle":
+        buyReactSkin(userId, "skin-sparkle", callback, errorCallback);
         break;
       default:
         if (errorCallback) {
@@ -366,7 +409,20 @@ client.on("message", (message) => {
               message.channel.send(`${author}: ${msg}`);
             },
             (errorMsg) => {
-              message.channel.send(`${message.author}: ${errorMsg}`);
+              message.channel.send(`${author}: ${errorMsg}`);
+            }
+          );
+          return;
+        case "e":
+        case "equip":
+          setReactEmoji(
+            userId,
+            tokens[1],
+            (msg) => {
+              message.channel.send(`${author}: ${msg}`);
+            },
+            (err) => {
+              message.channel.send(`${author}: ${err}`);
             }
           );
           return;
@@ -428,7 +484,7 @@ client.on("message", (message) => {
           } else if (Math.abs(data.number) == 69) {
             message.react("😎");
           } else {
-            message.react(data.emoji);
+            message.react(getReactEmoji(userId));
           }
         }
       } else {
