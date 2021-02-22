@@ -1,12 +1,16 @@
 //#region imports
 const Discord = require("discord.js");
 const fs = require("fs");
+const { isNull } = require("util");
 
 const { token, prefix } = require("./config.json");
 const shop = require("./shop.json");
 //#endregion
 
 //#region constants
+const REACT_CORRECT = "✅";
+const REACT_INCORRECT = "❌";
+const REACT_TIMEOUT = "⏳";
 const WIN = 70;
 const CONVERSION_RATE = 100;
 const COIN_RATE = 0.01;
@@ -22,6 +26,26 @@ const createUser = () => {
     crowns: 0,
     coins: 0,
     miscount: 0,
+    reactions: {},
+    powerups: {
+      reroll: 0,
+      teleport: 0,
+      fliparoo: 0,
+      zero: 0,
+    },
+  };
+};
+
+const getDataSchema = () => {
+  return {
+    number: 0,
+    users: {},
+    last: null,
+    channel: null,
+    win: getRandomInt(WIN, 1),
+    correctEmoji: REACT_CORRECT,
+    incorrectEmoji: REACT_INCORRECT,
+    timeoutEmoji: REACT_TIMEOUT,
   };
 };
 
@@ -30,18 +54,19 @@ let data;
 fs.stat("data.json", (err, _) => {
   if (err) {
     console.error("Creating data.json...");
-    data = {
-      number: 0,
-      users: {},
-      last: null,
-      channel: null,
-      win: getRandomInt(WIN, 1),
-    };
+    data = getDataSchema();
   } else {
     data = require("./data.json");
     console.log("Read in data");
   }
 });
+
+const persistData = () => {
+  fs.writeFileSync("data.json", JSON.stringify(data));
+  console.log("Data saved.");
+};
+
+const dataPersistenceId = setInterval(persistData, 1000 * 60 * 5);
 //#endregion
 
 // Discord client
@@ -63,7 +88,7 @@ const setReactEmoji = (emoji) => {
 
 // max is the only required argument. 0 < min < max
 const getRandomInt = (max, min) => {
-  if (isNullUndefinedNaN(min)) {
+  if (isNullUndefined(min)) {
     min = -1;
   }
   return Math.max(min, Math.floor(Math.random() * Math.floor(max)));
@@ -180,6 +205,40 @@ const shopBuy = (userId, item, callback, errorCallback) => {
     }
   } else {
     if (errorCallback) errorCallback("You don't have enough coins.");
+  }
+};
+
+const handleConvert = (userId, arg, callback, errorCb) => {
+  const number = parseInt(arg);
+  const user = getUser(userId);
+  if (isNullUndefined(arg)) {
+    convert(userId, callback, errorCb);
+    return;
+  }
+  if (!isNaN(number)) {
+    if (user.crowns >= number) {
+      const increase = number * CONVERSION_RATE;
+      user.crowns -= number;
+      user.coins += number * CONVERSION_RATE;
+      if (callback) {
+        callback(`👑💨 You've gained ${number * CONVERSION_RATE}c!`);
+      }
+      return;
+    } else {
+      if (errorCb) {
+        errorCb(
+          `Oopsies! You have ${user.crowns} Crowns and tried to convert ${number}.`
+        );
+      }
+      return;
+    }
+  } else if (arg.toLowerCase() === "all" && user.crowns > 0) {
+    const increase = user.crowns * CONVERSION_RATE;
+    user.coins += increase;
+    user.crowns = 0;
+    if (callback) {
+      callback(`👑💨 You've gained ${increase}c!`);
+    }
   }
 };
 
@@ -300,8 +359,9 @@ client.on("message", (message) => {
           );
           return;
         case "convert":
-          convert(
+          handleConvert(
             userId,
+            tokens[1],
             (msg) => {
               message.channel.send(`${author}: ${msg}`);
             },
@@ -362,8 +422,11 @@ client.on("message", (message) => {
         } else {
           data.last = Math.abs(Math.abs(number) - data.win) > 1 ? userId : null;
           if (Math.random() <= COIN_RATE) {
-            addCoins(userId, COIN_GAIN);
+            const gain = getRandomInt(100, 10);
+            addCoins(userId, gain);
             message.react("💰");
+          } else if (Math.abs(data.number) == 69) {
+            message.react("😎");
           } else {
             message.react(data.emoji);
           }
@@ -382,8 +445,7 @@ client.on("message", (message) => {
 
 // ensures data write when server killed
 process.on("SIGINT", () => {
-  console.log(data);
-  fs.writeFileSync("data.json", JSON.stringify(data));
+  persistData();
   process.exit(0);
 });
 
