@@ -211,7 +211,7 @@ const shopList = shopListBuilder();
 const shopBuy = (userId, item, callback, errorCallback) => {
   const user = getUser(userId);
   if (!shop.hasOwnProperty(item)) {
-    if (errorCallback) errorCallback(`${item} is not in the shop.`);
+    // if (errorCallback) errorCallback(`${item} is not in the shop.`);
     return;
   }
   if (user.coins >= shop[item]) {
@@ -229,6 +229,11 @@ const shopBuy = (userId, item, callback, errorCallback) => {
         break;
       case "fliparoo":
         fliparoo(callback);
+        break;
+      case "nice":
+        data.number = 69;
+        data.last = null;
+        callback(`Nice 😎.`);
         break;
       case "skin-default":
         buyReactSkin(userId, "skin-default", callback, errorCallback);
@@ -459,7 +464,7 @@ client.on("message", (message) => {
         user.miscount++;
         return;
       }
-      if (Math.abs(Math.abs(number) - Math.abs(data.number)) === 1) {
+      if (Math.abs(number - data.number) === 1) {
         if (data.last === userId) {
           // user sent previous message
           data.last = userId;
