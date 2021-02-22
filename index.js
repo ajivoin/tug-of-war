@@ -164,7 +164,7 @@ const teleport = (cb) => {
 const reroll = (cb) => {
   data.win = getRandomInt(WIN, 1);
   if (data.win === Math.abs(data.number)) data.win++;
-  if (cb) cb(`🎲 Reroll! Target number is now ${data.win}.`);
+  if (cb) cb(`🎲 Reroll! Target number is now ±${data.win}.`);
 };
 
 const zeroOut = (cb) => {
@@ -175,8 +175,18 @@ const zeroOut = (cb) => {
 const helpMsgBuilder = () => {
   const commands = require("./commands.json");
   let output = "```\n";
-  for (cmd in commands) {
+  for (let cmd in commands) {
     output += `${prefix}${cmd}: ${commands[cmd]}\n`;
+  }
+  output += "```";
+  return output;
+};
+
+const getUserReactions = (userId) => {
+  let output = "Your reactions:\n```\n";
+  const user = getUser(userId);
+  for (let react in user.reactions) {
+    output += `${skins[react]}: ${react}\n`;
   }
   output += "```";
   return output;
@@ -425,6 +435,10 @@ client.on("message", (message) => {
               message.channel.send(`${author}: ${err}`);
             }
           );
+          return;
+        case "inv":
+        case "inventory":
+          message.channel.send(`${author}: ${getUserReactions(userId)}`);
           return;
         case "b":
         case "bal":
