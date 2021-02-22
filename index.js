@@ -17,6 +17,10 @@ const skins = require('./skins.json');
 // Discord client
 const client = new Discord.Client();
 
+/**
+ * @param {Object} o
+ * @returns {boolean}
+ */
 const isNullUndefined = (o) => o === null || o === undefined;
 
 const fliparoo = (callback) => {

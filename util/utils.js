@@ -3,6 +3,12 @@ const constants = require('./constants');
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
 // max is the only required argument. 0 < min < max
+/**
+ * Behavior only guaranteed if max > min.
+ * 
+ * @param {Number} max
+ * @param {Number?} min
+ */
 const getRandomInt = (max, min) => {
   let minVal = min;
   if (Number.isNaN(min)) {
@@ -11,6 +17,9 @@ const getRandomInt = (max, min) => {
   return Math.max(minVal, Math.floor(Math.random() * Math.floor(max)));
 };
 
+/**
+ * @returns {object}
+ */
 const getDataSchema = () => ({
   number: 0,
   users: {},
@@ -22,6 +31,9 @@ const getDataSchema = () => ({
   timeoutEmoji: constants.REACT_TIMEOUT,
 });
 
+/**
+ * @returns {Object}
+ */
 const createUser = () => ({
   count: 0,
   wins: 0,
