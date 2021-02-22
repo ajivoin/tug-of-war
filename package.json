@@ -1,12 +1,13 @@
 {
   "name": "tug-of-war",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Discord counting bot mixed with tug of war",
   "main": "index.js",
   "scripts": {
     "start": "node .",
     "test": "test",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint-f": "eslint --fix ."
   },
   "repository": {
     "type": "git",

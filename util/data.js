@@ -61,7 +61,6 @@ const getCrowns = (userId, errorCallback) => {
   return undefined;
 };
 
-
 const addCoins = (userId, nCoins, callback, errorCallback) => {
   const user = getUserWritable(userId);
   if (user) {
@@ -211,7 +210,7 @@ const getEmojiForReactionId = (reactionId, callback, errorCallback) => {
   const emoji = skins[reactionId];
   if (!emoji) errorCallback(`Emoji not found for ${reactionId}.`);
   return emoji;
-}
+};
 
 module.exports = {
   // getters
@@ -227,6 +226,7 @@ module.exports = {
   getReaction,
   hasUser,
   getEmojiForReactionId,
+  getCrowns,
   // modifiers
   addCoins,
   addCrowns,
