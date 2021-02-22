@@ -274,6 +274,7 @@ const handleConvert = (userId, arg, callback, errorCb) => {
     return;
   }
   if (!isNaN(number)) {
+    if (number <= 0) return;
     if (user.crowns >= number) {
       const increase = number * CONVERSION_RATE;
       user.crowns -= number;
