@@ -63,7 +63,7 @@ const shopFunction = (message) => {
 const shopCmd = new Command('shop', commands.shop, shopFunction);
 
 const balanceFunction = (message) => {
-  message.channel.send(`${data.getCrowns(message.author.id)} Crowns; ${data.getCoins(message.author.id)}c`);
+  message.channel.send(`${message.author}: ${data.getCrowns(message.author.id)} Crowns; ${data.getCoins(message.author.id)}c`);
 };
 
 const balance = new Command('balance', commands.balance, balanceFunction);
