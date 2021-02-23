@@ -3,9 +3,7 @@ const Discord = require('discord.js');
 const utils = require('./util/utils');
 const constants = require('./util/constants');
 const data = require('./util/data');
-const shop = require('./util/shop');
-
-const commands = require('./commands.json');
+const commands = require('./util/commands');
 
 const { token, prefix } = require('./config.json');
 // #endregion
@@ -15,81 +13,7 @@ const { token, prefix } = require('./config.json');
 
 // Discord client
 const client = new Discord.Client();
-
-/**
- * @param {Object} o
- * @returns {boolean}
- */
-const isNullUndefined = (o) => o === null || o === undefined;
-
-const setReactEmoji = (userId, reactionId, callback, errorCb) => {
-  if (!reactionId) return;
-  if (data.hasReaction(userId, reactionId)) {
-    data.selectReaction(userId, reactionId);
-    const emoji = utils.getEmoji(reactionId);
-    if (callback) callback(`${emoji} You equipped a reaction skin!`);
-  } else if (errorCb) errorCb('You do not own this reaction skin.');
-};
-
-const helpMsgBuilder = () => {
-  let output = 'Command info:\n```\n';
-  output += Object.keys(commands).reduce((acc, cmd) => `${acc}${prefix}${cmd}: ${commands[cmd]}\n`, '');
-  output += '```';
-  return output;
-};
-
-const getUserReactions = (userId) => {
-  let output = 'Your reactions:\n```\n';
-  const user = data.getUser(userId);
-  output += Object.keys(user.reactions).reduce((acc, react) => `${acc}${react}: ${utils.getEmoji(react)}\n`, '');
-  output += `Select a skin with ${prefix}equip <item>\n`;
-  output += '```';
-  return output;
-};
-
-const helpMsg = helpMsgBuilder();
-
-const convert = (userId, callback, errorCb) => {
-  if (data.getCrowns(userId) >= 1) {
-    data.removeCrowns(userId, 1);
-    data.addCoins(userId, constants.CONVERSION_RATE);
-    if (callback) callback("👑💨 You've gained 100c!");
-  } else if (errorCb) errorCb('Not enough crowns to convert to coins.');
-};
-
-const handleConvert = (userId, arg, callback, errorCb) => {
-  const number = parseInt(arg, 10);
-  if (isNullUndefined(arg)) {
-    convert(userId, callback, errorCb);
-    return;
-  }
-  if (!Number.isNaN(number)) {
-    if (number <= 0) return;
-    if (data.getCrowns(userId) >= number) {
-      const increase = number * constants.CONVERSION_RATE;
-      data.removeCrowns(userId, number);
-      data.addCoins(userId, increase);
-      if (callback) {
-        callback(`👑💨 You've gained ${increase}c!`);
-      }
-    } else if (errorCb) {
-      errorCb(
-        `Oopsies! You have ${data.getCrowns(userId)} Crowns and tried to convert ${number}.`,
-      );
-    }
-  } else if (arg.toLowerCase() === 'all' && data.getCrowns(userId) > 0) {
-    const increase = data.getCrowns(userId) * constants.CONVERSION_RATE;
-    data.addCoins(userId, increase);
-    data.removeCrowns(userId, data.getCrowns(userId));
-    if (callback) {
-      callback(`👑💨 You've gained ${increase}c!`);
-    }
-  }
-};
-
-const balance = (userId, callback) => {
-  callback(`${data.getCrowns(userId)} Crowns; ${data.getCoins(userId)}c`);
-};
+client.commands = commands;
 
 client.once('ready', () => {
   if (data.getTargetNumber() === undefined
@@ -100,10 +24,8 @@ client.once('ready', () => {
   console.log('Logged in.');
 });
 
-const tokenize = (str) => str.toLowerCase().trim().split(' ');
-
 const bind = (messageObj, callback, errorCb) => {
-  const tokens = tokenize(messageObj.content);
+  const tokens = utils.tokenize(messageObj.content);
   if (messageObj.member.hasPermission('MANAGE_GUILD') && tokens.length > 1) {
     const channelId = tokens[1].trim().replace(/\D/g, '');
     client.channels
@@ -131,7 +53,7 @@ client.on('message', (message) => {
     if (!data.hasUser(userId)) {
       data.createUser(userId);
     }
-    const tokens = tokenize(message.content);
+    const tokens = utils.tokenize(message.content);
 
     // #region command
     // check for bind
@@ -151,83 +73,7 @@ client.on('message', (message) => {
       if (message.channel.id !== data.getChannelId()) return;
 
       // heavy-lifting for commands
-      switch (command) {
-        case 'h':
-        case '?':
-        case 'help':
-          message.channel.send(helpMsg);
-          return;
-        case 'target':
-        case 'current':
-        case 'i':
-        case 'info':
-          message.channel.send(
-            `Current number is ${data.getCurrentNumber()}. Target: ±${data.getTargetNumber()}.`,
-          );
-          return;
-        case 'u':
-        case 'stats':
-        case 'stat':
-        case 'user':
-          message.channel.send(
-            `${author}: ${data.getCount(userId)} numbers counted, ${data.getWins(userId)} wins, ${data.getMiscount(userId)} goofs.`,
-          );
-          return;
-        case 's':
-        case 'store':
-        case 'shop':
-          message.channel.send(shop.contents);
-          return;
-        case '$':
-        case 'buy':
-          shop.buy(
-            userId,
-            tokens.length > 1 ? tokens[1] : '',
-            (msg) => {
-              message.channel.send(`${author}: ${msg}`);
-            },
-            (errorMsg) => {
-              message.channel.send(`${author}: ${errorMsg}`);
-            },
-          );
-          return;
-        case 'convert':
-          handleConvert(
-            userId,
-            tokens[1],
-            (msg) => {
-              message.channel.send(`${author}: ${msg}`);
-            },
-            (errorMsg) => {
-              message.channel.send(`${author}: ${errorMsg}`);
-            },
-          );
-          return;
-        case 'e':
-        case 'equip':
-          setReactEmoji(
-            userId,
-            tokens[1],
-            (msg) => {
-              message.channel.send(`${author}: ${msg}`);
-            },
-            (err) => {
-              message.channel.send(`${author}: ${err}`);
-            },
-          );
-          return;
-        case 'inv':
-        case 'inventory':
-          message.channel.send(`${author}: ${getUserReactions(userId)}`);
-          return;
-        case 'b':
-        case 'bal':
-        case 'balance':
-          balance(userId, (msg) => { message.channel.send(`${author}: ${msg}`); });
-          return;
-        default:
-          return;
-      }
+      client.commands.get(command)?.execute(message);
     }
     // #endregion
 

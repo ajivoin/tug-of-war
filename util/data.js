@@ -1,5 +1,6 @@
 const fs = require('fs');
 const utils = require('./utils');
+const { prefix } = require('../config.json');
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -283,6 +284,15 @@ const selectReaction = (userId, reactionId) => {
   enableReaction(userId, reactionId);
 };
 
+const getUserReactionsMessage = (userId) => {
+  let output = 'Your reactions:\n```\n';
+  const user = getUser(userId);
+  output += Object.keys(user.reactions).reduce((acc, react) => `${acc}${react}: ${utils.getEmoji(react)}\n`, '');
+  output += `Select a skin with ${prefix}equip <item>\n`;
+  output += '```';
+  return output;
+};
+
 /**
  * @param {string} userId
  * @returns {string} Emoji
@@ -358,6 +368,7 @@ module.exports = {
   getCount,
   getMiscount,
   hasReaction,
+  getUserReactionsMessage,
   // modifiers
   addCoins,
   addCrowns,
