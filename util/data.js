@@ -1,6 +1,5 @@
 const fs = require('fs');
 const utils = require('./utils');
-const skins = require('./skins.json');
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -279,6 +278,11 @@ const enableReaction = (userId, reactionId) => {
   user.reactions[reactionId] = true;
 };
 
+const selectReaction = (userId, reactionId) => {
+  disableReactions(userId);
+  enableReaction(userId, reactionId);
+};
+
 /**
  * @param {string} userId
  * @returns {string} Emoji
@@ -286,8 +290,12 @@ const enableReaction = (userId, reactionId) => {
 const getReaction = (userId) => {
   const user = getUser(userId);
   const found = Object.keys(user.reactions).find((reaction) => user.reactions[reaction]);
-  return skins[found] || data.correctEmoji;
+  return utils.getEmoji(found) || data.correctEmoji;
 };
+
+const hasReaction = (userId, reactionId) => utils.hasProperty(
+  getUser(userId).reactions, reactionId,
+);
 
 /**
  * @returns {string}
@@ -332,18 +340,6 @@ const createUser = (userId, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} reactionId
- * @param {function?} callback
- * @param {function?} errorCallback
- * @returns {string} Emoji
- */
-const getEmojiForReactionId = (reactionId, callback, errorCallback) => {
-  const emoji = skins[reactionId];
-  if (!emoji) errorCallback(`Emoji not found for ${reactionId}.`);
-  return emoji;
-};
-
 module.exports = {
   // getters
   getUser,
@@ -357,11 +353,11 @@ module.exports = {
   getChannelId,
   getReaction,
   hasUser,
-  getEmojiForReactionId,
   getCrowns,
   getWins,
   getCount,
   getMiscount,
+  hasReaction,
   // modifiers
   addCoins,
   addCrowns,
@@ -381,6 +377,7 @@ module.exports = {
   incrementMiscount,
   incrementWins,
   createUser,
+  selectReaction,
   // data utils
   persistData,
 };

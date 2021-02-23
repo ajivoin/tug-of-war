@@ -1,4 +1,5 @@
 const constants = require('./constants');
+const skins = require('./skins.json');
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
@@ -48,6 +49,18 @@ const createUser = () => ({
   },
 });
 
+/**
+ * @param {string} reactionId
+ * @param {function?} callback
+ * @param {function?} errorCallback
+ * @returns {string} Emoji
+ */
+const getEmoji = (reactionId, callback, errorCallback) => {
+  const emoji = skins[reactionId];
+  if (!emoji) errorCallback(`Emoji not found for ${reactionId}.`);
+  return emoji;
+};
+
 module.exports = {
-  getRandomInt, hasProperty, getDataSchema, createUser,
+  getRandomInt, hasProperty, getDataSchema, createUser, getEmoji,
 };

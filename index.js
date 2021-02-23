@@ -3,11 +3,11 @@ const Discord = require('discord.js');
 const utils = require('./util/utils');
 const constants = require('./util/constants');
 const data = require('./util/data');
+const shop = require('./util/shop');
 
 const commands = require('./commands.json');
 
 const { token, prefix } = require('./config.json');
-const shop = require('./shop.json');
 const skins = require('./skins.json');
 // #endregion
 
@@ -23,57 +23,13 @@ const client = new Discord.Client();
  */
 const isNullUndefined = (o) => o === null || o === undefined;
 
-const fliparoo = (callback) => {
-  const currentNum = data.getCurrentNumber();
-  const currentTarget = data.getTargetNumber();
-  data.setCurrentNumber(Math.sign(currentNum) * currentTarget);
-  data.setTargetNumber(Math.abs(currentNum));
-  if (callback) callback('😵 Fliparoo! Current number and target are now swapped!');
-};
-
-const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
-  const user = data.getUser(userId);
-
-  // check if user owns react
-  if (
-    !utils.hasProperty(user.reactions, reactionId)
-    && utils.hasProperty(shop, reactionId)
-  ) {
-    data.disableReactions(userId);
-    data.enableReaction(userId, reactionId);
-    const emoji = data.getEmojiForReactionId(reactionId);
-    if (callback) callback(`${emoji} You bought a reaction skin!`);
-  } else if (errorCallback) errorCallback("You already have this reaction or it doesn't exist.");
-};
-
 const setReactEmoji = (userId, reactionId, callback, errorCb) => {
-  const user = data.getUser(userId);
   if (!reactionId) return;
-  if (utils.hasProperty(user.reactions, reactionId)) {
-    data.disableReactions(userId);
-    data.enableReaction(userId, reactionId);
-    const emoji = data.getEmojiForReactionId(reactionId);
+  if (data.hasReaction(userId, reactionId)) {
+    data.selectReaction(userId, reactionId);
+    const emoji = utils.getEmoji(reactionId);
     if (callback) callback(`${emoji} You equipped a reaction skin!`);
   } else if (errorCb) errorCb('You do not own this reaction skin.');
-};
-
-const teleport = (cb) => {
-  let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MIN);
-  if (Math.random() < 0.5) {
-    distance = -distance;
-  }
-  data.addToNumber(distance);
-  if (cb) cb(`🧙‍♂️ Teleport! Current number is now ${data.getCurrentNumber()}.`);
-};
-
-const reroll = (cb) => {
-  data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
-  if (cb) cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
-};
-
-const zeroOut = (cb) => {
-  data.setCurrentNumber(0);
-  if (cb) cb('💩 Zero! The current number is now 0.');
 };
 
 const helpMsgBuilder = () => {
@@ -94,68 +50,9 @@ const getUserReactions = (userId) => {
 
 const helpMsg = helpMsgBuilder();
 
-const shopListBuilder = () => {
-  let output = '```\n';
-  output += Object.keys(shop).reduce((acc, item) => `${acc}${item} costs ${shop[item]}c\n`, '');
-  output += `Purchase and use an item with ${prefix}buy <item>\n`;
-  output += '```';
-  return output;
-};
-
-const shopList = shopListBuilder();
-
-const shopBuy = (userId, item, callback, errorCallback) => {
-  if (!utils.hasProperty(shop, item)) {
-    return;
-  }
-  if (data.getCoins(userId) >= shop[item]) {
-    const price = shop[item];
-    data.removeCoins(userId, price);
-    switch (item) {
-      case 'reroll':
-        reroll(callback);
-        break;
-      case 'zero':
-        zeroOut(callback);
-        break;
-      case 'teleport':
-        teleport(callback);
-        break;
-      case 'fliparoo':
-        fliparoo(callback);
-        break;
-      case 'nice':
-        data.setCurrentNumber(69);
-        data.clearLastUserId();
-        callback('Nice 😎.');
-        break;
-      case 'skin-default':
-      case 'skin-monke':
-      case 'skin-pancake':
-      case 'skin-brain':
-      case 'skin-flex':
-      case 'skin-sparkle':
-      case 'skin-wiz':
-      case 'skin-trees':
-      case 'skin-clown':
-        buyReactSkin(userId, item, callback, errorCallback);
-        break;
-      default:
-        if (errorCallback) {
-          errorCallback(
-            `${item} is not in the shop. This shouldn't have happened.`,
-          );
-          data.addCoins(userId, price);
-        }
-    }
-  } else if (errorCallback) errorCallback("You don't have enough coins.");
-};
-
 const convert = (userId, callback, errorCb) => {
   if (data.getCrowns(userId) >= 1) {
-    console.log(data.getCrowns(userId));
     data.removeCrowns(userId, 1);
-    console.log(data.getCrowns(userId));
     data.addCoins(userId, constants.CONVERSION_RATE);
     if (callback) callback("👑💨 You've gained 100c!");
   } else if (errorCb) errorCb('Not enough crowns to convert to coins.');
@@ -280,11 +177,11 @@ client.on('message', (message) => {
         case 's':
         case 'store':
         case 'shop':
-          message.channel.send(shopList);
+          message.channel.send(shop.contents);
           return;
         case '$':
         case 'buy':
-          shopBuy(
+          shop.buy(
             userId,
             tokens.length > 1 ? tokens[1] : '',
             (msg) => {
@@ -336,11 +233,9 @@ client.on('message', (message) => {
     // #endregion
 
     const number = parseInt(tokens[0], 10);
-    console.log(`${data.getLastUserId()} - ${author.id}`);
 
     if (data.getChannelId() === message.channel.id && !Number.isNaN(number)) {
       if (data.getLastUserId() === userId) {
-        console.log(`${data.getLastUserId()} - ${author.id}`);
         message.react('⏳');
         data.incrementMiscount(userId);
         data.removeCoins(userId, constants.COIN_LOSS);
@@ -352,7 +247,6 @@ client.on('message', (message) => {
 
         // check if win
         data.setCurrentNumber(number);
-        console.log(`HELLO ${number}, ${data.getTargetNumber()}`);
         if (Math.abs(number) === data.getTargetNumber()) {
           console.log('Winner. Resetting number.');
           data.incrementWins(userId);
@@ -364,7 +258,6 @@ client.on('message', (message) => {
           );
           data.clearLastUserId();
         } else {
-          const lastUser = Math.abs(Math.abs(number) - data.getTargetNumber()) > 1 ? userId : null;
           if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
             data.setLastUserId(userId);
           } else {
