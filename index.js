@@ -8,7 +8,6 @@ const shop = require('./util/shop');
 const commands = require('./commands.json');
 
 const { token, prefix } = require('./config.json');
-const skins = require('./skins.json');
 // #endregion
 
 // #region constants
@@ -42,7 +41,7 @@ const helpMsgBuilder = () => {
 const getUserReactions = (userId) => {
   let output = 'Your reactions:\n```\n';
   const user = data.getUser(userId);
-  output += Object.keys(user.reactions).reduce((acc, react) => `${acc}${skins[react]}: ${react}\n`, '');
+  output += Object.keys(user.reactions).reduce((acc, react) => `${acc}${react}: ${utils.getEmoji(react)}\n`, '');
   output += `Select a skin with ${prefix}equip <item>\n`;
   output += '```';
   return output;
