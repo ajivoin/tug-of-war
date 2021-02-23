@@ -146,14 +146,24 @@ const buyFunction = (message) => {
 const buy = new Command('buy', commands.buy, buyFunction);
 
 const cmds = {
+  h: help,
+  '?': help,
   help,
+  i: info,
   info,
+  inv: inventory,
   inventory,
+  u: user,
+  stats: user,
   user,
   shop: shopCmd,
+  b: balance,
+  bal: balance,
   balance,
   convert,
+  e: equip,
   equip,
+  $: buy,
   buy,
 };
 
