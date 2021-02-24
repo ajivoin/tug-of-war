@@ -59,7 +59,7 @@ const createUser = () => ({
  */
 const getEmoji = (reactionId, callback, errorCallback) => {
   const emoji = skins[reactionId];
-  if (!emoji) errorCallback(`Emoji not found for ${reactionId}.`);
+  if (!emoji && errorCallback) errorCallback(`Emoji not found for ${reactionId}.`);
   return emoji;
 };
 

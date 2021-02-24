@@ -54,6 +54,11 @@ const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
   } else if (errorCallback) errorCallback("You already have this reaction or it doesn't exist.");
 };
 
+const sneak = (callback) => {
+  data.clearLastUserId();
+  callback('🤫');
+};
+
 const buy = (userId, item, callback, errorCallback) => {
   if (!utils.hasProperty(shop, item)) {
     return;
@@ -82,6 +87,9 @@ const buy = (userId, item, callback, errorCallback) => {
         data.setCurrentNumber(69);
         data.clearLastUserId();
         callback('Nice 😎.');
+        break;
+      case 'sneak':
+        sneak(callback);
         break;
       case 'skin-default':
       case 'skin-monke':
