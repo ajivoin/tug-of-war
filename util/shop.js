@@ -108,6 +108,9 @@ const buy = (userId, item, callback, errorCallback) => {
       case 'skin-wiz':
       case 'skin-trees':
       case 'skin-clown':
+      case 'skin-megaflex':
+      case 'skin-ultraflex':
+      case 'skin-hyperflex':
         buyReactSkin(userId, item, callback, errorCallback);
         break;
       default:

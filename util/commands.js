@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 
+const _ = require('underscore');
 const commands = require('./commands.json');
 const utils = require('./utils');
 const shop = require('./shop');
@@ -33,13 +34,13 @@ const helpFunction = (message) => {
   message.channel.send(utils.helpMsg);
 };
 
-const help = new Command('help', commands.help, helpFunction);
+const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
 
 const infoFunction = (message) => {
   message.channel.send(`Current number is ${data.getCurrentNumber()}. Target: ±${data.getTargetNumber()}.`);
 };
 
-const info = new Command('info', commands.info, infoFunction);
+const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
 
 const inventoryFunction = (message) => {
   message.channel.send(`${message.author}: ${data.getUserReactionsMessage(message.author.id)}`);
@@ -60,7 +61,7 @@ const shopFunction = (message) => {
   message.channel.send(`${message.author}: ${shop.contents}`);
 };
 
-const shopCmd = new Command('shop', commands.shop, shopFunction);
+const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
 
 const balanceFunction = (message) => {
   message.channel.send(`${message.author}: ${data.getCrowns(message.author.id)} Crowns; ${data.getCoins(message.author.id)}c`);
@@ -133,11 +134,12 @@ const equipFunction = (message) => {
     (errorMsg) => { message.channel.send(`${message.author}: ${errorMsg}`); });
 };
 
-const equip = new Command('equip', commands.equip, equipFunction);
+const equip = new Command('equip', commands.equip, _.debounce(equipFunction, true));
 
 const buyFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
+  if (tokens[1] === undefined) return;
   shop.buy(userId, tokens[1],
     (msg) => { message.channel.send(`${message.author}: ${msg}`); },
     (errorMsg) => { message.channel.send(`${message.author}: ${errorMsg}`); });
