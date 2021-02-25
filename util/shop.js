@@ -59,6 +59,11 @@ const sneak = (callback) => {
   callback('🤫');
 };
 
+const deposit = (userId, callback) => {
+  data.addCrowns(userId, 1);
+  if (callback) callback('💳 You have purchased a Crown Gift Card! (+1 👑)');
+};
+
 const buy = (userId, item, callback, errorCallback) => {
   if (!utils.hasProperty(shop, item)) {
     return;
@@ -90,6 +95,9 @@ const buy = (userId, item, callback, errorCallback) => {
         break;
       case 'sneak':
         sneak(callback);
+        break;
+      case 'crown-card':
+        deposit(userId, callback);
         break;
       case 'skin-default':
       case 'skin-monke':
