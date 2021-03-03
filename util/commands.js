@@ -1,5 +1,3 @@
-const Discord = require('discord.js');
-
 const _ = require('underscore');
 const commands = require('./commands.json');
 const utils = require('./utils');
@@ -7,25 +5,8 @@ const shop = require('./shop');
 const data = require('./data');
 const constants = require('./constants');
 const { prefix } = require('../config.json');
-
-class Command {
-  /**
-   * @param {string} name
-   * @param {string} description
-   * @param {function} execute
-   * @param {Array.<String>?} aliases
-   */
-  constructor(name, description, execute, aliases) {
-    this.name = name;
-    this.description = description;
-    this.executeFunction = execute;
-    if (aliases) this.aliases = aliases;
-  }
-
-  execute(message) {
-    this.executeFunction(message);
-  }
-}
+const Command = require('./Command');
+const AdminCommand = require('./AdminCommand');
 
 /**
  * @param {Discord.Message} message
@@ -147,6 +128,13 @@ const buyFunction = (message) => {
 
 const buy = new Command('buy', commands.buy, buyFunction);
 
+const debugFunction = (message) => {
+  const userId = message.mentions.members.first().id;
+  if (userId) message.channel.send(JSON.stringify(data.getUser(userId)));
+};
+
+const debug = new AdminCommand('debug', '', debugFunction);
+
 const cmds = {
   h: help,
   '?': help,
@@ -167,6 +155,7 @@ const cmds = {
   equip,
   $: buy,
   buy,
+  debug,
 };
 
 const get = (cmd) => {

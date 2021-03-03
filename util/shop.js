@@ -1,4 +1,4 @@
-const shop = require('./shop.json');
+let shop = require('./shop.json');
 const { prefix } = require('../config.json');
 const data = require('./data');
 const utils = require('./utils');
@@ -16,7 +16,7 @@ const contents = shopListBuilder();
 Object.freeze(contents);
 
 const teleport = (cb) => {
-  let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MIN);
+  let distance = utils.getRandomInt(constants.TP_MAX, constants.TP_MIN);
   if (Math.random() < 0.5) {
     distance = -distance;
   }
@@ -124,7 +124,13 @@ const buy = (userId, item, callback, errorCallback) => {
   } else if (errorCallback) errorCallback("You don't have enough coins.");
 };
 
+const reload = () => {
+  // eslint-disable-next-line global-require
+  shop = require('./shop.json');
+};
+
 module.exports = {
   buy,
   contents,
+  reload,
 };
