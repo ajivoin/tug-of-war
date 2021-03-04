@@ -100,14 +100,10 @@ const buy = (userId, item, callback, errorCallback) => {
         deposit(userId, callback);
         break;
       case 'skin-default':
-      case 'skin-monke':
-      case 'skin-pancake':
-      case 'skin-brain':
       case 'skin-flex':
-      case 'skin-sparkle':
-      case 'skin-wiz':
-      case 'skin-trees':
-      case 'skin-clown':
+      case 'skin-koala':
+      case 'skin-kiss':
+      case 'skin-ufo':
       case 'skin-megaflex':
       case 'skin-ultraflex':
       case 'skin-hyperflex':
