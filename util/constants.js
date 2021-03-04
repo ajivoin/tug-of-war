@@ -4,7 +4,7 @@ module.exports = {
   REACT_TIMEOUT: '⏳',
   WIN: 128,
   CONVERSION_RATE: 100,
-  COIN_RATE: 0.01,
+  COIN_RATE: 0.05,
   COIN_LOSS: 5,
   COIN_GAIN: 10,
   TP_MIN: 10,
