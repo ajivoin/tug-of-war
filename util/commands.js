@@ -140,18 +140,18 @@ const debug = new AdminCommand('debug', '', debugFunction);
  * @param {Discord.Message} message
  */
 const giveCrownsFunction = (message) => {
-  const userId = message.mentions.member.first().id;
+  const userId = message.mentions.members.first().id;
   if (userId) {
     const args = utils.tokenize(message.content);
     const amount = Number.parseInt(args[2], 10);
     if (amount) {
       if (amount > 0) data.addCrowns(userId, amount);
-      else if (amount < 0) data.removeCrowns(userId, amount);
+      else if (amount < 0) data.removeCrowns(userId, -amount);
     }
   }
 };
 
-const giveCrowns = new AdminCommand('giveCrowns', '', giveCrownsFunction);
+const givecrowns = new AdminCommand('givecrowns', '', giveCrownsFunction);
 
 const cmds = {
   h: help,
@@ -174,7 +174,7 @@ const cmds = {
   $: buy,
   buy,
   debug,
-  giveCrowns,
+  givecrowns,
 };
 
 const get = (cmd) => {
