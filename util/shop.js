@@ -65,6 +65,14 @@ const deposit = (userId, callback) => {
   if (callback) callback('💳 You have purchased a Crown Gift Card! (+1 👑)');
 };
 
+const sqrt = (callback) => {
+  let num = data.getCurrentNumber();
+  const sign = Math.sign(num);
+  num = sign * Math.floor(Math.sqrt(Math.abs(num)));
+  data.setCurrentNumber(num);
+  if (callback) callback(`👩‍🏫 Square Root! The current number is now ${num}.`);
+};
+
 const buy = (userId, item, callback, errorCallback) => {
   if (!utils.hasProperty(shop, item)) {
     return;
@@ -99,6 +107,9 @@ const buy = (userId, item, callback, errorCallback) => {
         break;
       case 'crown-card':
         deposit(userId, callback);
+        break;
+      case 'sqrt':
+        sqrt(callback);
         break;
       case 'skin-default':
       case 'skin-flex':
