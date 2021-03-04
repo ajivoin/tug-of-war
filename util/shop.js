@@ -1,4 +1,5 @@
 let shop = require('./shop.json');
+const skins = require('./skins.json');
 const { prefix } = require('../config.json');
 const data = require('./data');
 const utils = require('./utils');
@@ -6,7 +7,7 @@ const constants = require('./constants');
 
 const shopListBuilder = () => {
   let output = '```\n';
-  output += Object.keys(shop).reduce((acc, item) => `${acc}${item} costs ${shop[item]}c\n`, '');
+  output += Object.keys(shop).reduce((acc, item) => `${acc}${item}${item.startsWith('skin-') ? ` (${skins[item]})` : ''} costs ${shop[item]}c\n`, '');
   output += `Purchase and use an item with ${prefix}buy <item>\n`;
   output += '```';
   return output;
