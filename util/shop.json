@@ -1,10 +1,10 @@
 {
   "crown-card": 110,
-  "reroll": 50,
-  "teleport": 50,
+  "sneak": 20,
+  "reroll": 25,
+  "teleport": 25,
   "zero": 50,
   "nice": 50,
-  "sneak": 25,
   "skin-default": 0,
   "skin-kiss": 696,
   "skin-koala": 750,
