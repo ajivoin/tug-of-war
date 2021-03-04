@@ -73,7 +73,7 @@ const helpMsgBuilder = () => {
 const helpMsg = helpMsgBuilder();
 Object.freeze(helpMsg);
 
-const tokenize = (str) => str.toLowerCase().trim().split(' ');
+const tokenize = (str) => str.toLowerCase().trim().split(/ +/);
 
 module.exports = {
   getRandomInt, hasProperty, getDataSchema, createUser, getEmoji, helpMsg, tokenize,
