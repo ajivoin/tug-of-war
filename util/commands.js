@@ -12,7 +12,7 @@ const AdminCommand = require('./AdminCommand');
  * @param {Discord.Message} message
  */
 const helpFunction = (message) => {
-  message.channel.send(utils.helpMsg);
+  message.channel.send(utils.helpEmbed);
 };
 
 const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
