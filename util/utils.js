@@ -81,18 +81,8 @@ const generateHelpEmbed = () => {
 
 const helpEmbed = generateHelpEmbed();
 
-const helpMsgBuilder = () => {
-  let output = 'Command info:\n```\n';
-  output += Object.keys(commands).reduce((acc, cmd) => `${acc}${prefix}${cmd}: ${commands[cmd]}\n`, '');
-  output += '```';
-  return output;
-};
-
-const helpMsg = helpMsgBuilder();
-Object.freeze(helpMsg);
-
 const tokenize = (str) => str.toLowerCase().trim().split(/ +/);
 
 module.exports = {
-  getRandomInt, hasProperty, getDataSchema, createUser, getEmoji, helpMsg, tokenize, helpEmbed,
+  getRandomInt, hasProperty, getDataSchema, createUser, getEmoji, tokenize, helpEmbed,
 };
