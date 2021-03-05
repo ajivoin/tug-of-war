@@ -109,6 +109,7 @@ const buy = (userId, item, callback, errorCallback) => {
         deposit(userId, callback);
         break;
       case 'sqrt':
+        data.clearLastUserId();
         sqrt(callback);
         break;
       case 'skin-default':
