@@ -66,7 +66,7 @@ const getEmoji = (reactionId, callback, errorCallback) => {
 };
 
 const generateHelpEmbed = () => {
-  const fields = Object.keys(commands).reduce((acc, cmd) => ({
+  const fields = Object.keys(commands).map((acc, cmd) => ({
     name: cmd,
     value: commands[cmd],
     inline: true,
