@@ -39,7 +39,7 @@ const userFunction = (message) => {
 const user = new Command('user', commands.user, userFunction);
 
 const shopFunction = (message) => {
-  message.channel.send(`${message.author}: ${shop.contents}`);
+  message.channel.send(shop.contents);
 };
 
 const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
