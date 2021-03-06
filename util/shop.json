@@ -1,16 +1,58 @@
 {
-  "crown-card": 110,
-  "sneak": 20,
-  "reroll": 25,
-  "teleport": 25,
-  "sqrt": 50,
-  "nice": 50,
-  "skin-default": 0,
-  "skin-kiss": 696,
-  "skin-koala": 750,
-  "skin-ufo": 1337,
-  "skin-flex": 1000,
-  "skin-megaflex": 2500,
-  "skin-ultraflex": 5000,
-  "skin-hyperflex": 10000
+  "crown-card": {
+    "price": 110,
+    "description": "Convert coins back into a crown at a premium."
+  },
+  "sneak": {
+    "price": 20,
+    "description": "Say a number again without getting timed out."
+  },
+  "reroll": {
+    "price": 25,
+    "description": "Reroll the target number."
+  },
+  "teleport": {
+    "price": 25,
+    "description": "Moves the current number far away."
+  },
+  "sqrt": {
+    "price": 50,
+    "description": "Square roots the current number."
+  },
+  "nice": {
+    "price": 50,
+    "description": "Nice."
+  },
+  "skin-default": {
+    "price": 0,
+    "description": "✅ Simple."
+  },
+  "skin-kiss": {
+    "price": 696,
+    "description": "💋 Smooch!"
+  },
+  "skin-koala": {
+    "price": 750,
+    "description": "🐨 Very cute, not very intelligent."
+  },
+  "skin-ufo": {
+    "price": 1337,
+    "description": "🛸 Somewhere out there..."
+  },
+  "skin-flex": {
+    "price": 1000,
+    "description": "Do you even lift?"
+  },
+  "skin-megaflex": {
+    "price": 2500,
+    "description": "We get it. You lift."
+  },
+  "skin-ultraflex": {
+    "price": 5000,
+    "description": "Gives ability to throw competition into space."
+  },
+  "skin-hyperflex": {
+    "price": 10000,
+    "description": "It's all in the name."
+  }
 }

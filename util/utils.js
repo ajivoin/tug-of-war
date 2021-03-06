@@ -1,9 +1,6 @@
-const { MessageEmbed } = require('discord.js');
-
 const constants = require('./constants');
 const skins = require('./skins.json');
-const commands = require('./commands.json');
-const { prefix } = require('../config.json');
+const { helpEmbed } = require('./embeds');
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
@@ -64,22 +61,6 @@ const getEmoji = (reactionId, callback, errorCallback) => {
   if (!emoji && errorCallback) errorCallback(`Emoji not found for ${reactionId}.`);
   return emoji;
 };
-
-const generateHelpEmbed = () => {
-  const fields = Object.keys(commands).map((cmd) => ({
-    name: cmd,
-    value: commands[cmd],
-    inline: true,
-  }));
-
-  return new MessageEmbed()
-    .setColor('#0099ff')
-    .setTitle('Help')
-    .setDescription(`Information on available commands. Prefix: ${prefix}`)
-    .addFields(...fields);
-};
-
-const helpEmbed = generateHelpEmbed();
 
 const tokenize = (str) => str.toLowerCase().trim().split(/ +/);
 
