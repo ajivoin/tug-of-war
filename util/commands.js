@@ -12,7 +12,7 @@ const AdminCommand = require('./AdminCommand');
  * @param {Discord.Message} message
  */
 const helpFunction = (message) => {
-  message.channel.send(utils.helpMsg);
+  message.channel.send(utils.helpEmbed);
 };
 
 const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
@@ -39,7 +39,7 @@ const userFunction = (message) => {
 const user = new Command('user', commands.user, userFunction);
 
 const shopFunction = (message) => {
-  message.channel.send(`${message.author}: ${shop.contents}`);
+  message.channel.send(shop.contents);
 };
 
 const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
