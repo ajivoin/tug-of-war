@@ -7,7 +7,7 @@ const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
   .setTitle(title)
   .setDescription(description)
-  .fields(...fields);
+  .addFields(...fields);
 
 const generateHelpEmbed = () => {
   const fields = Object.keys(commands).map((cmd) => ({
