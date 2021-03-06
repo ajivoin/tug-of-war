@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const commands = require('./commands.json');
 const shop = require('./shop.json');
+const data = require('./data');
+const skins = require('./skins.json');
 const { prefix } = require('../config.json');
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
@@ -11,11 +13,11 @@ const getCoreEmbed = (title, description, fields) => new MessageEmbed()
 
 const generateHelpEmbed = () => {
   const fields = Object.keys(commands).map((cmd) => ({
-    name: cmd,
+    name: `${prefix}${cmd}`,
     value: commands[cmd],
     inline: true,
   }));
-  return getCoreEmbed('Help', `Information on available commands. Prefix: ${prefix}`, fields);
+  return getCoreEmbed('Help', 'Information on available commands.', fields);
 };
 
 const generateShopEmbed = () => {
@@ -28,10 +30,23 @@ const generateShopEmbed = () => {
   return getCoreEmbed('Shop', `Purchase items with ${prefix}buy <item name>.`, fields);
 };
 
+const inventoryEmbedForUser = (userId) => {
+  const user = data.getUser(userId);
+  const { reactions } = user;
+  const fields = Object.keys(reactions).map((skin) => ({
+    name: `${skin}${reactions[skin] ? ' (enabled)' : ''}`,
+    description: skins[skin] || '',
+    inline: true,
+  }));
+
+  return getCoreEmbed('Inventory', `Equip items with ${prefix}equip <item name>.`, fields);
+};
+
 const helpEmbed = generateHelpEmbed();
 const shopEmbed = generateShopEmbed();
 
 module.exports = {
   helpEmbed,
   shopEmbed,
+  inventoryEmbedForUser,
 };

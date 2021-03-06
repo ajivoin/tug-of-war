@@ -5,6 +5,7 @@ const shop = require('./shop');
 const data = require('./data');
 const constants = require('./constants');
 const { prefix } = require('../config.json');
+const embeds = require('./embeds');
 const Command = require('./Command');
 const AdminCommand = require('./AdminCommand');
 
@@ -24,7 +25,7 @@ const infoFunction = (message) => {
 const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
 
 const inventoryFunction = (message) => {
-  message.channel.send(`${message.author}: ${data.getUserReactionsMessage(message.author.id)}`);
+  message.channel.send(embeds.inventoryEmbedForUser(message.author.id));
 };
 
 const inventory = new Command('inventory', commands.inventory, inventoryFunction);
