@@ -33,7 +33,7 @@ const inventoryEmbedForUser = (user) => {
   const { reactions } = user;
   const fields = Object.keys(reactions).map((skin) => ({
     name: `${skin}${reactions[skin] ? ' (enabled)' : ''}`,
-    description: skins[skin] || '',
+    value: skins[skin] || '',
     inline: true,
   }));
 
