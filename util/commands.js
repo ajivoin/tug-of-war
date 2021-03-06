@@ -25,7 +25,7 @@ const infoFunction = (message) => {
 const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
 
 const inventoryFunction = (message) => {
-  message.channel.send(embeds.inventoryEmbedForUser(message.author.id));
+  message.channel.send(embeds.inventoryEmbedForUser(data.getUser(message.author.id)));
 };
 
 const inventory = new Command('inventory', commands.inventory, inventoryFunction);

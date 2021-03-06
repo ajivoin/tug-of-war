@@ -1,7 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const commands = require('./commands.json');
 const shop = require('./shop.json');
-const data = require('./data');
 const skins = require('./skins.json');
 const { prefix } = require('../config.json');
 
@@ -30,8 +29,7 @@ const generateShopEmbed = () => {
   return getCoreEmbed('Shop', `Purchase items with ${prefix}buy <item name>.`, fields);
 };
 
-const inventoryEmbedForUser = (userId) => {
-  const user = data.getUser(userId);
+const inventoryEmbedForUser = (user) => {
   const { reactions } = user;
   const fields = Object.keys(reactions).map((skin) => ({
     name: `${skin}${reactions[skin] ? ' (enabled)' : ''}`,
