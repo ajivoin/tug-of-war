@@ -56,7 +56,7 @@ client.on('message', (message) => {
     const tokens = utils.tokenize(message.content);
 
     // #region command
-    // check for bind
+    // explicity check for bind first
     if (message.content.startsWith(prefix)) {
       const command = tokens[0].substr(prefix.length);
       if (command === 'bind') {

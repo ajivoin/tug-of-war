@@ -66,7 +66,7 @@ const buy = (userId, item, callback, errorCallback) => {
     return;
   }
   if (data.getCoins(userId) >= shop[item]) {
-    const price = shop[item];
+    const { price } = shop[item];
     data.removeCoins(userId, price);
     switch (item) {
       case 'reroll':
