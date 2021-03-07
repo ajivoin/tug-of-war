@@ -65,7 +65,7 @@ const buy = (userId, item, callback, errorCallback) => {
   if (!utils.hasProperty(shop, item)) {
     return;
   }
-  if (data.getCoins(userId) >= shop[item]) {
+  if (data.getCoins(userId) >= shop[item].price) {
     const { price } = shop[item];
     data.removeCoins(userId, price);
     switch (item) {
