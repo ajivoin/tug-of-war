@@ -16,9 +16,11 @@ const client = new Discord.Client();
 client.commands = commands;
 
 client.once('ready', () => {
-  if (data.getTargetNumber() === undefined
+  if (
+    data.getTargetNumber() === undefined
     || data.getTargetNumber() === null
-    || Number.isNaN(data.getTargetNumber())) {
+    || Number.isNaN(data.getTargetNumber())
+  ) {
     data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
   }
   console.log('Logged in.');
@@ -114,6 +116,8 @@ client.on('message', (message) => {
             message.react('💰');
           } else if (Math.abs(data.getCurrentNumber()) === 69) {
             message.react('😎');
+          } else if (Math.abs(data.getCurrentNumber()) === 100) {
+            message.react('💯');
           } else {
             message.react(data.getReaction(userId)).catch((err) => {
               message.react(constants.REACT_CORRECT);
