@@ -6,7 +6,8 @@ module.exports = {
   CONVERSION_RATE: 100,
   COIN_RATE: 0.05,
   COIN_LOSS: 5,
-  COIN_GAIN: 10,
+  COIN_GAIN: 3,
   TP_MIN: 5,
   TP_MAX: 50,
+  CROWN_MULTIPLIER: 3,
 };

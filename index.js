@@ -97,8 +97,8 @@ client.on('message', (message) => {
         if (Math.abs(number) === data.getTargetNumber()) {
           console.log('Winner. Resetting number.');
           data.incrementWins(userId);
-          data.addCrowns(userId, 1);
-          data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
+          data.addCrowns(userId, constants.CROWN_MULTIPLIER);
+          data.setTargetNumber(utils.getRandomInt(constants.WIN, 0));
           message.react('👑');
           message.channel.send(
             `🤴 Congrats ${author}! New target: ±${data.getTargetNumber()}.`,
@@ -111,7 +111,7 @@ client.on('message', (message) => {
             data.clearLastUserId();
           }
           if (Math.random() <= constants.COIN_RATE) {
-            const gain = 5 * utils.getRandomInt(10, 2);
+            const gain = constants.COIN_GAIN * 5 * utils.getRandomInt(10, 2);
             data.addCoins(userId, gain);
             message.react('💰');
           } else if (Math.abs(data.getCurrentNumber()) === 69) {
