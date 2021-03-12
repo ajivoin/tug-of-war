@@ -1,5 +1,5 @@
 import constants from './constants.js';
-import skins from './shop/items/skins.js';
+import { skins } from './shop/items/skins.js';
 import { helpEmbed } from './embeds.js';
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
