@@ -1,6 +1,6 @@
 import { MessageEmbed } from 'discord.js';
 import commands from './command_list.js';
-import skins from './shop/items/skins.js';
+import shopSkins, { skins } from './shop/items/skins.js';
 import powerups from './shop/items/powerups.js'
 import config from '../config.js';
 
@@ -30,9 +30,9 @@ const generateShopEmbed = () => {
 
   const embed = getCoreEmbed('Shop', `Purchase items with \`${prefix}buy <item name>\`.`, fields);
   embed.addField('\u200b', '\u200b'); // blank link
-  embed.addFields(Object.keys(skins).map((item) => ({
-    name:`${item} (${skins[item].price}c)`,
-    value: skins[item].description,
+  embed.addFields(...Object.keys(shopSkins).map((item) => ({
+    name:`${item} (${shopSkins[item].price}c)`,
+    value: shopSkins[item].description,
     inline: true,
   })))
   return embed;
@@ -42,7 +42,7 @@ const inventoryEmbedForUser = (user) => {
   const { reactions } = user;
   const fields = Object.keys(reactions).map((skin) => ({
     name: `${skin}${reactions[skin] ? ' (enabled)' : ''}`,
-    value: skins[skin] || '',
+    value: skins[skin].emoji || '',
     inline: true,
   }));
 
