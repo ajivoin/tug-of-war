@@ -1,11 +1,10 @@
 // #region imports
-const Discord = require('discord.js');
-const utils = require('./util/utils');
-const constants = require('./util/constants');
-const data = require('./util/data');
-const commands = require('./util/commands');
-
-const { token, prefix } = require('./config.json');
+import Discord from 'discord.js';
+import utils from './util/utils.js';
+import constants from './util/constants.js';
+import data from './util/data.js';
+import commands from './util/commands.js';
+import { token, prefix } from './config.js';
 // #endregion
 
 // #region constants

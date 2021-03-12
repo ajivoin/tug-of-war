@@ -1,13 +1,13 @@
-const _ = require('underscore');
-const commands = require('./commands.json');
-const utils = require('./utils');
-const shop = require('./shop');
-const data = require('./data');
-const constants = require('./constants');
-const { prefix } = require('../config.json');
-const embeds = require('./embeds');
-const Command = require('./Command');
-const AdminCommand = require('./AdminCommand');
+import _ from 'underscore';
+import utils from './utils.js';
+import shop from './shop/shop.js';
+import constants from './constants.js';
+import embeds from './embeds.js';
+import Command from './Command.js';
+import AdminCommand from './AdminCommand.js';
+import commands from './command_list.js';
+import data from './data.js';
+import { prefix } from '../config.js'
 
 /**
  * @param {Discord.Message} message
@@ -40,7 +40,7 @@ const userFunction = (message) => {
 const user = new Command('user', commands.user, userFunction);
 
 const shopFunction = (message) => {
-  message.channel.send(shop.contents);
+  message.channel.send(embeds.shopEmbed);
 };
 
 const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
@@ -185,6 +185,6 @@ const get = (cmd) => {
   return null;
 };
 
-module.exports = {
+export default {
   get,
 };

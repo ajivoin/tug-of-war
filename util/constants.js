@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   REACT_CORRECT: '✅',
   REACT_INCORRECT: '❌',
   REACT_TIMEOUT: '⏳',

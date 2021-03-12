@@ -1,6 +1,6 @@
-const constants = require('./constants');
-const skins = require('./skins.json');
-const { helpEmbed } = require('./embeds');
+import constants from './constants.js';
+import skins from './shop/items/skins.js';
+import { helpEmbed } from './embeds.js';
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
@@ -41,7 +41,7 @@ const createUser = () => ({
   crowns: 0,
   coins: 0,
   miscount: 0,
-  reactions: {},
+  reactions: { 'skin-default': true },
   powerups: {
     reroll: 0,
     teleport: 0,
@@ -57,13 +57,14 @@ const createUser = () => ({
  * @returns {string} Emoji
  */
 const getEmoji = (reactionId, callback, errorCallback) => {
-  const emoji = skins[reactionId];
-  if (!emoji && errorCallback) errorCallback(`Emoji not found for ${reactionId}.`);
+  const emoji = skins[reactionId]?.emoji;
+  if (emoji && callback) callback(`Emoji found for ${reactionId}`);
+  else if (!emoji && errorCallback) errorCallback(`Emoji not found for ${reactionId}.`);
   return emoji;
 };
 
 const tokenize = (str) => str.toLowerCase().trim().split(/ +/);
 
-module.exports = {
+export default {
   getRandomInt, hasProperty, getDataSchema, createUser, getEmoji, tokenize, helpEmbed,
 };
