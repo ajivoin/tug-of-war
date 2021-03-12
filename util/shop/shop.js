@@ -107,6 +107,12 @@ const buy = (userId, item, callback, errorCallback) => {
     }
   } else if (utils.hasProperty(skins, item)) {
     // handle skins
+    const { price } = skins[item];
+    if (data.getCoins(userId) < price) {
+      if (errorCallback) errorCallback("You don't have enough coins.");
+      return;
+    }
+    data.removeCoins(userId, price);
     buyReactSkin(userId, item, callback, errorCallback);
   }
 };
