@@ -1,6 +1,6 @@
-const fs = require('fs');
-const utils = require('./utils');
-const { prefix } = require('../config.json');
+import fs from 'fs';
+import utils from './utils.js';
+import { prefix } from '../config.js';
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -350,7 +350,7 @@ const createUser = (userId, callback, errorCallback) => {
   }
 };
 
-module.exports = {
+export default {
   // getters
   getUser,
   getTargetNumber,

@@ -1,8 +1,10 @@
-const { MessageEmbed } = require('discord.js');
-const commands = require('./commands.json');
-const shop = require('./shop.json');
-const skins = require('./skins.json');
-const { prefix } = require('../config.json');
+import { MessageEmbed } from 'discord.js';
+import commands from './command_list.js';
+import skins from './shop/items/skins.js';
+import powerups from './shop/items/powerups.js'
+import config from '../config.js';
+
+const prefix = config.prefix;
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
@@ -20,13 +22,20 @@ const generateHelpEmbed = () => {
 };
 
 const generateShopEmbed = () => {
-  const fields = Object.keys(shop).map((item) => ({
-    name: `${item} (${shop[item].price}c)`,
-    value: shop[item].description,
+  const fields = Object.keys(powerups).map((item) => ({
+    name: `${item} (${powerups[item].price}c)`,
+    value: powerups[item].description,
     inline: true,
   }));
 
-  return getCoreEmbed('Shop', `Purchase items with ${prefix}buy <item name>.`, fields);
+  const embed = getCoreEmbed('Shop', `Purchase items with \`${prefix}buy <item name>\`.`, fields);
+  embed.addField('\u200b', '\u200b'); // blank link
+  embed.addFields(Object.keys(skins).map((item) => ({
+    name:`${item} (${skins[item].price}c)`,
+    value: skins[item].description,
+    inline: true,
+  })))
+  return embed;
 };
 
 const inventoryEmbedForUser = (user) => {
@@ -40,10 +49,10 @@ const inventoryEmbedForUser = (user) => {
   return getCoreEmbed('Inventory', `Equip items with ${prefix}equip <item name>.`, fields);
 };
 
-const helpEmbed = generateHelpEmbed();
-const shopEmbed = generateShopEmbed();
+export const helpEmbed = generateHelpEmbed();
+export const shopEmbed = generateShopEmbed();
 
-module.exports = {
+export default {
   helpEmbed,
   shopEmbed,
   inventoryEmbedForUser,

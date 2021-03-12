@@ -1,8 +1,9 @@
-let shop = require('./shop.json');
-const data = require('./data');
-const utils = require('./utils');
-const constants = require('./constants');
-const { shopEmbed } = require('./embeds');
+import powerups from './items/powerups.js'
+import skins from './items/skins.js';
+import utils from '../utils.js';
+
+import data from '../data.js';
+import constants from '../constants.js';
 
 const teleport = (cb) => {
   let distance = utils.getRandomInt(constants.TP_MAX, constants.TP_MIN);
@@ -35,7 +36,7 @@ const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
   // check if user owns react
   if (
     !data.hasReaction(userId, reactionId)
-    && utils.hasProperty(shop, reactionId)
+    && utils.hasProperty(skins, reactionId)
   ) {
     data.selectReaction(userId, reactionId);
     const emoji = utils.getEmoji(reactionId);
@@ -62,11 +63,12 @@ const sqrt = (callback) => {
 };
 
 const buy = (userId, item, callback, errorCallback) => {
-  if (!utils.hasProperty(shop, item)) {
-    return;
-  }
-  if (data.getCoins(userId) >= shop[item].price) {
-    const { price } = shop[item];
+  if (utils.hasProperty(powerups, item)) {
+    const { price } = powerups[item];
+    if (data.getCoins(userId) < price) {
+      if (errorCallback) errorCallback("You don't have enough coins.");
+      return;
+    }
     data.removeCoins(userId, price);
     switch (item) {
       case 'reroll':
@@ -100,37 +102,13 @@ const buy = (userId, item, callback, errorCallback) => {
         data.clearLastUserId();
         sqrt(callback);
         break;
-      case 'skin-default':
-      case 'skin-flex':
-      case 'skin-koala':
-      case 'skin-kiss':
-      case 'skin-ufo':
-      case 'skin-megaflex':
-      case 'skin-ultraflex':
-      case 'skin-hyperflex':
-      case 'skin-devil':
-      case 'skin-mad':
-      case 'skin-rage':
-        buyReactSkin(userId, item, callback, errorCallback);
-        break;
       default:
-        if (errorCallback) {
-          errorCallback(
-            `${item} is not in the shop. This shouldn't have happened.`,
-          );
-          data.addCoins(userId, price);
-        }
+        console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);
     }
-  } else if (errorCallback) errorCallback("You don't have enough coins.");
+  } else if (utils.hasProperty(skins, item)) {
+    // handle skins
+    buyReactSkin(userId, item, callback, errorCallback);
+  }
 };
 
-const reload = () => {
-  // eslint-disable-next-line global-require
-  shop = require('./shop.json');
-};
-
-module.exports = {
-  buy,
-  contents: shopEmbed,
-  reload,
-};
+export default { buy };

@@ -1,5 +1,5 @@
-const { adminId } = require('../config.json');
-const Command = require('./Command');
+import { adminId } from '../config.js';
+import Command from './Command.js';
 
 class AdminCommand extends Command {
   execute(message) {
@@ -9,4 +9,4 @@ class AdminCommand extends Command {
   }
 }
 
-module.exports = AdminCommand;
+export default AdminCommand;

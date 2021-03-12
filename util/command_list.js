@@ -1,4 +1,4 @@
-{
+export default {
   "help": "shows all commands",
   "info": "shows the current number and target number",
   "inventory": "shows your inventory",
