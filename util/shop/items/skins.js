@@ -1,4 +1,28 @@
 export const skins = {
+  pi: {
+    price: 100,
+    description: '🟢 **LIMITED** 3.14159...',
+    enabled: false,
+    emoji: '🟢'
+  },
+  pie: {
+    price: 1000,
+    description: "🥧 **LIMITED** Wait, it isn't pie day?",
+    enabled: false,
+    emoji: '🥧',
+  },
+  patty: {
+    price: 100,
+    description: "🍀 **LIMITED** Happy St. Patrick's Day!",
+    enabled: false,
+    emoji: '🍀',
+  },
+  clink: {
+    price: 1000,
+    description: "🍻 **LIMITED** Happy Green Beer Day!",
+    enabled: false,
+    emoji: '🍻',
+  },
   'skin-default': {
     price: 0,
     description: '✅ Simple.',
