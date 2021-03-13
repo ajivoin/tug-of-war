@@ -11,7 +11,7 @@ const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, pro
  * @param {Number} min
  */
 const getRandomInt = (min, max) => {
-  return Math.random() * (max - min) + min;
+  return Math.floor(Math.random() * (max - min) + min);
 };
 
 /**
