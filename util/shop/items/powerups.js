@@ -1,4 +1,4 @@
-const powerups = {
+export const powerups = {
   crowncard: {
     price: 110,
     description: 'Convert coins back into a crown at a premium.',
@@ -36,4 +36,12 @@ const powerups = {
   },
 };
 
-export default powerups;
+const enabledPowerups = {};
+
+Object.keys(powerups).forEach((key) => {
+  if (powerups[key].enabled) {
+    enabledPowerups[key] = powerups[key];
+  }
+});
+
+export default enabledPowerups;
