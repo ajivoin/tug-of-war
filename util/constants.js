@@ -10,4 +10,5 @@ export default {
   TP_MIN: 5,
   TP_MAX: 50,
   CROWN_MULTIPLIER: 3,
+  BOSS_SPAWN_RATE: 0.025,
 };

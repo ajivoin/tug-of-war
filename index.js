@@ -5,6 +5,7 @@ import constants from './util/constants.js';
 import data from './util/data.js';
 import commands from './util/commands.js';
 import { token, prefix } from './config.js';
+import Boss from './util/bosses.js';
 // #endregion
 
 // #region constants
@@ -22,6 +23,7 @@ client.once('ready', () => {
   ) {
     data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
   }
+  Boss.load(data.getBoss());
   console.log('Logged in.');
 });
 
@@ -88,6 +90,15 @@ client.on('message', (message) => {
         return;
       }
       if (Math.abs(number - data.getCurrentNumber()) === 1) {
+        if (Boss.instance) {
+          const isBossDead = Boss.instance.hit(message.author.id);
+          if (isBossDead) {
+            message.channel.send('Boss defeated! Check your balance!');
+          }
+        } else if (Math.random() != constants.BOSS_SPAWN_RATE) {
+          Boss.instantiate();
+          message.channel.send(Boss.instance.embed());
+        }
         // increment user count
         data.incrementCount(userId);
 
@@ -138,6 +149,7 @@ client.on('message', (message) => {
 
 // ensures data write when server killed
 process.on('SIGINT', () => {
+  data.persistBoss(Boss.instance);
   data.persistData();
   process.exit(0);
 });

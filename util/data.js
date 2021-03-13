@@ -15,6 +15,15 @@ fs.stat('./data.json', (err) => {
   }
 });
 
+const persistBoss = (boss) => {
+  data.boss = boss;
+  console.log('Boss added to data.');
+}
+
+const getBoss = () => {
+  return data.boss;
+}
+
 /**
  * Writes data to disk.
  */
@@ -22,6 +31,7 @@ const persistData = () => {
   fs.writeFileSync('data.json', JSON.stringify(data));
   console.log('Data saved.');
 };
+
 
 setInterval(persistData, FIVE_MINUTES);
 
@@ -369,6 +379,7 @@ export default {
   getMiscount,
   hasReaction,
   getUserReactionsMessage,
+  getBoss,
   // modifiers
   addCoins,
   addCrowns,
@@ -389,6 +400,7 @@ export default {
   incrementWins,
   createUser,
   selectReaction,
+  persistBoss,
   // data utils
   persistData,
 };
