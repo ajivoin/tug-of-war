@@ -95,7 +95,7 @@ const buy = (userId, item, callback, errorCallback) => {
       case 'sneak':
         sneak(callback);
         break;
-      case 'crown-card':
+      case 'crowncard':
         deposit(userId, callback);
         break;
       case 'sqrt':
