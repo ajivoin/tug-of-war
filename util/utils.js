@@ -6,16 +6,13 @@ const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, pro
 
 // max is the only required argument. 0 < min < max
 /**
- * Behavior only guaranteed if max > min.
+ * return random int in range [min, max)
  * @param {Number} max
- * @param {Number?} min
+ * @param {Number} min
  */
-const getRandomInt = (max, min) => {
-  let minVal = min;
-  if (Number.isNaN(min)) {
-    minVal = -1;
-  }
-  return Math.max(minVal, Math.floor(Math.random() * Math.floor(max)));
+const getRandomInt = (min, max) => {
+  if (min < max) [min, max] = [max, min];
+  return Math.random() * (max - min) + min; ;
 };
 
 /**
@@ -26,7 +23,7 @@ const getDataSchema = () => ({
   users: {},
   last: null,
   channel: null,
-  win: getRandomInt(constants.WIN, 1),
+  win: getRandomInt(0, constants.WIN),
   correctEmoji: constants.REACT_CORRECT,
   incorrectEmoji: constants.REACT_INCORRECT,
   timeoutEmoji: constants.REACT_TIMEOUT,

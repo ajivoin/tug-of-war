@@ -21,7 +21,7 @@ client.once('ready', () => {
     || data.getTargetNumber() === null
     || Number.isNaN(data.getTargetNumber())
   ) {
-    data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
+    data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
   }
   Boss.load(data.getBoss());
   console.log('Logged in.');
@@ -108,7 +108,7 @@ client.on('message', (message) => {
           console.log('Winner. Resetting number.');
           data.incrementWins(userId);
           data.addCrowns(userId, constants.CROWN_MULTIPLIER);
-          data.setTargetNumber(utils.getRandomInt(constants.WIN, 0));
+          data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
           message.react('👑');
           message.channel.send(
             `🤴 Congrats ${author}! New target: ±${data.getTargetNumber()}.`,
@@ -121,7 +121,7 @@ client.on('message', (message) => {
             data.clearLastUserId();
           }
           if (Math.random() <= constants.COIN_RATE) {
-            const gain = constants.COIN_GAIN * 5 * utils.getRandomInt(10, 2);
+            const gain = constants.COIN_GAIN * 5 * utils.getRandomInt(2, 10);
             data.addCoins(userId, gain);
             message.react('💰');
           } else if (Math.abs(data.getCurrentNumber()) === 69) {

@@ -6,7 +6,7 @@ import data from '../data.js';
 import constants from '../constants.js';
 
 const teleport = (cb) => {
-  let distance = utils.getRandomInt(constants.TP_MAX, constants.TP_MIN);
+  let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);
   if (Math.random() < 0.5) {
     distance = -distance;
   }
@@ -15,7 +15,7 @@ const teleport = (cb) => {
 };
 
 const reroll = (cb) => {
-  data.setTargetNumber(utils.getRandomInt(constants.WIN, 1));
+  data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
   if (cb) cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
 };
 
