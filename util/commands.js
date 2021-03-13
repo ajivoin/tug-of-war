@@ -8,6 +8,7 @@ import AdminCommand from './AdminCommand.js';
 import commands from './command_list.js';
 import data from './data.js';
 import { prefix } from '../config.js'
+import Boss from './bosses.js';
 
 /**
  * @param {Discord.Message} message
@@ -136,6 +137,16 @@ const debugFunction = (message) => {
 
 const debug = new AdminCommand('debug', '', debugFunction);
 
+const bossFunction = (message) => {
+  if (Boss.instance) {
+    message.channel.send(Boss.instance.embed());
+  } else {
+    message.channel.send('There is no boss right now. Count to lure one!');
+  }
+}
+
+const boss = new Command('boss', 'boss information', bossFunction);
+
 /**
  * Expects: t?giveCrowns user amount
  * @param {Discord.Message} message
@@ -176,6 +187,7 @@ const cmds = {
   buy,
   debug,
   givecrowns,
+  boss
 };
 
 const get = (cmd) => {
