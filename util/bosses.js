@@ -68,7 +68,7 @@ export default class Boss {
       this.health = this.level * Boss.HEALTH_MULTIPLIER;
       this.totalHealth = this.health;
       this.health = Boss.HEALTH_MULTIPLIER * this.level;
-      this.participants = null;
+      this.participants = {};
       this.active = true;
       Boss.instance = this;
     }
