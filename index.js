@@ -95,7 +95,7 @@ client.on('message', (message) => {
           if (isBossDead) {
             message.channel.send('Boss defeated! Check your balance!');
           }
-        } else if (Math.random() != constants.BOSS_SPAWN_RATE) {
+        } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
           Boss.instantiate();
           message.channel.send(Boss.instance.embed());
         }
