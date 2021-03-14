@@ -165,6 +165,10 @@ const giveCrownsFunction = (message) => {
 
 const givecrowns = new AdminCommand('givecrowns', '', giveCrownsFunction);
 
+const spawn = new AdminCommand('spawn', '', () => Boss.instantiate());
+
+const kill = new AdminCommand('kill', '', () => Boss.kill());
+
 const cmds = {
   h: help,
   '?': help,
@@ -187,7 +191,9 @@ const cmds = {
   buy,
   debug,
   givecrowns,
-  boss
+  boss,
+  spawn,
+  kill
 };
 
 const get = (cmd) => {

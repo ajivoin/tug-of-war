@@ -1,8 +1,28 @@
+import _ from 'underscore';
+
 import constants from './constants.js';
 import utils from './utils.js';
 import data from './data.js';
 import { MessageEmbed } from 'discord.js';
 
+const IMAGE_PATH = [
+  'util/boss_images/0_sunglasses.png',
+  'util/boss_images/1_ogre.png',
+  'util/boss_images/2_monster.png',
+  'util/boss_images/3_clown.png',
+  'util/boss_images/4_dragon.png',
+  'util/boss_images/5_clown.png',
+  'util/boss_images/6_poop.png',
+  'util/boss_images/7_devil.png',
+  'util/boss_images/8_goblin.png',
+  'util/boss_images/9_cowboy.png',
+  'util/boss_images/10_bezos.png',
+  'util/boss_images/11_santa.png',
+  'util/boss_images/12_sun.png',
+  'util/boss_images/13_moon.png',
+  'util/boss_images/14_snowman.png',
+  'util/boss_images/15_rock.png'
+];
 
 const BOSS_REWARDS_POOL = [
     {crowns: 10},
@@ -25,6 +45,10 @@ export default class Boss {
     1.00
   ];
 
+  static kill() {
+    Boss.instance = null;
+  }
+
   static load() {
     if (!Boss.instance) {
       const boss = data.getBoss();
@@ -37,6 +61,8 @@ export default class Boss {
          me.participants = boss.participants;
          me.rewards = boss.rewards;
          me.totalHealth = boss.totalHealth;
+         me.imagePath = boss.imagePath;
+         me.imageName = boss.imageName;
          me.levelText = '⭐'.repeat(me.level);
       }
     }
@@ -55,7 +81,9 @@ export default class Boss {
       .setTitle('Boss battle!')
       .setDescription('Count numbers to attack the boss! All participants will receive a reward!')
       .addField('Level', this.levelText, true)
-      .addField('Health', `${this.health} ❤`, true);
+      .addField('Health', `${this.health} ❤`, true)
+      .attachFiles([this.imagePath])
+      .setImage(`attachment://${this.imageName}`);
   }
 
   constructor() {
@@ -71,6 +99,9 @@ export default class Boss {
       this.health = Boss.HEALTH_MULTIPLIER * this.level;
       this.participants = {};
       this.active = true;
+      this.imagePath = _.sample(IMAGE_PATH);
+      this.imageName = this.imagePath.split('/')[2];
+      console.log(this.imageName);
       Boss.instance = this;
     }
   }
