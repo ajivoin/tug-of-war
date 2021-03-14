@@ -93,7 +93,8 @@ client.on('message', (message) => {
         if (Boss.instance) {
           const isBossDead = Boss.instance.hit(message.author.id);
           if (isBossDead) {
-            message.channel.send('Boss defeated! Check your balance!');
+            message.react('⚔');
+            message.channel.send('Boss defeated! Paying rewards to everyone who helped...');
           }
         } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
           Boss.instantiate();

@@ -28,6 +28,7 @@ export default class Boss {
   static load() {
     if (!Boss.instance) {
       const boss = data.getBoss();
+      console.log(`Boss load: ${boss}`);
       if (boss) {
          const me = Boss.instance = new Boss();
          me.active = boss.active;
@@ -115,9 +116,7 @@ export default class Boss {
       this.handleWin(userId);
       return true;
     }
-    if (this.health % 10 === 0) {
-      data.persistBoss(JSON.stringify(this));
-    }
+    data.persistBoss(Boss.instance);
     return false;
   }
 };

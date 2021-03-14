@@ -1,15 +1,15 @@
 export const skins = {
-  pi: {
-    price: 100,
-    description: '🟢 **LIMITED** 3.14159...',
-    enabled: false,
-    emoji: '🟢'
-  },
   pie: {
-    price: 1000,
+    price: 200,
     description: "🥧 **LIMITED** Wait, it isn't pie day?",
-    enabled: false,
+    enabled: true,
     emoji: '🥧',
+  },
+  pizza: {
+    price: 2000,
+    description: '🍕 Now THIS is pie.',
+    enabled: true,
+    emoji: '🍕',
   },
   patty: {
     price: 100,
@@ -19,7 +19,7 @@ export const skins = {
   },
   clink: {
     price: 1000,
-    description: "🍻 **LIMITED** Happy Green Beer Day!",
+    description: '🍻 **LIMITED** Happy Green Beer Day!',
     enabled: false,
     emoji: '🍻',
   },
