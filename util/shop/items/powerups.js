@@ -5,9 +5,9 @@ export const powerups = {
     enabled: true,
   },
   sneak: {
-    price: 20,
+    price: 25,
     description: 'Say a number again without getting timed out.',
-    enabled: false,
+    enabled: true,
   },
   reroll: {
     price: 25,

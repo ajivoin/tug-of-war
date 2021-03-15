@@ -1,16 +1,4 @@
 export const skins = {
-  pie: {
-    price: 200,
-    description: "🥧 **LIMITED** Wait, it isn't pie day?",
-    enabled: true,
-    emoji: '🥧',
-  },
-  pizza: {
-    price: 2000,
-    description: '🍕 Now THIS is pie.',
-    enabled: true,
-    emoji: '🍕',
-  },
   patty: {
     price: 100,
     description: "🍀 **LIMITED** Happy St. Patrick's Day!",
@@ -29,22 +17,40 @@ export const skins = {
     enabled: true,
     emoji: '✅',
   },
+  sunflower: {
+    price: 500,
+    description: "🌻 Then you're left in the dust...",
+    enabled: true,
+    emoji: '🌻',
+  },
+  tulip: {
+    price: 500,
+    description: '🌷 One lip, tulip, red lip, blue lip.',
+    enabled: true,
+    emoji: '🌷',
+  },
+  blossom: {
+    price: 1000,
+    description: '🌸 Spring has sprung!',
+    enabled: true,
+    emoji: '🌸',
+  },
   devil: {
     price: 666,
     description: "😈 Let's make a deal.",
-    enabled: true,
+    enabled: false,
     emoji: '😈',
   },
   mad: {
     price: 500,
     description: '😡 My face when I type the wrong number.',
-    enabled: true,
+    enabled: false,
     emoji: '😡',
   },
   rage: {
     price: 1000,
     description: '🤬 @!#?@!.',
-    enabled: true,
+    enabled: false,
     emoji: '🤬',
   },
   flex: {
@@ -59,21 +65,27 @@ export const skins = {
     enabled: false,
     emoji: '🥞',
   },
+  pizza: {
+    price: 2000,
+    description: '🍕 Now THIS is pie.',
+    enabled: true,
+    emoji: '🍕',
+  },
   megaflex: {
     price: 2500,
-    description: '❓ We get it. You lift.',
+    description: '🌌 We get it. You lift.',
     enabled: true,
     emoji: '🌌',
   },
   ultraflex: {
     price: 5000,
-    description: '❓ Gives ability to throw competition into space.',
+    description: '🚀 Gives ability to throw competition into space.',
     enabled: true,
     emoji: '🚀',
   },
   hyperflex: {
     price: 10000,
-    description: "❓ It's all in the name.",
+    description: '🍆',
     enabled: true,
     emoji: '🍆',
   },
@@ -142,6 +154,12 @@ export const skins = {
     description: '🛸 Somewhere out there...',
     enabled: false,
     emoji: '🛸',
+  },
+  pie: {
+    price: 200,
+    description: "🥧 **LIMITED** Wait, it isn't pie day?",
+    enabled: false,
+    emoji: '🥧',
   },
 };
 
