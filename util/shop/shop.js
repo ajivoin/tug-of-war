@@ -1,9 +1,8 @@
-import powerups from './items/powerups.js'
-import skins from './items/skins.js';
-import utils from '../utils.js';
-
-import data from '../data.js';
-import constants from '../constants.js';
+import enabledPowerups from './items/powerups';
+import enabledSkins from './items/skins';
+import utils from '../utils';
+import data from '../data';
+import constants from '../constants';
 
 const teleport = (cb) => {
   let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);
@@ -36,7 +35,7 @@ const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
   // check if user owns react
   if (
     !data.hasReaction(userId, reactionId)
-    && utils.hasProperty(skins, reactionId)
+    && utils.hasProperty(enabledSkins, reactionId)
   ) {
     data.selectReaction(userId, reactionId);
     const emoji = utils.getEmoji(reactionId);
@@ -63,8 +62,8 @@ const sqrt = (callback) => {
 };
 
 const buy = (userId, item, callback, errorCallback) => {
-  if (utils.hasProperty(powerups, item)) {
-    const { price } = powerups[item];
+  if (utils.hasProperty(enabledPowerups, item)) {
+    const { price } = enabledPowerups[item];
     if (data.getCoins(userId) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
       return;
@@ -105,9 +104,9 @@ const buy = (userId, item, callback, errorCallback) => {
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);
     }
-  } else if (utils.hasProperty(skins, item)) {
+  } else if (utils.hasProperty(enabledSkins, item)) {
     // handle skins
-    const { price } = skins[item];
+    const { price } = enabledSkins[item];
     if (data.getCoins(userId) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
       return;

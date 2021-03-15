@@ -1,6 +1,6 @@
 import fs from 'fs';
-import utils from './utils.js';
-import { prefix } from '../config.js';
+import utils from './utils';
+import { prefix } from '../config';
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -18,11 +18,9 @@ fs.stat('./data.json', (err) => {
 const persistBoss = (boss) => {
   data.boss = boss;
   console.log('Boss added to data.');
-}
+};
 
-const getBoss = () => {
-  return data.boss;
-}
+const getBoss = () => data.boss;
 
 /**
  * Writes data to disk.
@@ -31,7 +29,6 @@ const persistData = () => {
   fs.writeFileSync('data.json', JSON.stringify(data));
   console.log('Data saved.');
 };
-
 
 setInterval(persistData, FIVE_MINUTES);
 

@@ -1,14 +1,14 @@
 import _ from 'underscore';
-import utils from './utils.js';
-import shop from './shop/shop.js';
-import constants from './constants.js';
-import embeds from './embeds.js';
-import Command from './Command.js';
-import AdminCommand from './AdminCommand.js';
-import commands from './command_list.js';
-import data from './data.js';
-import { prefix } from '../config.js'
-import Boss from './bosses.js';
+import utils from './utils';
+import shop from './shop/shop';
+import constants from './constants';
+import embeds, { shopEmbed } from './embeds';
+import Command from './Command';
+import AdminCommand from './AdminCommand';
+import commands from './command_list';
+import data from './data';
+import { prefix } from '../config';
+import Boss from './bosses';
 
 /**
  * @param {Discord.Message} message
@@ -41,7 +41,7 @@ const userFunction = (message) => {
 const user = new Command('user', commands.user, userFunction);
 
 const shopFunction = (message) => {
-  message.channel.send(embeds.shopEmbed);
+  message.channel.send(shopEmbed);
 };
 
 const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
@@ -143,7 +143,7 @@ const bossFunction = (message) => {
   } else {
     message.channel.send('There is no boss right now. Count to lure one!');
   }
-}
+};
 
 const boss = new Command('boss', 'boss information', bossFunction);
 
@@ -193,7 +193,7 @@ const cmds = {
   givecrowns,
   boss,
   spawn,
-  kill
+  kill,
 };
 
 const get = (cmd) => {

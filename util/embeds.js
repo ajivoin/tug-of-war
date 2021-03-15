@@ -1,10 +1,9 @@
 import { MessageEmbed } from 'discord.js';
-import commands from './command_list.js';
-import shopSkins, { skins } from './shop/items/skins.js';
-import powerups from './shop/items/powerups.js'
-import config from '../config.js';
 
-const prefix = config.prefix;
+import commands from './command_list';
+import shopSkins, { skins } from './shop/items/skins';
+import enabledPowerups from './shop/items/powerups';
+import { prefix } from '../config';
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
@@ -22,19 +21,19 @@ const generateHelpEmbed = () => {
 };
 
 const generateShopEmbed = () => {
-  const fields = Object.keys(powerups).map((item) => ({
-    name: `${item} (${powerups[item].price}c)`,
-    value: powerups[item].description,
+  const fields = Object.keys(enabledPowerups).map((item) => ({
+    name: `${item} (${enabledPowerups[item].price}c)`,
+    value: enabledPowerups[item].description,
     inline: true,
   }));
 
   const embed = getCoreEmbed('Shop', `Purchase items with \`${prefix}buy <item name>\`.`, fields);
   embed.addField('\u200b', '\u200b'); // blank link
   embed.addFields(...Object.keys(shopSkins).map((item) => ({
-    name:`${item} (${shopSkins[item].price}c)`,
+    name: `${item} (${shopSkins[item].price}c)`,
     value: shopSkins[item].description,
     inline: true,
-  })))
+  })));
   return embed;
 };
 

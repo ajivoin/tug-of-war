@@ -1,6 +1,6 @@
-import constants from './constants.js';
-import { skins } from './shop/items/skins.js';
-import { helpEmbed } from './embeds.js';
+import constants from './constants';
+import { skins } from './shop/items/skins';
+import { helpEmbed } from './embeds';
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
@@ -10,9 +10,7 @@ const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, pro
  * @param {Number} max
  * @param {Number} min
  */
-const getRandomInt = (min, max) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 /**
  * @returns {object}

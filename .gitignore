@@ -106,4 +106,5 @@ dist
 config.json
 config.js
 data.json
+data/
 *.bak

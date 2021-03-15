@@ -1,5 +1,5 @@
-import { adminId } from '../config.js';
-import Command from './Command.js';
+import { adminId } from '../config';
+import Command from './Command';
 
 class AdminCommand extends Command {
   execute(message) {

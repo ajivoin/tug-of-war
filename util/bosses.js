@@ -1,9 +1,8 @@
 import _ from 'underscore';
-
-import constants from './constants.js';
-import utils from './utils.js';
-import data from './data.js';
 import { MessageEmbed } from 'discord.js';
+
+import utils from './utils';
+import data from './data';
 
 const IMAGE_PATH = [
   'util/boss_images/0_sunglasses.png',
@@ -21,28 +20,31 @@ const IMAGE_PATH = [
   'util/boss_images/12_sun.png',
   'util/boss_images/13_moon.png',
   'util/boss_images/14_snowman.png',
-  'util/boss_images/15_rock.png'
+  'util/boss_images/15_rock.png',
 ];
 
 const BOSS_REWARDS_POOL = [
-    {crowns: 10},
-    {crowns: 20},
-    {crowns: 40},
-    {crowns: 80},
-    {crowns: 160}
+  { crowns: 10 },
+  { crowns: 20 },
+  { crowns: 40 },
+  { crowns: 80 },
+  { crowns: 160 },
 ];
 const BOSS_HEALTH_MULTIPLIER = 100;
 
 export default class Boss {
-  static instance = null;
+  static instance;
+
   static REWARDS_POOL = BOSS_REWARDS_POOL;
+
   static HEALTH_MULTIPLIER = BOSS_HEALTH_MULTIPLIER;
+
   static BOSS_BREAKPOINTS = [
     0.40,
     0.70,
     0.95,
     0.99,
-    1.00
+    1.00,
   ];
 
   static kill() {
@@ -54,16 +56,16 @@ export default class Boss {
       const boss = data.getBoss();
       console.log(`Boss load: ${boss}`);
       if (boss) {
-         const me = Boss.instance = new Boss();
-         me.active = boss.active;
-         me.health = boss.health;
-         me.level = boss.level;
-         me.participants = boss.participants;
-         me.rewards = boss.rewards;
-         me.totalHealth = boss.totalHealth;
-         me.imagePath = boss.imagePath;
-         me.imageName = boss.imageName;
-         me.levelText = '⭐'.repeat(me.level);
+        Boss.instance = new Boss();
+        Boss.instance.active = boss.active;
+        Boss.instance.health = boss.health;
+        Boss.instance.level = boss.level;
+        Boss.instance.participants = boss.participants;
+        Boss.instance.rewards = boss.rewards;
+        Boss.instance.totalHealth = boss.totalHealth;
+        Boss.instance.imagePath = boss.imagePath;
+        Boss.instance.imageName = boss.imageName;
+        Boss.instance.levelText = '⭐'.repeat(boss.level);
       }
     }
   }
@@ -100,7 +102,7 @@ export default class Boss {
       this.participants = {};
       this.active = true;
       this.imagePath = _.sample(IMAGE_PATH);
-      this.imageName = this.imagePath.split('/')[2];
+      [,, this.imageName] = this.imagePath.split('/');
       console.log(this.imageName);
       Boss.instance = this;
     }
@@ -109,22 +111,22 @@ export default class Boss {
   calculateReward(userId) {
     const ratio = this.participants[userId] / this.totalHealth;
     const result = {};
-    for (const reward of Object.keys(this.rewards)) {
+    Object.keys(this.rewards).forEach((reward) => {
       result[reward] = Math.ceil(ratio * this.rewards[reward]);
-    }
+    });
     return result;
   }
 
   distributeRewards() {
-    for (const userId of Object.keys(this.participants)) {
+    Object.keys(this.participants).forEach((userId) => {
       const reward = this.calculateReward(userId);
       if (utils.hasProperty(reward, 'crowns')) {
         data.addCrowns(userId, reward.crowns);
       }
       if (utils.hasProperty(reward, 'coins')) {
-        data.addCoins(userid, reward.coins);
+        data.addCoins(userId, reward.coins);
       }
-    }
+    });
   }
 
   handleWin(userId) {
@@ -150,4 +152,4 @@ export default class Boss {
     data.persistBoss(Boss.instance);
     return false;
   }
-};
+}

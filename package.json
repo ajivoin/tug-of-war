@@ -4,7 +4,7 @@
   "description": "Discord counting bot mixed with tug of war",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "babel-node --experimental-modules --es-module-specifier-resolution=node .",
     "test": "test",
     "lint": "eslint .",
     "lint-f": "eslint --fix ."
@@ -21,9 +21,16 @@
   "homepage": "https://github.com/ajivoin/tug-of-war#readme",
   "dependencies": {
     "discord.js": "^12.5.1",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.12.0",
     "underscore": "^1.12.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/eslint-parser": "^7.13.10",
+    "@babel/node": "^7.13.10",
+    "@babel/plugin-syntax-class-properties": "^7.12.13",
+    "@babel/preset-env": "^7.13.10",
     "eslint": "^7.20.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1"
