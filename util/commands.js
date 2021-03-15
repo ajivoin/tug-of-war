@@ -21,7 +21,7 @@ const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 10
 
 const infoFunction = (message) => {
   message.channel.send(
-    embeds.infoEmbed(data.getCurrentNumber(), `±${data.getTargetNumber()}.`, Boss.instance),
+    embeds.infoEmbed(data.getCurrentNumber(), `±${data.getTargetNumber()}`, Boss.instance),
   );
 };
 
