@@ -99,7 +99,7 @@ client.on('message', (message) => {
           }
         } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
           Boss.instantiate();
-          message.channel.send(Boss.instance.embed());
+          message.channel.send(Boss.instance.embed);
         }
         // increment user count
         data.incrementCount(userId);
