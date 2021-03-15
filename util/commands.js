@@ -20,7 +20,9 @@ const helpFunction = (message) => {
 const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
 
 const infoFunction = (message) => {
-  message.channel.send(`Current number is ${data.getCurrentNumber()}. Target: ±${data.getTargetNumber()}.`);
+  message.channel.send(
+    embeds.infoEmbed(data.getCurrentNumber(), `±${data.getTargetNumber()}.`, Boss.instance),
+  );
 };
 
 const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
@@ -33,9 +35,7 @@ const inventory = new Command('inventory', commands.inventory, inventoryFunction
 
 const userFunction = (message) => {
   const user = message.author;
-  message.channel.send(
-    `${user}: ${data.getCount(user.id)} numbers counted, ${data.getWins(user.id)} wins, ${data.getMiscount(user.id)} goofs.`,
-  );
+  message.channel.send(embeds.userEmbed(data.getUser(user.id), message.member.displayName));
 };
 
 const user = new Command('user', commands.user, userFunction);

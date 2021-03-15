@@ -48,6 +48,60 @@ const inventoryEmbedForUser = (user) => {
   return getCoreEmbed('Inventory', `Equip items with ${prefix}equip <item name>.`, fields);
 };
 
+const userEmbed = (user, name) => {
+  const fields = [
+    {
+      name: 'Counts',
+      value: user.count,
+      inline: true,
+    },
+    {
+      name: 'Mistakes',
+      value: user.miscount,
+      inline: true,
+    },
+    {
+      name: 'Accuracy',
+      value: `${((100 * user.count) / (user.count + user.miscount)).toFixed(1)}%`,
+      inline: true,
+    },
+    {
+      name: 'Wins',
+      value: user.wins,
+      inline: true,
+    },
+    {
+      name: 'Bosses Slain',
+      value: user.boss,
+      inline: true,
+    },
+  ];
+  return getCoreEmbed(name, `Statistics for ${name}.`, fields);
+};
+
+const infoEmbed = (currentNumber, targetNumber, boss) => {
+  const fields = [
+    {
+      name: 'Current Number',
+      value: currentNumber,
+      inline: true,
+    },
+    {
+      name: 'Target Number',
+      value: targetNumber,
+      inline: true,
+    },
+  ];
+
+  const embed = getCoreEmbed('Tug-of-War Information', '', fields);
+  if (boss) {
+    // embed.addField('\u200b', '\u200b'); // blank link
+    embed.addField('\u200b', '**Boss Information**');
+    embed.addFields(boss.embed.fields).attachFiles([boss.imagePath]).setImage(`attachment://${boss.imageName}`);
+  }
+  return embed;
+};
+
 export const helpEmbed = generateHelpEmbed();
 export const shopEmbed = generateShopEmbed();
 
@@ -55,4 +109,6 @@ export default {
   helpEmbed,
   shopEmbed,
   inventoryEmbedForUser,
+  userEmbed,
+  infoEmbed,
 };

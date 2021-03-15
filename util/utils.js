@@ -35,13 +35,8 @@ const createUser = () => ({
   crowns: 0,
   coins: 0,
   miscount: 0,
-  reactions: { 'skin-default': true },
-  powerups: {
-    reroll: 0,
-    teleport: 0,
-    fliparoo: 0,
-    zero: 0,
-  },
+  boss: 0,
+  reactions: { default: true },
 });
 
 /**

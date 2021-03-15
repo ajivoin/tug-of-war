@@ -1,9 +1,8 @@
-import { adminId } from '../config';
 import Command from './Command';
 
 class AdminCommand extends Command {
   execute(message) {
-    if (message.author.id === adminId) {
+    if (message.member.hasPermission('MANAGE_GUILD')) {
       super.execute(message);
     }
   }

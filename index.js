@@ -96,6 +96,10 @@ client.on('message', (message) => {
           if (isBossDead) {
             message.react('⚔');
             message.channel.send('Boss defeated! Paying rewards to everyone who helped...');
+            const user = data.getUser(userId);
+            user.boss += 1;
+          } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
+            message.channel.send(Boss.instance.embed);
           }
         } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
           Boss.instantiate();
