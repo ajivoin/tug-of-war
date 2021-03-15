@@ -172,6 +172,8 @@ const spawn = new AdminCommand('spawn', '', (message) => {
 
 const kill = new AdminCommand('kill', '', () => Boss.kill());
 
+const ping = new Command('ping', 'Pong!', (message) => { message.react('☑'); });
+
 const cmds = {
   h: help,
   '?': help,
@@ -197,6 +199,7 @@ const cmds = {
   boss,
   spawn,
   kill,
+  ping,
 };
 
 const get = (cmd) => {
