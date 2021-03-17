@@ -4,6 +4,14 @@ import { MessageEmbed } from 'discord.js';
 import utils from './utils';
 import data from './data';
 
+const IMAGE_PATH_HOLIDAY = [
+  ['util/boss_images/317_leprechaun.png'],
+  ['util/boss_images/317_leprechaun.png'],
+  ['util/boss_images/317_leprechaun.png'],
+  ['util/boss_images/317_leprechaun.png'],
+  ['util/boss_images/317_leprechaun.png'],
+];
+
 const IMAGE_PATH = [
   [
     'util/boss_images/0_sunglasses.png',
@@ -112,7 +120,7 @@ export default class Boss {
     this.health = Boss.HEALTH_MULTIPLIER * this.level;
     this.participants = {};
     this.active = true;
-    this.imagePath = _.sample(IMAGE_PATH[bp]);
+    this.imagePath = _.sample(IMAGE_PATH_HOLIDAY[bp]);
     [,, this.imageName] = this.imagePath.split('/');
     const [, bossName] = this.imageName.split(/[_|.]/);
     this.bossName = bossName[0].toUpperCase() + bossName.slice(1);
