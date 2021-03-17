@@ -2,13 +2,13 @@ export const skins = {
   patty: {
     price: 100,
     description: "🍀 **LIMITED** Happy St. Patrick's Day!",
-    enabled: false,
+    enabled: true,
     emoji: '🍀',
   },
   clink: {
     price: 1000,
     description: '🍻 **LIMITED** Happy Green Beer Day!',
-    enabled: false,
+    enabled: true,
     emoji: '🍻',
   },
   default: {
@@ -16,6 +16,18 @@ export const skins = {
     description: '✅ Simple.',
     enabled: true,
     emoji: '✅',
+  },
+  sauropod: {
+    price: 2000,
+    description: '🦕 How is this for extinction?',
+    enabled: true,
+    emoji: '🦕',
+  },
+  trex: {
+    price: 5000,
+    description: '🦖 Haha, short arms.',
+    enabled: true,
+    emoji: '🦖',
   },
   sunflower: {
     price: 500,
