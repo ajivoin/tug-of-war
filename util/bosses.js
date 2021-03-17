@@ -42,13 +42,13 @@ const IMAGE_PATH = [
 ];
 
 const BOSS_REWARDS_POOL = [
-  { crowns: 10 },
   { crowns: 20 },
   { crowns: 40 },
   { crowns: 80 },
   { crowns: 160 },
+  { crowns: 320 },
 ];
-const BOSS_HEALTH_MULTIPLIER = 100;
+const BOSS_HEALTH_MULTIPLIER = 150;
 
 export default class Boss {
   static instance;
