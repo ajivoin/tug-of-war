@@ -24,8 +24,9 @@ client.once('ready', () => {
   ) {
     data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
   }
-  Boss.load(data.getBoss());
+  Boss.load();
   console.log('Logged in.');
+  client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
 });
 
 const bind = (messageObj, callback, errorCb) => {
