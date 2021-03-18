@@ -1,16 +1,4 @@
 export const skins = {
-  patty: {
-    price: 100,
-    description: "🍀 **LIMITED** Happy St. Patrick's Day!",
-    enabled: true,
-    emoji: '🍀',
-  },
-  clink: {
-    price: 1000,
-    description: '🍻 **LIMITED** Happy Green Beer Day!',
-    enabled: true,
-    emoji: '🍻',
-  },
   default: {
     price: 0,
     description: '✅ Simple.',
@@ -101,6 +89,12 @@ export const skins = {
     enabled: true,
     emoji: '🍆',
   },
+  diamond: {
+    price: 25000,
+    description: '💎 Flex.',
+    enabled: true,
+    emoji: '💎',
+  },
   monke: {
     price: 500,
     description: '🐵 MONKE.',
@@ -172,6 +166,18 @@ export const skins = {
     description: "🥧 **LIMITED** Wait, it isn't pie day?",
     enabled: false,
     emoji: '🥧',
+  },
+  patty: {
+    price: 100,
+    description: "🍀 **LIMITED** Happy St. Patrick's Day!",
+    enabled: false,
+    emoji: '🍀',
+  },
+  clink: {
+    price: 1000,
+    description: '🍻 **LIMITED** Happy Green Beer Day!',
+    enabled: false,
+    emoji: '🍻',
   },
 };
 

@@ -4,14 +4,6 @@ import { MessageEmbed } from 'discord.js';
 import utils from './utils';
 import data from './data';
 
-const IMAGE_PATH_HOLIDAY = [
-  ['util/boss_images/317_leprechaun.png'],
-  ['util/boss_images/317_leprechaun.png'],
-  ['util/boss_images/317_leprechaun.png'],
-  ['util/boss_images/317_leprechaun.png'],
-  ['util/boss_images/317_leprechaun.png'],
-];
-
 const IMAGE_PATH = [
   [
     'util/boss_images/0_sunglasses.png',
@@ -42,11 +34,11 @@ const IMAGE_PATH = [
 ];
 
 const BOSS_REWARDS_POOL = [
-  { crowns: 10 * 1.5 },
-  { crowns: 20 * 1.5 },
-  { crowns: 40 * 1.5 },
-  { crowns: 80 * 1.5 },
-  { crowns: 160 * 1.5 },
+  { crowns: 10 },
+  { crowns: 20 },
+  { crowns: 40 },
+  { crowns: 80 },
+  { crowns: 160 },
 ];
 const BOSS_HEALTH_MULTIPLIER = 100;
 
@@ -120,7 +112,7 @@ export default class Boss {
     this.health = Boss.HEALTH_MULTIPLIER * this.level;
     this.participants = {};
     this.active = true;
-    this.imagePath = _.sample(IMAGE_PATH_HOLIDAY[bp]);
+    this.imagePath = _.sample(IMAGE_PATH[bp]);
     [,, this.imageName] = this.imagePath.split('/');
     const [, bossName] = this.imageName.split(/[_|.]/);
     this.bossName = bossName[0].toUpperCase() + bossName.slice(1);
