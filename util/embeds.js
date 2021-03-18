@@ -97,7 +97,7 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
   if (boss) {
     // embed.addField('\u200b', '\u200b'); // blank link
     embed.addField('\u200b', '**Boss Information**');
-    embed.addFields(boss.embed.fields).attachFiles([boss.imagePath]).setImage(`attachment://${boss.imageName}`);
+    embed.addFields(boss.embed.fields).attachFiles([boss.imagePath]).setThumbnail(`attachment://${boss.imageName}`);
   }
   return embed;
 };
