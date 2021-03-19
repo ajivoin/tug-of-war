@@ -21,6 +21,7 @@ const getDataSchema = () => ({
   last: null,
   channel: null,
   win: getRandomInt(0, constants.WIN),
+  boss: {},
   correctEmoji: constants.REACT_CORRECT,
   incorrectEmoji: constants.REACT_INCORRECT,
   timeoutEmoji: constants.REACT_TIMEOUT,

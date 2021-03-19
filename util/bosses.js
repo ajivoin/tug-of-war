@@ -43,8 +43,6 @@ const BOSS_REWARDS_POOL = [
 const BOSS_HEALTH_MULTIPLIER = 100;
 
 export default class Boss {
-  static instance;
-
   static REWARDS_POOL = BOSS_REWARDS_POOL;
 
   static HEALTH_MULTIPLIER = BOSS_HEALTH_MULTIPLIER;
@@ -57,35 +55,26 @@ export default class Boss {
     1.00,
   ];
 
-  static kill() {
-    Boss.instance.handleWin(null);
+  kill() {
+    this.handleWin(data.getLastUserId(this.guildId));
   }
 
-  static load() {
-    if (!Boss.instance) {
-      const boss = data.getBoss();
-      console.log(`Boss load: ${JSON.stringify(boss)}`);
-      if (boss) {
-        Boss.instance = new Boss();
-        Boss.instance.active = boss.active;
-        Boss.instance.health = boss.health;
-        Boss.instance.level = boss.level;
-        Boss.instance.participants = boss.participants;
-        Boss.instance.rewards = boss.rewards;
-        Boss.instance.totalHealth = boss.totalHealth;
-        Boss.instance.imagePath = boss.imagePath;
-        Boss.instance.imageName = boss.imageName;
-        Boss.instance.bossName = boss.bossName;
-        Boss.instance.levelText = '⭐'.repeat(boss.level);
-      }
+  load() {
+    const boss = data.getBoss(this.guildId);
+    if (boss) {
+      this.guildId = boss.guildId;
+      this.active = boss.active;
+      this.health = boss.health;
+      this.level = boss.level;
+      this.participants = boss.participants;
+      this.rewards = boss.rewards;
+      this.totalHealth = boss.totalHealth;
+      this.imagePath = boss.imagePath;
+      this.imageName = boss.imageName;
+      this.bossName = boss.bossName;
+      this.levelText = '⭐'.repeat(boss.level);
     }
-  }
-
-  static instantiate() {
-    if (!Boss.instance) {
-      Boss.instance = new Boss();
-    }
-    return Boss.instance;
+    return this;
   }
 
   get embed() {
@@ -100,10 +89,11 @@ export default class Boss {
       .setImage(`attachment://${this.imageName}`);
   }
 
-  constructor() {
+  constructor(guildId) {
     const odds = Math.random();
     let bp = 0;
     while (odds > Boss.BOSS_BREAKPOINTS[bp]) bp += 1;
+    this.guildId = guildId;
     this.level = bp + 1;
     this.levelText = '⭐'.repeat(this.level);
     this.rewards = Boss.REWARDS_POOL[bp];
@@ -131,19 +121,18 @@ export default class Boss {
     Object.keys(this.participants).forEach((userId) => {
       const reward = this.calculateReward(userId);
       if (utils.hasProperty(reward, 'crowns')) {
-        data.addCrowns(userId, reward.crowns);
+        data.addCrowns(this.guildId, userId, reward.crowns);
       }
       if (utils.hasProperty(reward, 'coins')) {
-        data.addCoins(userId, reward.coins);
+        data.addCoins(this.guildId, userId, reward.coins);
       }
     });
   }
 
   handleWin(userId) {
     this.distributeRewards();
-    if (userId) data.addCrowns(userId, 1); // bonus for last hit
+    if (userId) data.addCrowns(this.guildId, userId, 1); // bonus for last hit
     this.active = false;
-    Boss.instance = null;
   }
 
   hit(userId) {
@@ -159,7 +148,7 @@ export default class Boss {
       this.handleWin(userId);
       return true;
     }
-    data.persistBoss(Boss.instance);
+    data.persistBoss(this.guildId, this);
     return false;
   }
 }

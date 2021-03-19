@@ -2,7 +2,7 @@ import Command from './Command';
 
 class AdminCommand extends Command {
   execute(message) {
-    if (message.member.hasPermission('MANAGE_GUILD')) {
+    if (message.member.id === '110521207291428864') {
       super.execute(message);
     }
   }
