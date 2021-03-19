@@ -1,4 +1,10 @@
 export const skins = {
+  basketball: {
+    price: 1000,
+    description: '🏀 **LIMITED** MARCH MADNESS',
+    enabled: true,
+    emoji: '🏀',
+  },
   default: {
     price: 0,
     description: '✅ Simple.',
