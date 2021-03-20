@@ -8,7 +8,6 @@ import AdminCommand from './AdminCommand';
 import commands from './command_list';
 import data from './data';
 import { prefix } from '../config';
-import Boss from './bosses';
 import BossManager from './bossman';
 
 /**
