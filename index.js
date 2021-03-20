@@ -63,7 +63,7 @@ client.on('message', (message) => {
     // explicity check for bind first
     if (message.content.startsWith(prefix)) {
       const command = tokens[0].substr(prefix.length);
-      if (command === 'bind') {
+      if (command === 'bind' && tokens.length > 1) {
         bind(message);
       }
       if (!data.getChannelId(guildId)) {
