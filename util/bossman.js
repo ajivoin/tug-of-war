@@ -21,7 +21,7 @@ export default class BossManager {
   static load() {
     // add boss from json for guild each guild
     BossManager.manInstance = new BossManager();
-    Object.keys(data).forEach((guildId) => {
+    Object.keys(data.getBosses()).forEach((guildId) => {
       BossManager.instance.bosses[guildId] = new Boss(guildId).load();
     });
   }
@@ -45,8 +45,8 @@ export default class BossManager {
   }
 
   static persist() {
-    // Object.values(BossManager.instance.bosses).forEach((boss) => {
-    //   data.persistBoss(boss.guildId, boss);
-    // });
+    Object.values(BossManager.instance.bosses).forEach((boss) => {
+      data.persistBoss(boss.guildId, boss);
+    });
   }
 }

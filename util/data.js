@@ -26,12 +26,19 @@ const guildContext = (guildId) => data[guildId];
 
 const persistBoss = (guildId, boss) => {
   const guild = guildContext(guildId);
-  console.log(guild);
   guild.boss = boss;
   console.log(`Boss added to data for guild ${guildId}`);
 };
 
 const getBoss = (guildId) => guildContext(guildId)?.boss;
+
+const getBosses = () => {
+  const results = {};
+  Object.keys(data).forEach((guildId) => {
+    results[guildId] = { boss: data[guildId].boss };
+  });
+  return results;
+};
 
 /**
  * Writes data to disk.
@@ -318,7 +325,6 @@ const getUserReactionsMessage = (guildId, userId) => {
 const getReaction = (guildId, userId) => {
   const user = getUser(guildId, userId);
   const found = Object.keys(user.reactions).find((reaction) => user.reactions[reaction]);
-  console.log(`HELLO ${found}`);
   return utils.getEmoji(found) || constants.REACT_CORRECT;
 };
 
@@ -389,6 +395,7 @@ export default {
   hasReaction,
   getUserReactionsMessage,
   getBoss,
+  getBosses,
   // modifiers
   addCoins,
   addCrowns,
