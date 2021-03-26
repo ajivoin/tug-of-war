@@ -11,64 +11,16 @@ export const skins = {
     enabled: true,
     emoji: '✅',
   },
-  sauropod: {
-    price: 2000,
-    description: '🦕 How is this for extinction?',
+  goat: {
+    price: 3000,
+    description: '🐐 THE GOAT.',
     enabled: true,
-    emoji: '🦕',
-  },
-  trex: {
-    price: 5000,
-    description: '🦖 Haha, short arms.',
-    enabled: true,
-    emoji: '🦖',
-  },
-  sunflower: {
-    price: 500,
-    description: "🌻 Then you're left in the dust...",
-    enabled: true,
-    emoji: '🌻',
-  },
-  tulip: {
-    price: 500,
-    description: '🌷 One lip, tulip, red lip, blue lip.',
-    enabled: true,
-    emoji: '🌷',
-  },
-  blossom: {
-    price: 1000,
-    description: '🌸 Spring has sprung!',
-    enabled: true,
-    emoji: '🌸',
-  },
-  devil: {
-    price: 666,
-    description: "😈 Let's make a deal.",
-    enabled: false,
-    emoji: '😈',
-  },
-  mad: {
-    price: 500,
-    description: '😡 My face when I type the wrong number.',
-    enabled: false,
-    emoji: '😡',
-  },
-  rage: {
-    price: 1000,
-    description: '🤬 @!#?@!.',
-    enabled: false,
-    emoji: '🤬',
-  },
-  flex: {
-    price: 1000,
-    description: '💪 Do you even lift?',
-    enabled: true,
-    emoji: '💪',
+    emoji: '🐐',
   },
   pancake: {
     price: 1000,
     description: '🥞 Breakfast is served.',
-    enabled: false,
+    enabled: true,
     emoji: '🥞',
   },
   pizza: {
@@ -76,6 +28,19 @@ export const skins = {
     description: '🍕 Now THIS is pie.',
     enabled: true,
     emoji: '🍕',
+  },
+  ufo: {
+    price: 1337,
+    description: '🛸 Somewhere out there...',
+    enabled: true,
+    emoji: '🛸',
+  },
+  /* FLEX */
+  flex: {
+    price: 1000,
+    description: '💪 Do you even lift?',
+    enabled: true,
+    emoji: '💪',
   },
   megaflex: {
     price: 2500,
@@ -100,6 +65,55 @@ export const skins = {
     description: '💎 Flex.',
     enabled: true,
     emoji: '💎',
+  },
+  /* DISABLED */
+  sauropod: {
+    price: 2000,
+    description: '🦕 How is this for extinction?',
+    enabled: false,
+    emoji: '🦕',
+  },
+  trex: {
+    price: 5000,
+    description: '🦖 Haha, short arms.',
+    enabled: false,
+    emoji: '🦖',
+  },
+  sunflower: {
+    price: 500,
+    description: "🌻 Then you're left in the dust...",
+    enabled: false,
+    emoji: '🌻',
+  },
+  tulip: {
+    price: 500,
+    description: '🌷 One lip, tulip, red lip, blue lip.',
+    enabled: false,
+    emoji: '🌷',
+  },
+  blossom: {
+    price: 1000,
+    description: '🌸 Spring has sprung!',
+    enabled: false,
+    emoji: '🌸',
+  },
+  devil: {
+    price: 666,
+    description: "😈 Let's make a deal.",
+    enabled: false,
+    emoji: '😈',
+  },
+  mad: {
+    price: 500,
+    description: '😡 My face when I type the wrong number.',
+    enabled: false,
+    emoji: '😡',
+  },
+  rage: {
+    price: 1000,
+    description: '🤬 @!#?@!.',
+    enabled: false,
+    emoji: '🤬',
   },
   monke: {
     price: 500,
@@ -160,12 +174,6 @@ export const skins = {
     description: '💋 Smooch.',
     enabled: false,
     emoji: '💋',
-  },
-  ufo: {
-    price: 1337,
-    description: '🛸 Somewhere out there...',
-    enabled: false,
-    emoji: '🛸',
   },
   pie: {
     price: 200,
