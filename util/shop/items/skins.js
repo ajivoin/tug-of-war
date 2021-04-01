@@ -11,6 +11,12 @@ export const skins = {
     enabled: true,
     emoji: '🤖',
   },
+  default: {
+    price: 0,
+    description: '',
+    enabled: false,
+    emoji: '✅',
+  },
   goat: {
     price: 3000,
     description: '🐐 THE GOAT.',
