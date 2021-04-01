@@ -6,32 +6,60 @@ import data from './data';
 
 const IMAGE_PATH = [
   [
-    'util/boss_images/0_sunglasses.png',
     'util/boss_images/5_clown.png',
-    'util/boss_images/6_poop.png',
+    'util/boss_images/401_joker.png',
+    'util/boss_images/401_prankster.png',
   ],
   [
-    'util/boss_images/1_ogre.png',
-    'util/boss_images/2_monster.png',
-    'util/boss_images/3_ghost.png',
-  ],
-  [
-    'util/boss_images/9_cowboy.png',
-    'util/boss_images/11_santa.png',
-    'util/boss_images/14_snowman.png',
+    'util/boss_images/5_clown.png',
+    'util/boss_images/401_joker.png',
+    'util/boss_images/401_prankster.png',
   ],
   [
     'util/boss_images/10_bezos.png',
-    'util/boss_images/7_devil.png',
-    'util/boss_images/8_goblin.png',
+    'util/boss_images/401_joker.png',
+    'util/boss_images/401_prankster.png',
   ],
   [
-    'util/boss_images/12_sun.png',
-    'util/boss_images/13_moon.png',
-    'util/boss_images/15_rock.png',
-    'util/boss_images/4_dragon.png',
+    'util/boss_images/6_poop.png',
+    'util/boss_images/401_joker.png',
+    'util/boss_images/401_prankster.png',
+  ],
+  [
+    'util/boss_images/8_goblin.png',
+    'util/boss_images/401_joker.png',
+    'util/boss_images/401_prankster.png',
   ],
 ];
+
+// const IMAGE_PATH = [
+//   [
+//     'util/boss_images/0_sunglasses.png',
+//     'util/boss_images/5_clown.png',
+//     'util/boss_images/6_poop.png',
+//   ],
+//   [
+//     'util/boss_images/1_ogre.png',
+//     'util/boss_images/2_monster.png',
+//     'util/boss_images/3_ghost.png',
+//   ],
+//   [
+//     'util/boss_images/9_cowboy.png',
+//     'util/boss_images/11_santa.png',
+//     'util/boss_images/14_snowman.png',
+//   ],
+//   [
+//     'util/boss_images/10_bezos.png',
+//     'util/boss_images/7_devil.png',
+//     'util/boss_images/8_goblin.png',
+//   ],
+//   [
+//     'util/boss_images/12_sun.png',
+//     'util/boss_images/13_moon.png',
+//     'util/boss_images/15_rock.png',
+//     'util/boss_images/4_dragon.png',
+//   ],
+// ];
 
 const BOSS_REWARDS_POOL = [
   { crowns: 10 },
@@ -40,7 +68,7 @@ const BOSS_REWARDS_POOL = [
   { crowns: 80 },
   { crowns: 160 },
 ];
-const BOSS_HEALTH_MULTIPLIER = 100;
+const BOSS_HEALTH_MULTIPLIER = 37;
 
 export default class Boss {
   static instance;
@@ -50,10 +78,10 @@ export default class Boss {
   static HEALTH_MULTIPLIER = BOSS_HEALTH_MULTIPLIER;
 
   static BOSS_BREAKPOINTS = [
-    0.40,
-    0.70,
-    0.95,
-    0.99,
+    0,
+    0,
+    0.5,
+    0.75,
     1.00,
   ];
 

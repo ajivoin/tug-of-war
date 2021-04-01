@@ -11,10 +11,6 @@ fs.stat('./data.json', (err) => {
     console.log('Using new data base.');
   } else {
     data = JSON.parse(fs.readFileSync('./data.json'));
-    const { users } = data;
-    Object.keys(users).forEach((user) => {
-      if (!users[user].boss) users[user].boss = 0;
-    });
     console.log('Read in data');
   }
 });

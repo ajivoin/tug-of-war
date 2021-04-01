@@ -1,69 +1,69 @@
 export const skins = {
-  basketball: {
-    price: 1000,
-    description: '🏀 **LIMITED** MARCH MADNESS',
+  fool: {
+    price: 99,
+    description: '🃏 The Fool. **[LIMITED]**',
     enabled: true,
-    emoji: '🏀',
+    emoji: '🃏',
   },
-  default: {
-    price: 0,
-    description: '✅ Simple.',
+  test: {
+    price: 2000,
+    description: 'test emoji please ignore',
     enabled: true,
-    emoji: '✅',
+    emoji: '🤖',
   },
   goat: {
     price: 3000,
     description: '🐐 THE GOAT.',
-    enabled: true,
+    enabled: false,
     emoji: '🐐',
   },
   pancake: {
     price: 1000,
     description: '🥞 Breakfast is served.',
-    enabled: true,
+    enabled: false,
     emoji: '🥞',
   },
   pizza: {
     price: 2000,
     description: '🍕 Now THIS is pie.',
-    enabled: true,
+    enabled: false,
     emoji: '🍕',
   },
   ufo: {
     price: 1337,
     description: '🛸 Somewhere out there...',
-    enabled: true,
+    enabled: false,
     emoji: '🛸',
   },
   /* FLEX */
   flex: {
     price: 1000,
     description: '💪 Do you even lift?',
-    enabled: true,
+    enabled: false,
     emoji: '💪',
   },
   megaflex: {
     price: 2500,
     description: '🌌 We get it. You lift.',
-    enabled: true,
+    enabled: false,
     emoji: '🌌',
   },
   ultraflex: {
     price: 5000,
     description: '🚀 Gives ability to throw competition into space.',
-    enabled: true,
+    enabled: false,
     emoji: '🚀',
   },
   hyperflex: {
     price: 10000,
     description: '🍆',
-    enabled: true,
+    enabled: false,
     emoji: '🍆',
   },
   diamond: {
     price: 25000,
     description: '💎 Flex.',
-    enabled: true,
+    enabled: false,
     emoji: '💎',
   },
   /* DISABLED */
@@ -192,6 +192,12 @@ export const skins = {
     description: '🍻 **LIMITED** Happy Green Beer Day!',
     enabled: false,
     emoji: '🍻',
+  },
+  basketball: {
+    price: 1000,
+    description: '🏀 **LIMITED** MARCH MADNESS',
+    enabled: false,
+    emoji: '🏀',
   },
 };
 
