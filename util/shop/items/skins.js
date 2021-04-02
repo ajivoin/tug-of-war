@@ -1,15 +1,21 @@
 export const skins = {
-  fool: {
-    price: 99,
-    description: '🃏 The Fool. **[LIMITED]**',
-    enabled: true,
-    emoji: '🃏',
-  },
   test: {
     price: 2000,
     description: 'test emoji please ignore',
-    enabled: true,
+    enabled: false,
     emoji: '🤖',
+  },
+  bunny: {
+    price: 1500,
+    description: '🐰 Happy Bunny Day! **[LIMITED]**',
+    enabled: true,
+    emoji: '🐰',
+  },
+  rabbit: {
+    price: 3500,
+    description: '🐇 Hop hop.',
+    enabled: true,
+    emoji: '🐇',
   },
   default: {
     price: 0,
@@ -20,25 +26,25 @@ export const skins = {
   goat: {
     price: 3000,
     description: '🐐 THE GOAT.',
-    enabled: false,
+    enabled: true,
     emoji: '🐐',
   },
   pancake: {
     price: 1000,
     description: '🥞 Breakfast is served.',
-    enabled: false,
+    enabled: true,
     emoji: '🥞',
   },
   pizza: {
     price: 2000,
     description: '🍕 Now THIS is pie.',
-    enabled: false,
+    enabled: true,
     emoji: '🍕',
   },
   ufo: {
     price: 1337,
     description: '🛸 Somewhere out there...',
-    enabled: false,
+    enabled: true,
     emoji: '🛸',
   },
   /* FLEX */
@@ -82,7 +88,7 @@ export const skins = {
   trex: {
     price: 5000,
     description: '🦖 Haha, short arms.',
-    enabled: false,
+    enabled: true,
     emoji: '🦖',
   },
   sunflower: {
@@ -100,7 +106,7 @@ export const skins = {
   blossom: {
     price: 1000,
     description: '🌸 Spring has sprung!',
-    enabled: false,
+    enabled: true,
     emoji: '🌸',
   },
   devil: {
@@ -124,7 +130,7 @@ export const skins = {
   monke: {
     price: 500,
     description: '🐵 MONKE.',
-    enabled: false,
+    enabled: true,
     emoji: '🐵',
   },
   brain: {
@@ -160,8 +166,14 @@ export const skins = {
   trees: {
     price: 420,
     description: '🍁 Blaze it.',
-    enabled: false,
+    enabled: true,
     emoji: '🍁',
+  },
+  fool: {
+    price: 99,
+    description: '🃏 The Fool. **[LIMITED]**',
+    enabled: false,
+    emoji: '🃏',
   },
   clown: {
     price: 999,

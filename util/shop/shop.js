@@ -14,7 +14,7 @@ const teleport = (cb) => {
 };
 
 const reroll = (cb) => {
-  // data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
+  data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
   if (cb) cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
 };
 

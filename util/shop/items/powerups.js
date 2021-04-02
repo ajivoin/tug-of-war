@@ -30,7 +30,7 @@ export const powerups = {
     enabled: true,
   },
   zero: {
-    price: 0,
+    price: 50,
     description: '0',
     enabled: false,
   },
