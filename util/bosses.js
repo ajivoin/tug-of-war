@@ -3,6 +3,7 @@ import { MessageEmbed } from 'discord.js';
 
 import utils from './utils';
 import data from './data';
+import constants from './constants';
 
 // const IMAGE_PATH = [
 //   [
@@ -69,7 +70,7 @@ const BOSS_REWARDS_POOL = [
   { crowns: 75 },
   { crowns: 150 },
 ];
-const BOSS_HEALTH_MULTIPLIER = 75;
+const BOSS_HEALTH_MULTIPLIER = 75 * constants.BASE_DAMAGE;
 
 export default class Boss {
   static instance;
@@ -170,24 +171,27 @@ export default class Boss {
 
   handleWin(userId) {
     this.distributeRewards();
-    if (userId) data.addCrowns(userId, 1); // bonus for last hit
+    if (userId) data.addCrowns(userId, 5); // bonus for last hit
     this.active = false;
     Boss.instance = null;
   }
 
-  hit(userId) {
+  hit(userId, critCallback) {
+    const crit = Math.random() < constants.CRIT_RATE;
+    const damage = constants.BASE_DAMAGE * (crit ? constants.CRIT_MULTIPLIER : 1);
     const user = this.participants[userId];
     if (user) {
-      this.participants[userId] += 1;
+      this.participants[userId] += damage;
     } else {
-      this.participants[userId] = 1;
+      this.participants[userId] = damage;
     }
-    this.health -= 1;
+    this.health -= damage;
     if (this.health <= 0) {
       // winner!
       this.handleWin(userId);
       return true;
     }
+    if (crit) critCallback();
     data.persistBoss(Boss.instance);
     return false;
   }

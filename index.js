@@ -93,7 +93,9 @@ client.on('message', (message) => {
       }
       if (Math.abs(number - data.getCurrentNumber()) === 1) {
         if (Boss.instance) {
-          const isBossDead = Boss.instance.hit(message.author.id);
+          const isBossDead = Boss.instance.hit(message.author.id, () => {
+            message.react('‼'); // crit
+          });
           if (isBossDead) {
             message.react('⚔');
             message.channel.send('Boss defeated! Paying rewards to everyone who helped...');
