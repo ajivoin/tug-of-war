@@ -14,4 +14,5 @@ export default {
   BASE_DAMAGE: 100,
   CRIT_RATE: 0.025,
   CRIT_MULTIPLIER: 10,
+  BOMB_DAMAGE: 1000,
 };

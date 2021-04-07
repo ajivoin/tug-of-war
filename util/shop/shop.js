@@ -3,6 +3,7 @@ import enabledSkins from './items/skins';
 import utils from '../utils';
 import data from '../data';
 import constants from '../constants';
+import Boss from '../bosses';
 
 const teleport = (cb) => {
   let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);
@@ -45,7 +46,9 @@ const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
 
 const sneak = (callback) => {
   data.clearLastUserId();
-  callback('🤫');
+  const direction = Math.sign(data.getTargetNumber() - data.getCurrentNumber());
+  data.addToNumber(direction);
+  callback();
 };
 
 const deposit = (userId, callback) => {
@@ -59,6 +62,19 @@ const sqrt = (callback) => {
   num = sign * Math.floor(Math.sqrt(Math.abs(num)));
   data.setCurrentNumber(num);
   if (callback) callback(`👩‍🏫 Square Root! The current number is now ${num}.`);
+};
+
+const bomb = (userId, callback, errorCallback) => {
+  if (Boss.instance) {
+    const name = Boss.instance.bossName;
+    const isDead = Boss.instance.bomb(userId);
+    if (isDead) {
+      if (callback) callback(`⚔ ${name} defeated!`);
+    } else if (callback) {
+      callback(`💣 ${name} was bombed!`);
+    }
+  }
+  if (errorCallback) errorCallback('There is no active boss right now.');
 };
 
 const buy = (userId, item, callback, errorCallback) => {
@@ -100,6 +116,9 @@ const buy = (userId, item, callback, errorCallback) => {
       case 'sqrt':
         data.clearLastUserId();
         sqrt(callback);
+        break;
+      case 'bomb':
+        bomb(userId, callback);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);

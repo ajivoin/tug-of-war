@@ -176,6 +176,23 @@ export default class Boss {
     Boss.instance = null;
   }
 
+  bomb(userId) {
+    const user = this.participants[userId];
+    if (user) {
+      this.participants[userId] += constants.BOMB_DAMAGE;
+    } else {
+      this.participants[userId] = constants.BOMB_DAMAGE;
+    }
+    this.health -= constants.BOMB_DAMAGE;
+    if (this.health <= 0) {
+      this.handleWin(userId);
+      data.persistBoss(null);
+      return true;
+    }
+    data.persistBoss(Boss.instance);
+    return false;
+  }
+
   hit(userId, critCallback) {
     const crit = Math.random() < constants.CRIT_RATE;
     const damage = constants.BASE_DAMAGE * (crit ? constants.CRIT_MULTIPLIER : 1);
