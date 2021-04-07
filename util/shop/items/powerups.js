@@ -5,19 +5,19 @@ export const powerups = {
     enabled: true,
   },
   sneak: {
-    price: 25,
-    description: 'Say a number again without getting timed out.',
+    price: 30,
+    description: 'Sneakily move towards the target number.',
     enabled: true,
   },
   reroll: {
-    price: 25,
+    price: 50,
     description: 'Reroll the target number.',
     enabled: true,
   },
   teleport: {
     price: 25,
     description: 'Moves the current number far away.',
-    enabled: true,
+    enabled: false,
   },
   sqrt: {
     price: 50,
@@ -33,6 +33,11 @@ export const powerups = {
     price: 50,
     description: '0',
     enabled: false,
+  },
+  bomb: {
+    price: 1000,
+    description: 'Deal significant damage to the boss.',
+    enabled: true,
   },
 };
 

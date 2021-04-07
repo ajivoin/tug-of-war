@@ -8,13 +8,13 @@ export const skins = {
   bunny: {
     price: 1500,
     description: '🐰 Happy Bunny Day! **[LIMITED]**',
-    enabled: true,
+    enabled: false,
     emoji: '🐰',
   },
   rabbit: {
     price: 3500,
     description: '🐇 Hop hop.',
-    enabled: true,
+    enabled: false,
     emoji: '🐇',
   },
   default: {
@@ -22,6 +22,30 @@ export const skins = {
     description: '',
     enabled: false,
     emoji: '✅',
+  },
+  trees: {
+    price: 420,
+    description: '🍁 Blaze it.',
+    enabled: true,
+    emoji: '🍁',
+  },
+  sunflower: {
+    price: 500,
+    description: "🌻 Then you're left in the dust...",
+    enabled: true,
+    emoji: '🌻',
+  },
+  tulip: {
+    price: 500,
+    description: '🌷 One lip, tulip, red lip, blue lip.',
+    enabled: true,
+    emoji: '🌷',
+  },
+  blossom: {
+    price: 1000,
+    description: '🌸 Spring has sprung!',
+    enabled: true,
+    emoji: '🌸',
   },
   goat: {
     price: 3000,
@@ -32,20 +56,26 @@ export const skins = {
   pancake: {
     price: 1000,
     description: '🥞 Breakfast is served.',
-    enabled: true,
+    enabled: false,
     emoji: '🥞',
   },
   pizza: {
     price: 2000,
     description: '🍕 Now THIS is pie.',
-    enabled: true,
+    enabled: false,
     emoji: '🍕',
   },
   ufo: {
     price: 1337,
     description: '🛸 Somewhere out there...',
-    enabled: true,
+    enabled: false,
     emoji: '🛸',
+  },
+  chipmunk: {
+    price: 1000,
+    description: '🐿 This skin is nuts!',
+    enabled: true,
+    emoji: '🐿',
   },
   /* FLEX */
   flex: {
@@ -75,7 +105,7 @@ export const skins = {
   diamond: {
     price: 25000,
     description: '💎 Flex.',
-    enabled: false,
+    enabled: true,
     emoji: '💎',
   },
   /* DISABLED */
@@ -90,24 +120,6 @@ export const skins = {
     description: '🦖 Haha, short arms.',
     enabled: true,
     emoji: '🦖',
-  },
-  sunflower: {
-    price: 500,
-    description: "🌻 Then you're left in the dust...",
-    enabled: false,
-    emoji: '🌻',
-  },
-  tulip: {
-    price: 500,
-    description: '🌷 One lip, tulip, red lip, blue lip.',
-    enabled: false,
-    emoji: '🌷',
-  },
-  blossom: {
-    price: 1000,
-    description: '🌸 Spring has sprung!',
-    enabled: true,
-    emoji: '🌸',
   },
   devil: {
     price: 666,
@@ -162,12 +174,6 @@ export const skins = {
     description: "🤖 You shouldn't have this.",
     enabled: false,
     emoji: '🤖',
-  },
-  trees: {
-    price: 420,
-    description: '🍁 Blaze it.',
-    enabled: true,
-    emoji: '🍁',
   },
   fool: {
     price: 99,
