@@ -2,7 +2,7 @@ export const skins = {
   test: {
     price: 2000,
     description: 'test emoji please ignore',
-    enabled: false,
+    enabled: true,
     emoji: '🤖',
   },
   bunny: {
@@ -112,13 +112,13 @@ export const skins = {
   sauropod: {
     price: 2000,
     description: '🦕 How is this for extinction?',
-    enabled: false,
+    enabled: true,
     emoji: '🦕',
   },
   trex: {
     price: 5000,
     description: '🦖 Haha, short arms.',
-    enabled: true,
+    enabled: false,
     emoji: '🦖',
   },
   devil: {
@@ -130,19 +130,19 @@ export const skins = {
   mad: {
     price: 500,
     description: '😡 My face when I type the wrong number.',
-    enabled: false,
+    enabled: true,
     emoji: '😡',
   },
   rage: {
     price: 1000,
     description: '🤬 @!#?@!.',
-    enabled: false,
+    enabled: true,
     emoji: '🤬',
   },
   monke: {
     price: 500,
     description: '🐵 MONKE.',
-    enabled: true,
+    enabled: false,
     emoji: '🐵',
   },
   brain: {
