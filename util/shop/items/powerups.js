@@ -5,12 +5,12 @@ export const powerups = {
     enabled: true,
   },
   sneak: {
-    price: 30,
+    price: 60,
     description: 'Sneakily move towards the target number.',
     enabled: true,
   },
   reroll: {
-    price: 60,
+    price: 50,
     description: 'Reroll the target number.',
     enabled: true,
   },
