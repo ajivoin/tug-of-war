@@ -10,7 +10,7 @@ export const powerups = {
     enabled: true,
   },
   reroll: {
-    price: 50,
+    price: 60,
     description: 'Reroll the target number.',
     enabled: true,
   },
