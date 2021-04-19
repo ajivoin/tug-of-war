@@ -40,7 +40,7 @@ export const powerups = {
     enabled: false,
   },
   crit: {
-    price: 10000,
+    price: 3000,
     description: 'Permanently increase your crit chance (up to 5 times).',
     enabled: true,
   },
