@@ -194,7 +194,8 @@ export default class Boss {
   }
 
   hit(userId, critCallback) {
-    const crit = Math.random() < constants.CRIT_RATE * Math.sqrt(this.level);
+    const crit = Math.random() < (constants.CRIT_RATE
+      + (data.getCritBonus(userId) ?? 0) * constants.CRIT_BONUS);
     const damage = constants.BASE_DAMAGE * (crit ? constants.CRIT_MULTIPLIER : 1);
     const user = this.participants[userId];
     if (user) {

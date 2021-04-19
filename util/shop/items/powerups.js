@@ -37,6 +37,11 @@ export const powerups = {
   bomb: {
     price: 1000,
     description: 'Deal significant damage to the boss.',
+    enabled: false,
+  },
+  crit: {
+    price: 10000,
+    description: 'Permanently increase your crit chance (up to 5 times).',
     enabled: true,
   },
 };

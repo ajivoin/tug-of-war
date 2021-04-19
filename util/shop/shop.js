@@ -77,6 +77,19 @@ const bomb = (userId, callback, errorCallback) => {
   if (errorCallback) errorCallback('There is no active boss right now.');
 };
 
+const crit = (userId, callback) => {
+  const currentCritBonus = data.getCritBonus(userId);
+  if (!currentCritBonus) {
+    data.setCritBonus(userId, 1);
+    callback('Your crit level is now 1.');
+  } else if (currentCritBonus < constants.MAX_CRIT_LEVEL) {
+    data.setCritBonus(userId, currentCritBonus + 1);
+    callback(`Your crit level is now ${currentCritBonus + 1}.`);
+  } else {
+    callback('You already have the maximum crit level!');
+  }
+};
+
 const buy = (userId, item, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     const { price } = enabledPowerups[item];
@@ -119,6 +132,9 @@ const buy = (userId, item, callback, errorCallback) => {
         break;
       case 'bomb':
         bomb(userId, callback);
+        break;
+      case 'crit':
+        crit(userId, callback);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);

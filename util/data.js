@@ -79,6 +79,10 @@ const getWins = (userId) => getUser(userId).wins;
 
 const getMiscount = (userId) => getUser(userId).miscount;
 
+const getCritBonus = (userId) => getUser(userId).critBonus;
+
+const setCritBonus = (userId, value) => { getUser(userId).critBonus = value; };
+
 /**
  * @param {string} userId
  * @param {function?} errorCallback
@@ -377,6 +381,7 @@ export default {
   hasReaction,
   getUserReactionsMessage,
   getBoss,
+  getCritBonus,
   // modifiers
   addCoins,
   addCrowns,
@@ -398,6 +403,7 @@ export default {
   createUser,
   selectReaction,
   persistBoss,
+  setCritBonus,
   // data utils
   persistData,
 };
