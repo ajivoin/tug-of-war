@@ -4,6 +4,7 @@ import commands from './command_list';
 import shopSkins, { skins } from './shop/items/skins';
 import enabledPowerups from './shop/items/powerups';
 import { prefix } from '../config';
+import constants from './constants'
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
@@ -73,6 +74,11 @@ const userEmbed = (user, name) => {
     {
       name: 'Bosses Slain',
       value: user.boss,
+      inline: true,
+    },
+    {
+      name: 'Crit Level',
+      value: `${user.critBonus ?? 0}/${constants.MAX_CRIT_LEVEL}`,
       inline: true,
     },
   ];
