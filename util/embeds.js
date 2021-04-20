@@ -4,7 +4,7 @@ import commands from './command_list';
 import shopSkins, { skins } from './shop/items/skins';
 import enabledPowerups from './shop/items/powerups';
 import { prefix } from '../config';
-import constants from './constants'
+import constants from './constants';
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
