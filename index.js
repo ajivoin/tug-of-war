@@ -124,7 +124,8 @@ client.on('message', (message) => {
           );
           data.clearLastUserId();
         } else {
-          if (Math.random() <= constants.ACROBATICS_RATE * (data.getAcrobatics(userId) ?? 0)) {
+          if (Math.random() <= constants.ACROBATICS_RATE
+            * ((data.getAcrobatics(userId) ?? 0) ** 1.5)) {
             message.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
           } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
@@ -134,19 +135,21 @@ client.on('message', (message) => {
           }
 
           if (Math.random() <= constants.COIN_RATE) {
-            const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
+            // const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
+            const gain = 420;
             data.addCoins(userId, gain);
-            message.react('💰');
-          } else if (Math.abs(data.getCurrentNumber()) === 69) {
+            // message.react('💰');
+            message.react('🔥');
+          }
+          if (Math.abs(data.getCurrentNumber()) === 69) {
             message.react('😎');
           } else if (Math.abs(data.getCurrentNumber()) === 100) {
             message.react('💯');
-          } else {
-            message.react(data.getReaction(userId)).catch((err) => {
-              message.react(constants.REACT_CORRECT);
-              console.error(err);
-            });
           }
+          message.react(data.getReaction(userId)).catch((err) => {
+            message.react(constants.REACT_CORRECT);
+            console.error(err);
+          });
         }
       } else {
         data.setLastUserId(userId);
