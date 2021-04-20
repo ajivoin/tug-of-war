@@ -29,6 +29,12 @@ export const skins = {
     enabled: true,
     emoji: '🍁',
   },
+  blazeit: {
+    price: 420,
+    description: '🔥 BLAZE IT!',
+    enabled: false,
+    emoji: '🔥',
+  },
   sunflower: {
     price: 500,
     description: "🌻 Then you're left in the dust...",

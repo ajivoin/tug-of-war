@@ -59,7 +59,9 @@ client.on('message', (message) => {
       data.createUser(userId);
     }
     const tokens = utils.tokenize(message.content);
-
+    if (message.content.toLowerCase() === "blaze it" && !data.hasReaction(userId, 'blazeit')) {
+      data.selectReaction(userId, 'blazeit');
+    }
     // #region command
     // explicity check for bind first
     if (message.content.startsWith(prefix)) {
