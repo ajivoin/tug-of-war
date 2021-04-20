@@ -124,11 +124,15 @@ client.on('message', (message) => {
           );
           data.clearLastUserId();
         } else {
-          if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
+          if (Math.random() <= constants.ACROBATICS_RATE * (data.getAcrobatics(userId) ?? 0)) {
+            message.react(constants.ACROBATICS_EMOJI);
+            data.clearLastUserId();
+          } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
             data.setLastUserId(userId);
           } else {
             data.clearLastUserId();
           }
+
           if (Math.random() <= constants.COIN_RATE) {
             const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
             data.addCoins(userId, gain);

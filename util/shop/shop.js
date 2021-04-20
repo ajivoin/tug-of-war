@@ -82,12 +82,31 @@ const crit = (userId, callback) => {
   if (!currentCritBonus) {
     data.setCritBonus(userId, 1);
     callback('Your crit level is now 1.');
-  } else if (currentCritBonus < constants.MAX_CRIT_LEVEL) {
+    return true;
+  }
+  if (currentCritBonus < constants.MAX_CRIT_LEVEL) {
     data.setCritBonus(userId, currentCritBonus + 1);
     callback(`Your crit level is now ${currentCritBonus + 1}.`);
-  } else {
-    callback('You already have the maximum crit level!');
+    return true;
   }
+  callback('You already have the maximum crit level!');
+  return false;
+};
+
+const acrobatics = (userId, callback) => {
+  const currentAcrobatics = data.getAcrobatics(userId);
+  if (!currentAcrobatics) {
+    data.setAcrobatics(userId, 1);
+    callback('Your acrobatics level is now 1.');
+    return true;
+  }
+  if (currentAcrobatics < constants.MAX_ACRO_LEVEL) {
+    data.setAcrobatics(userId, currentAcrobatics + 1);
+    callback(`Your acrobatics level is now ${currentAcrobatics + 1}.`);
+    return true;
+  }
+  callback('You already have the maximum acrobatics level!');
+  return false;
 };
 
 const buy = (userId, item, callback, errorCallback) => {
@@ -134,7 +153,10 @@ const buy = (userId, item, callback, errorCallback) => {
         bomb(userId, callback);
         break;
       case 'crit':
-        crit(userId, callback);
+        if (!crit(userId, callback)) data.addCoins(userId, price);
+        break;
+      case 'acrobatics':
+        if (!acrobatics(userId, callback)) data.addCoins(userId, price);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);

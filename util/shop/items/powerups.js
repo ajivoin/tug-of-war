@@ -44,6 +44,11 @@ export const powerups = {
     description: 'Permanently increase your crit chance (up to 5 times).',
     enabled: true,
   },
+  acrobatics: {
+    price: 5000,
+    description: 'Permanently increase your chance to be able to count two numbers in a row (up to 5 times).',
+    enabled: true,
+  },
 };
 
 const enabledPowerups = {};

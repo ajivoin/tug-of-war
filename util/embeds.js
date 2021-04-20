@@ -81,6 +81,11 @@ const userEmbed = (user, name) => {
       value: `${user.critBonus ?? 0}/${constants.MAX_CRIT_LEVEL}`,
       inline: true,
     },
+    {
+      name: 'Acrobatics Level',
+      value: `${user.acrobatics ?? 0}/${constants.MAX_ACRO_LEVEL}`,
+      inline: true,
+    },
   ];
   return getCoreEmbed(name, `Statistics for ${name}.`, fields);
 };

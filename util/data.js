@@ -83,6 +83,10 @@ const getCritBonus = (userId) => getUser(userId).critBonus;
 
 const setCritBonus = (userId, value) => { getUser(userId).critBonus = value; };
 
+const getAcrobatics = (userId) => getUser(userId).acrobatics;
+
+const setAcrobatics = (userId, value) => { getUser(userId).acrobatics = value; };
+
 /**
  * @param {string} userId
  * @param {function?} errorCallback
@@ -382,6 +386,7 @@ export default {
   getUserReactionsMessage,
   getBoss,
   getCritBonus,
+  getAcrobatics,
   // modifiers
   addCoins,
   addCrowns,
@@ -404,6 +409,7 @@ export default {
   selectReaction,
   persistBoss,
   setCritBonus,
+  setAcrobatics,
   // data utils
   persistData,
 };
