@@ -125,7 +125,7 @@ client.on('message', (message) => {
           data.clearLastUserId();
         } else {
           if (Math.random() <= constants.ACROBATICS_RATE
-            * ((data.getAcrobatics(userId) ?? 0) ** 1.5)) {
+              * ((data.getAcrobatics(userId) ?? 0) ** 1.5)) {
             message.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
           } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
