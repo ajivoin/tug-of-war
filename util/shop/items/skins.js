@@ -3,7 +3,7 @@ export const skins = {
     price: 1000,
     description: '🐶 TO THE MOON!',
     enabled: true,
-    emoji: 'dog',
+    emoji: '🐶',
   },
   moon: {
     price: 2000,
