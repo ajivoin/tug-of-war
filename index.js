@@ -80,7 +80,7 @@ client.on('message', (message) => {
       if (message.channel.id !== data.getChannelId()) return;
 
       // heavy-lifting for commands
-      client.commands.get(command) ?.execute(message);
+      client.commands.get(command)?.execute(message);
     }
     // #endregion
 
