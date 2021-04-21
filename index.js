@@ -80,7 +80,7 @@ client.on('message', (message) => {
       if (message.channel.id !== data.getChannelId()) return;
 
       // heavy-lifting for commands
-      client.commands.get(command)?.execute(message);
+      client.commands.get(command) ?.execute(message);
     }
     // #endregion
 
@@ -127,7 +127,7 @@ client.on('message', (message) => {
           data.clearLastUserId();
         } else {
           if (Math.random() <= constants.ACROBATICS_RATE
-              * (data.getAcrobatics(userId) ?? 0)) {
+            * (data.getAcrobatics(userId) ?? 0)) {
             message.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
           } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {

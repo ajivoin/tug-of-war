@@ -51,9 +51,9 @@ const sneak = (callback) => {
   callback();
 };
 
-const deposit = (userId, callback) => {
-  data.addCrowns(userId, 1);
-  if (callback) callback('💳 You have purchased a Crown Gift Card! (+1 👑)');
+const deposit = (userId, quantity, callback) => {
+  data.addCrowns(userId, quantity);
+  if (callback) callback(`💳 You have purchased ${quantity} Crown Gift Card${quantity > 1 ? 's' : ''}! (+1 👑)`);
 };
 
 const sqrt = (callback) => {
@@ -109,9 +109,9 @@ const acrobatics = (userId, callback) => {
   return false;
 };
 
-const buy = (userId, item, callback, errorCallback) => {
+const buy = (userId, item, quantity = 1, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
-    const { price } = enabledPowerups[item];
+    const price = enabledPowerups[item].price * (enabledPowerups[item].quantified ? quantity : 1);
     if (data.getCoins(userId) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
       return;
@@ -143,7 +143,7 @@ const buy = (userId, item, callback, errorCallback) => {
         sneak(callback);
         break;
       case 'crowncard':
-        deposit(userId, callback);
+        deposit(userId, quantity, callback);
         break;
       case 'sqrt':
         data.clearLastUserId();
