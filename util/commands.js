@@ -123,7 +123,7 @@ const buyFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
   if (tokens[1] === undefined) return;
-  shop.buy(userId, tokens[1],
+  shop.buy(userId, tokens[1], tokens[2],
     (msg) => { if (msg) message.channel.send(`${message.author}: ${msg}`); },
     (errorMsg) => { if (errorMsg) message.channel.send(`${message.author}: ${errorMsg}`); });
 };
