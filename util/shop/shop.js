@@ -109,6 +109,22 @@ const acrobatics = (userId, callback) => {
   return false;
 };
 
+const royalty = (userId, callback) => {
+  const currentRoyalty = data.getRoyalty(userId);
+  if (!currentRoyalty) {
+    data.setRoyalty(userId, 1);
+    callback('Your royalty level is now 1.');
+    return true;
+  }
+  if (currentRoyalty < constants.MAX_ROYALTY_LEVEL) {
+    data.setRoyalty(userId, currentRoyalty + 1);
+    callback(`Your royalty level is now ${currentRoyalty + 1}.`);
+    return true;
+  }
+  callback('You already have the maximum royalty level!');
+  return false;
+};
+
 const buy = (userId, item, quantity, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
@@ -160,6 +176,9 @@ const buy = (userId, item, quantity, callback, errorCallback) => {
         break;
       case 'acrobatics':
         if (!acrobatics(userId, callback)) data.addCoins(userId, price);
+        break;
+      case 'royalty':
+        if (!royalty(userId, callback)) data.addCoins(userId, price);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);

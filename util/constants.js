@@ -20,4 +20,6 @@ export default {
   ACROBATICS_EMOJI: '👟',
   ACROBATICS_RATE: 0.1,
   MAX_ACRO_LEVEL: 5,
+  ROYALTY_GAIN: 1,
+  MAX_ROYALTY_LEVEL: 4,
 };

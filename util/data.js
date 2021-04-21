@@ -79,13 +79,17 @@ const getWins = (userId) => getUser(userId).wins;
 
 const getMiscount = (userId) => getUser(userId).miscount;
 
-const getCritBonus = (userId) => getUser(userId).critBonus;
+const getCritBonus = (userId) => getUser(userId).critBonus ?? 0;
 
 const setCritBonus = (userId, value) => { getUser(userId).critBonus = value; };
 
-const getAcrobatics = (userId) => getUser(userId).acrobatics;
+const getAcrobatics = (userId) => getUser(userId).acrobatics ?? 0;
 
 const setAcrobatics = (userId, value) => { getUser(userId).acrobatics = value; };
+
+const getRoyalty = (userId) => getUser(userId).royalty ?? 0;
+
+const setRoyalty = (userId, value) => { getUser(userId).royalty = value; };
 
 /**
  * @param {string} userId
@@ -387,6 +391,7 @@ export default {
   getBoss,
   getCritBonus,
   getAcrobatics,
+  getRoyalty,
   // modifiers
   addCoins,
   addCrowns,
@@ -410,6 +415,7 @@ export default {
   persistBoss,
   setCritBonus,
   setAcrobatics,
+  setRoyalty,
   // data utils
   persistData,
 };
