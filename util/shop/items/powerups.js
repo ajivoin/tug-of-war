@@ -45,7 +45,7 @@ export const powerups = {
     enabled: true,
   },
   acrobatics: {
-    price: 5000,
+    price: 2500,
     description: 'Permanently increase your chance to be able to count two numbers in a row (up to 5 times).',
     enabled: true,
   },
