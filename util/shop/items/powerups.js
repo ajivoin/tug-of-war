@@ -14,31 +14,26 @@ export const powerups = {
   reroll: {
     price: 50,
     description: 'Reroll the target number.',
-    quantified: false,
     enabled: true,
   },
   teleport: {
     price: 25,
     description: 'Moves the current number far away.',
-    quantified: false,
     enabled: false,
   },
   sqrt: {
     price: 50,
     description: 'Square roots the current number.',
-    quantified: false,
     enabled: true,
   },
   nice: {
     price: 50,
     description: 'Nice.',
-    quantified: false,
     enabled: true,
   },
   zero: {
     price: 50,
     description: '0',
-    quantified: false,
     enabled: false,
   },
   bomb: {
