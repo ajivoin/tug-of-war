@@ -88,7 +88,7 @@ const userEmbed = (user, name) => {
     },
     {
       name: 'Royalty',
-      value: `${user.royalty}/${constants.MAX_ROYALTY_LEVEL}`,
+      value: `${user.royalty ?? 0}/${constants.MAX_ROYALTY_LEVEL}`,
       inline: true,
     },
   ];
