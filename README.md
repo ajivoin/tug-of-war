@@ -21,3 +21,11 @@ Single-server Discord bot that makes counting competitive.
 ## Usage
 
 Type `t?help` to see what commands you can use.
+
+## Contributing
+
+0. Follow [Development](#development) instructions.
+1. Implement and document your feature.
+2. Manually test your feature and document how you tested it.
+3. Run `npm run lint` and ensure you have **no lint errors**.
+4. Create a pull request including documentation of your feature and how you tested it.

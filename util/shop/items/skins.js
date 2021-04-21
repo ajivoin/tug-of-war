@@ -1,8 +1,26 @@
 export const skins = {
+  doge: {
+    price: 1000,
+    description: '🐶 TO THE MOON!',
+    enabled: true,
+    emoji: '🐶',
+  },
+  moon: {
+    price: 2000,
+    description: '🌙 Wtf is a doge coin?',
+    enabled: true,
+    emoji: '🌙',
+  },
+  satellite: {
+    price: 5000,
+    description: '🛰 Space is pretty cool.',
+    enabled: true,
+    emoji: '🛰',
+  },
   test: {
     price: 2000,
     description: 'test emoji please ignore',
-    enabled: true,
+    enabled: false,
     emoji: '🤖',
   },
   bunny: {
@@ -26,7 +44,7 @@ export const skins = {
   trees: {
     price: 420,
     description: '🍁 Blaze it.',
-    enabled: true,
+    enabled: false,
     emoji: '🍁',
   },
   blazeit: {
@@ -38,13 +56,13 @@ export const skins = {
   sunflower: {
     price: 500,
     description: "🌻 Then you're left in the dust...",
-    enabled: true,
+    enabled: false,
     emoji: '🌻',
   },
   tulip: {
     price: 500,
     description: '🌷 One lip, tulip, red lip, blue lip.',
-    enabled: true,
+    enabled: false,
     emoji: '🌷',
   },
   blossom: {
@@ -56,7 +74,7 @@ export const skins = {
   goat: {
     price: 3000,
     description: '🐐 THE GOAT.',
-    enabled: true,
+    enabled: false,
     emoji: '🐐',
   },
   pancake: {
@@ -74,7 +92,7 @@ export const skins = {
   ufo: {
     price: 1337,
     description: '🛸 Somewhere out there...',
-    enabled: false,
+    enabled: true,
     emoji: '🛸',
   },
   chipmunk: {
@@ -136,7 +154,7 @@ export const skins = {
   mad: {
     price: 500,
     description: '😡 My face when I type the wrong number.',
-    enabled: true,
+    enabled: false,
     emoji: '😡',
   },
   rage: {

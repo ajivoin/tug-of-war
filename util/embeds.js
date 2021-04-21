@@ -77,13 +77,18 @@ const userEmbed = (user, name) => {
       inline: true,
     },
     {
-      name: 'Crit Level',
+      name: 'Crit Bonus',
       value: `${user.critBonus ?? 0}/${constants.MAX_CRIT_LEVEL}`,
       inline: true,
     },
     {
-      name: 'Acrobatics Level',
+      name: 'Acrobatics',
       value: `${user.acrobatics ?? 0}/${constants.MAX_ACRO_LEVEL}`,
+      inline: true,
+    },
+    {
+      name: 'Royalty',
+      value: `${user.royalty ?? 0}/${constants.MAX_ROYALTY_LEVEL}`,
       inline: true,
     },
   ];

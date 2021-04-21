@@ -59,6 +59,12 @@ export const powerups = {
     quantified: false,
     enabled: true,
   },
+  royalty: {
+    price: 5000,
+    description: 'Permanently gain an extra crown each time you win (up to 4 times).',
+    quantified: false,
+    enabled: true,
+  },
 };
 
 const enabledPowerups = {};
