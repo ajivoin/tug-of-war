@@ -137,11 +137,9 @@ client.on('message', (message) => {
           }
 
           if (Math.random() <= constants.COIN_RATE) {
-            // const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
-            const gain = 420;
+            const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
             data.addCoins(userId, gain);
-            // message.react('💰');
-            message.react('🔥');
+            message.react('💰');
           }
           if (Math.abs(data.getCurrentNumber()) === 69) {
             message.react('😎');

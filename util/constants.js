@@ -6,7 +6,7 @@ export default {
   CONVERSION_RATE: 100,
   COIN_RATE: 0.05,
   COIN_LOSS: 2,
-  COIN_GAIN: 20,
+  COIN_GAIN: 50,
   TP_MIN: 10,
   TP_MAX: 50,
   CROWN_MULTIPLIER: 1,
