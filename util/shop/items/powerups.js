@@ -49,6 +49,11 @@ export const powerups = {
     description: 'Permanently increase your chance to be able to count two numbers in a row (up to 5 times).',
     enabled: true,
   },
+  royalty: {
+    price: 5000,
+    description: 'Permanently gain an extra crown each time you win (up to 4 times).',
+    enabled: true,
+  },
 };
 
 const enabledPowerups = {};
