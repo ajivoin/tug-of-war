@@ -17,7 +17,6 @@ fs.stat('./data.json', (err) => {
 
 const persistBoss = (boss) => {
   data.boss = boss;
-  console.log('Boss added to data.');
 };
 
 const getBoss = () => data.boss;

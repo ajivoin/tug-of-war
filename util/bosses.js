@@ -171,7 +171,7 @@ export default class Boss {
 
   handleWin(userId) {
     this.distributeRewards();
-    if (userId) data.addCrowns(userId, 5); // bonus for last hit
+    if (userId) data.addCrowns(userId, 5 + data.getRoyalty(userId)); // bonus for last hit
     this.active = false;
     Boss.instance = null;
   }

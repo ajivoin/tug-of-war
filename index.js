@@ -94,22 +94,6 @@ client.on('message', (message) => {
         return;
       }
       if (Math.abs(number - data.getCurrentNumber()) === 1) {
-        if (Boss.instance) {
-          const isBossDead = Boss.instance.hit(message.author.id, () => {
-            message.react('‼'); // crit
-          });
-          if (isBossDead) {
-            message.react('⚔');
-            message.channel.send('Boss defeated! Paying rewards to everyone who helped...');
-            const user = data.getUser(userId);
-            user.boss += 1;
-          } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
-            message.channel.send(Boss.instance.embed);
-          }
-        } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
-          Boss.instantiate();
-          message.channel.send(Boss.instance.embed);
-        }
         // increment user count
         data.incrementCount(userId);
 
@@ -126,8 +110,10 @@ client.on('message', (message) => {
           );
           data.clearLastUserId();
         } else {
+          let hasReacted = false;
           if (Math.random() <= constants.ACROBATICS_RATE
               * (data.getAcrobatics(userId) ?? 0)) {
+            hasReacted = true;
             message.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
           } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
@@ -135,21 +121,40 @@ client.on('message', (message) => {
           } else {
             data.clearLastUserId();
           }
-
+          if (Boss.instance) {
+            const isBossDead = Boss.instance.hit(message.author.id, () => {
+              hasReacted = true;
+              message.react('‼'); // crit
+            });
+            if (isBossDead) {
+              message.channel.send(`Boss slain by ${message.author}! Paying rewards to everyone who helped...`);
+              const user = data.getUser(userId);
+              user.boss += 1;
+            } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
+              message.channel.send(Boss.instance.embed);
+            }
+          } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
+            Boss.instantiate();
+            message.channel.send(Boss.instance.embed);
+          }
           if (Math.random() <= constants.COIN_RATE) {
             const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
             data.addCoins(userId, gain);
             message.react('💰');
+            hasReacted = true;
           }
-          if (Math.abs(data.getCurrentNumber()) === 69) {
-            message.react('😎');
-          } else if (Math.abs(data.getCurrentNumber()) === 100) {
-            message.react('💯');
+          if (!hasReacted) {
+            if (Math.abs(data.getCurrentNumber()) === 69) {
+              message.react('😎');
+            } else if (Math.abs(data.getCurrentNumber()) === 100) {
+              message.react('💯');
+            } else {
+              message.react(data.getReaction(userId)).catch((err) => {
+                message.react(constants.REACT_CORRECT);
+                console.error(err);
+              });
+            }
           }
-          message.react(data.getReaction(userId)).catch((err) => {
-            message.react(constants.REACT_CORRECT);
-            console.error(err);
-          });
         }
       } else {
         data.setLastUserId(userId);
