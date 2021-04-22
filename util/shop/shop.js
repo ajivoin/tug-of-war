@@ -129,7 +129,7 @@ const buy = (userId, item, quant, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
     let quantity = 1;
-    if (quant.toLowerCase() === 'max') {
+    if (quant && quant.toLowerCase() === 'max') {
       quantity = Math.floor(data.getCoins(userId) / price);
       if (quantity === 0) quantity = 1;
     } else if (!Number.isNaN(Number.parseInt(quant, 10))) {
