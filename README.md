@@ -1,3 +1,5 @@
+[![Lint](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml/badge.svg)](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml)
+
 # tug-of-war
 
 Single-server Discord bot that makes counting competitive.
