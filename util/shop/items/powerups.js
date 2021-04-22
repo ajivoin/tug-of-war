@@ -2,11 +2,13 @@ export const powerups = {
   crowncard: {
     price: 110,
     description: 'Convert coins back into a crown at a premium.',
+    quantified: true,
     enabled: true,
   },
   sneak: {
     price: 60,
     description: 'Sneakily move towards the target number.',
+    quantified: false,
     enabled: true,
   },
   reroll: {
@@ -37,21 +39,25 @@ export const powerups = {
   bomb: {
     price: 1000,
     description: 'Deal significant damage to the boss.',
+    quantified: false,
     enabled: false,
   },
   crit: {
     price: 3000,
     description: 'Permanently increase your crit chance (up to 5 times).',
+    quantified: false,
     enabled: true,
   },
   acrobatics: {
     price: 2500,
     description: 'Permanently increase your chance to be able to count two numbers in a row (up to 5 times).',
+    quantified: false,
     enabled: true,
   },
   royalty: {
     price: 5000,
     description: 'Permanently gain an extra crown each time you win (up to 4 times).',
+    quantified: false,
     enabled: true,
   },
 };
