@@ -125,11 +125,18 @@ const royalty = (userId, callback) => {
   return false;
 };
 
-const buy = (userId, item, quantity, callback, errorCallback) => {
+const buy = (userId, item, quant, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
-    if (!Number.isNaN(Number.parseInt(quantity, 10)) && enabledPowerups[item].quantified) {
-      price *= Number.parseInt(quantity, 10);
+    let quantity = 1;
+    if (quant.toLowerCase() === 'max') {
+      quantity = Math.floor(data.getCoins(userId) / price);
+      if (quantity === 0) quantity = 1;
+    } else if (!Number.isNaN(Number.parseInt(quant, 10))) {
+      quantity = Number.parseInt(quant, 10);
+    }
+    if (enabledPowerups[item].quantified) {
+      price *= quantity;
     }
     if (data.getCoins(userId) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
