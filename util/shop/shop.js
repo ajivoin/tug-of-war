@@ -53,7 +53,7 @@ const sneak = (callback) => {
 
 const deposit = (userId, callback, quantity = 1) => {
   data.addCrowns(userId, quantity);
-  if (callback) callback(`💳 You have purchased ${quantity} Crown Gift Card${quantity > 1 ? 's' : ''}! (+${quantity} 👑)`);
+  if (callback) callback(`💳 You have purchased a Crown Gift Card! (+${quantity} 👑)`);
 };
 
 const sqrt = (callback) => {
