@@ -20,3 +20,7 @@ Single-server Discord bot that makes counting competitive.
 ## Usage
 
 Type `t?help` to see what commands you can use.
+
+## Contributing
+
+See [CONTRIBUTING.md](/CONTRIBUTING.md)
