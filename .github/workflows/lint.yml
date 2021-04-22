@@ -20,6 +20,6 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 14.x
-    - run: touch {{ $github.workspace }}/config.js
+    - run: touch ${{ github.workspace }}/config.js
     - run: npm ci
     - run: npm run lint
