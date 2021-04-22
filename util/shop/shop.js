@@ -51,9 +51,9 @@ const sneak = (callback) => {
   callback();
 };
 
-const deposit = (userId, callback, quantity) => {
-  data.addCrowns(userId, quantity ?? 1);
-  if (callback) callback(`💳 You have purchased a Crown Gift Card! (+${quantity ?? 1} 👑)`);
+const deposit = (userId, callback, quantity = 1) => {
+  data.addCrowns(userId, quantity);
+  if (callback) callback(`💳 You have purchased a Crown Gift Card! (+${quantity} 👑)`);
 };
 
 const sqrt = (callback) => {
@@ -128,7 +128,7 @@ const royalty = (userId, callback) => {
 const buy = (userId, item, quantity, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
-    if (!Number.isNaN(Number.parseInt(quantity, 10))) {
+    if (!Number.isNaN(Number.parseInt(quantity, 10)) && enabledPowerups[item].quantified) {
       price *= Number.parseInt(quantity, 10);
     }
     if (data.getCoins(userId) < price) {
