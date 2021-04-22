@@ -94,7 +94,6 @@ export default class Boss {
   static load() {
     if (!Boss.instance) {
       const boss = data.getBoss();
-      console.log(`Boss load: ${JSON.stringify(boss)}`);
       if (boss) {
         Boss.instance = new Boss();
         Boss.instance.active = boss.active;

@@ -100,7 +100,6 @@ client.on('message', (message) => {
         // check if win
         data.setCurrentNumber(number);
         if (Math.abs(number) === data.getTargetNumber()) {
-          console.log('Winner. Resetting number.');
           data.incrementWins(userId);
           data.addCrowns(userId, constants.CROWN_MULTIPLIER * (1 + data.getRoyalty(userId)));
           data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
