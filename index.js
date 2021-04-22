@@ -59,7 +59,7 @@ client.on('message', (message) => {
       data.createUser(userId);
     }
     const tokens = utils.tokenize(message.content);
-    if (message.content.toLowerCase() === "blaze it" && !data.hasReaction(userId, 'blazeit')) {
+    if (message.content.toLowerCase() === 'blaze it') {
       data.selectReaction(userId, 'blazeit');
     }
     // #region command
