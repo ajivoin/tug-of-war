@@ -21,7 +21,7 @@
   "homepage": "https://github.com/ajivoin/tug-of-war#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "underscore": "^1.12.0"
+    "underscore": "^1.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.16",
