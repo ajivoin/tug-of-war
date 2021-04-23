@@ -5,6 +5,8 @@ import shopSkins, { skins } from './shop/items/skins';
 import enabledPowerups from './shop/items/powerups';
 import { prefix } from '../config';
 import constants from './constants';
+import data from './data';
+import utils from './utils';
 
 const getCoreEmbed = (title, description, fields) => new MessageEmbed()
   .setColor('#0099ff')
@@ -118,6 +120,19 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
   return embed;
 };
 
+const generateLeaderboardEmbed = (prop = 'wins') => {
+  const users = data.getAllUsers();
+  const leaderboardContents = utils.generateLeaderboard(users, 'wins');
+  const textContents = leaderboardContents.reduce((acc, [mention, score], i) => `${acc}${i + 1}. ${mention}: ${score}\n`, '');
+  return getCoreEmbed('Leaderboard', '', [
+    {
+      name: prop.toUpperCase(),
+      value: textContents,
+      inline: false,
+    },
+  ]);
+};
+
 export const helpEmbed = generateHelpEmbed();
 export const shopEmbed = generateShopEmbed();
 
@@ -127,4 +142,5 @@ export default {
   inventoryEmbedForUser,
   userEmbed,
   infoEmbed,
+  generateLeaderboardEmbed,
 };

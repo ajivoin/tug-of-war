@@ -368,6 +368,8 @@ const createUser = (userId, callback, errorCallback) => {
   }
 };
 
+const getAllUsers = () => data.users ?? {};
+
 export default {
   // getters
   getUser,
@@ -391,6 +393,7 @@ export default {
   getCritBonus,
   getAcrobatics,
   getRoyalty,
+  getAllUsers,
   // modifiers
   addCoins,
   addCrowns,

@@ -1,6 +1,5 @@
 import constants from './constants';
 import { skins } from './shop/items/skins';
-import { helpEmbed } from './embeds';
 
 const hasProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
 
@@ -52,8 +51,27 @@ const getEmoji = (reactionId, callback, errorCallback) => {
   return emoji;
 };
 
+const userIdToMention = (userId) => `<@${userId}>`;
+
 const tokenize = (str) => str.toLowerCase().trim().split(/ +/);
 
+const sortedListByProp = (dict, prop, maxLength = 5) => Object.keys(dict).map((key) => ([
+  key, dict[key][prop],
+])).sort((a, b) => b[1] - a[1]).slice(0, maxLength);
+
+const generateLeaderboard = (users, sortingOption = 'wins') => {
+  const mentionAndScores = sortedListByProp(users, sortingOption).map(
+    ([userId, value]) => [userIdToMention(userId), value],
+  );
+  return mentionAndScores;
+};
+
 export default {
-  getRandomInt, hasProperty, getDataSchema, createUser, getEmoji, tokenize, helpEmbed,
+  getRandomInt,
+  hasProperty,
+  getDataSchema,
+  createUser,
+  getEmoji,
+  tokenize,
+  generateLeaderboard,
 };
