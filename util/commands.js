@@ -2,7 +2,7 @@ import _ from 'underscore';
 import utils from './utils';
 import shop from './shop/shop';
 import constants from './constants';
-import embeds, { shopEmbed } from './embeds';
+import embeds, { shopEmbed, helpEmbed } from './embeds';
 import Command from './Command';
 import AdminCommand from './AdminCommand';
 import commands from './command_list';
@@ -14,7 +14,7 @@ import Boss from './bosses';
  * @param {Discord.Message} message
  */
 const helpFunction = (message) => {
-  message.channel.send(utils.helpEmbed);
+  message.channel.send(helpEmbed);
 };
 
 const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
@@ -26,6 +26,12 @@ const infoFunction = (message) => {
 };
 
 const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
+
+const leaderboardFunction = (message) => {
+  message.channel.send(embeds.generateLeaderboardEmbed());
+};
+
+const leaderboard = new Command('leaderboard', commands.leaderboard, _.debounce(leaderboardFunction, 10 * 1000, true));
 
 const inventoryFunction = (message) => {
   message.channel.send(embeds.inventoryEmbedForUser(data.getUser(message.author.id)));
@@ -200,6 +206,7 @@ const cmds = {
   spawn,
   kill,
   ping,
+  leaderboard,
 };
 
 const get = (cmd) => {
