@@ -74,7 +74,7 @@ const userEmbed = (user, name) => {
       inline: true,
     },
     {
-      name: 'Bosses Slain',
+      name: 'Bosses Defeated',
       value: user.boss,
       inline: true,
     },

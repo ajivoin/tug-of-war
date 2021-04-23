@@ -5,36 +5,65 @@ import utils from './utils';
 import data from './data';
 import constants from './constants';
 
+// const IMAGE_PATH = [ // old images
+//   [
+//     'util/boss_images/0_sunglasses.png',
+//     'util/boss_images/5_clown.png',
+//     'util/boss_images/6_poop.png',
+//   ],
+//   [
+//     'util/boss_images/1_ogre.png',
+//     'util/boss_images/2_monster.png',
+//     'util/boss_images/3_ghost.png',
+//   ],
+//   [
+//     'util/boss_images/9_cowboy.png',
+//     'util/boss_images/10_bezos.png',
+//     'util/boss_images/15_rock.png',
+//     // 'util/boss_images/11_santa.png',
+//     // 'util/boss_images/14_snowman.png',
+//   ],
+//   [
+//     'util/boss_images/7_devil.png',
+//     'util/boss_images/8_goblin.png',
+//     'util/boss_images/401_prankster.png',
+//   ],
+//   [
+//     'util/boss_images/4_dragon.png',
+//     'util/boss_images/7_devil.png',
+//   ],
+//   [
+//     'util/boss_images/12_sun.png',
+//     'util/boss_images/13_moon.png',
+//   ],
+// ];
 const IMAGE_PATH = [
   [
-    'util/boss_images/0_sunglasses.png',
-    'util/boss_images/5_clown.png',
-    'util/boss_images/6_poop.png',
+    'util/boss_images/17_snail.png',
+    'util/boss_images/19_bloon.png',
+    'util/boss_images/24_blurtle.png',
   ],
   [
-    'util/boss_images/1_ogre.png',
+    'util/boss_images/21_scorpion.png',
+    'util/boss_images/30_monke.png',
+    'util/boss_images/20_crab.png',
+  ],
+  [
+    'util/boss_images/27_poodle.png',
+    'util/boss_images/25_whale.png',
+    'util/boss_images/29_fox.png',
+  ],
+  [
+    'util/boss_images/16_crocodile.png',
+    'util/boss_images/23_octopus.png',
+  ],
+  [
     'util/boss_images/2_monster.png',
-    'util/boss_images/3_ghost.png',
+    'util/boss_images/26_eagle.png',
   ],
   [
-    'util/boss_images/9_cowboy.png',
-    'util/boss_images/10_bezos.png',
-    'util/boss_images/15_rock.png',
-    // 'util/boss_images/11_santa.png',
-    // 'util/boss_images/14_snowman.png',
-  ],
-  [
-    'util/boss_images/7_devil.png',
-    'util/boss_images/8_goblin.png',
-    'util/boss_images/401_prankster.png',
-  ],
-  [
+    'util/boss_images/22_whale.png',
     'util/boss_images/4_dragon.png',
-    'util/boss_images/7_devil.png',
-  ],
-  [
-    'util/boss_images/12_sun.png',
-    'util/boss_images/13_moon.png',
   ],
 ];
 
@@ -98,10 +127,10 @@ export default class Boss {
     return new MessageEmbed()
       .setColor('#0099ff')
       .setTitle('Boss battle!')
-      .setDescription('Count numbers to attack the boss! All participants will receive a reward!')
+      .setDescription(`Count numbers to pet ${this.bossName}! All participants will receive a reward!`)
       .addField('Name', this.bossName, true)
       .addField('Level', this.levelText, true)
-      .addField('Health', `${this.health} ❤`, true)
+      .addField('Anger', `${this.health} 💢`, true)
       .attachFiles([this.imagePath])
       .setImage(`attachment://${this.imageName}`);
   }

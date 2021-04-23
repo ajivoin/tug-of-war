@@ -126,7 +126,7 @@ client.on('message', (message) => {
               message.react('‼'); // crit
             });
             if (isBossDead) {
-              message.channel.send(`Boss slain by ${message.author}! Paying rewards to everyone who helped...`);
+              message.channel.send(`${Boss.instance.bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...`);
               const user = data.getUser(userId);
               user.boss += 1;
             } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
@@ -159,7 +159,7 @@ client.on('message', (message) => {
         data.setLastUserId(userId);
         data.incrementMiscount(userId);
         data.removeCoins(userId, constants.COIN_LOSS);
-        message.react('❌');
+        message.react(constants.REACT_INCORRECT);
       }
     }
   } catch (err) {
