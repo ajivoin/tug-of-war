@@ -129,13 +129,13 @@ const buy = (userId, item, quant, callback, errorCallback) => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
     let quantity = 1;
-    if (quant && quant.toLowerCase() === 'max') {
-      quantity = Math.floor(data.getCoins(userId) / price);
-      if (quantity === 0) quantity = 1;
-    } else if (!Number.isNaN(Number.parseInt(quant, 10))) {
-      quantity = Number.parseInt(quant, 10);
-    }
     if (enabledPowerups[item].quantified) {
+      if (quant && quant.toLowerCase() === 'max') {
+        quantity = Math.floor(data.getCoins(userId) / price);
+        if (quantity === 0) quantity = 1;
+      } else if (!Number.isNaN(Number.parseInt(quant, 10))) {
+        quantity = Number.parseInt(quant, 10);
+      }
       price *= quantity;
     }
     if (data.getCoins(userId) < price) {
