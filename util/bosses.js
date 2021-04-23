@@ -5,34 +5,6 @@ import utils from './utils';
 import data from './data';
 import constants from './constants';
 
-// const IMAGE_PATH = [
-//   [
-//     'util/boss_images/5_clown.png',
-//     'util/boss_images/401_joker.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-//   [
-//     'util/boss_images/5_clown.png',
-//     'util/boss_images/401_joker.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-//   [
-//     'util/boss_images/10_bezos.png',
-//     'util/boss_images/401_joker.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-//   [
-//     'util/boss_images/6_poop.png',
-//     'util/boss_images/401_joker.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-//   [
-//     'util/boss_images/8_goblin.png',
-//     'util/boss_images/401_joker.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-// ];
-
 const IMAGE_PATH = [
   [
     'util/boss_images/0_sunglasses.png',
@@ -57,20 +29,24 @@ const IMAGE_PATH = [
     'util/boss_images/401_prankster.png',
   ],
   [
+    'util/boss_images/4_dragon.png',
+    'util/boss_images/7_devil.png',
+  ],
+  [
     'util/boss_images/12_sun.png',
     'util/boss_images/13_moon.png',
-    'util/boss_images/4_dragon.png',
   ],
 ];
 
 const BOSS_REWARDS_POOL = [
-  { crowns: 20 },
+  { crowns: 15 },
   { crowns: 30 },
-  { crowns: 50 },
+  { crowns: 45 },
+  { crowns: 60 },
   { crowns: 75 },
-  { crowns: 150 },
+  { crowns: 125 },
 ];
-const BOSS_HEALTH_MULTIPLIER = 75 * constants.BASE_DAMAGE;
+const BOSS_HEALTH_MULTIPLIER = 100 * constants.BASE_DAMAGE;
 
 export default class Boss {
   static instance;
@@ -80,10 +56,11 @@ export default class Boss {
   static HEALTH_MULTIPLIER = BOSS_HEALTH_MULTIPLIER;
 
   static BOSS_BREAKPOINTS = [
-    0.3,
-    0.5,
-    0.7,
-    0.9,
+    0.30,
+    0.55,
+    0.80,
+    0.95,
+    0.99,
     1.0,
   ];
 
@@ -134,11 +111,15 @@ export default class Boss {
     let bp = 0;
     while (odds > Boss.BOSS_BREAKPOINTS[bp]) bp += 1;
     this.level = bp + 1;
-    this.levelText = '⭐'.repeat(this.level);
     this.rewards = Boss.REWARDS_POOL[bp];
-    this.health = this.level * Boss.HEALTH_MULTIPLIER;
+    if (this.level <= 5) {
+      this.levelText = '⭐'.repeat(this.level);
+      this.health = this.level * Boss.HEALTH_MULTIPLIER;
+    } else if (this.level <= 10) {
+      this.levelText = '💀'.repeat(this.level - 5);
+      this.health = this.level * Boss.HEALTH_MULTIPLIER * 1.5;
+    }
     this.totalHealth = this.health;
-    this.health = Boss.HEALTH_MULTIPLIER * this.level;
     this.participants = {};
     this.active = true;
     this.imagePath = _.sample(IMAGE_PATH[bp]);
