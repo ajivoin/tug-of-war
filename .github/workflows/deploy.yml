@@ -7,21 +7,25 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
+    paths:
+    - '**.js'
+    - '.github/workflows/deploy.yml'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+#   if: ${{ github.repository_owner == 'ajivoin' }}
   deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH Remote Commands
-        uses: appleboy/ssh-action@v0.1.4
-        with: 
-          host: ${{ secrets.SERVER_IP}}
-          username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_PASSWORD }}
-          script: cd ${{ secrets.PROJECT_PATH }} && git pull && npm install && pm2 restart ${{ secrets.PROJECT_ID }}
+      runs-on: ubuntu-latest
+      steps:
+        - name: SSH Remote Commands
+          uses: appleboy/ssh-action@v0.1.4
+          with: 
+            host: ${{ secrets.SERVER_IP}}
+            username: ${{ secrets.SERVER_USERNAME }}
+            password: ${{ secrets.SERVER_PASSWORD }}
+            script: cd ${{ secrets.PROJECT_PATH }} && rm package-lock.json && git pull && npm install && pm2 restart ${{ secrets.PROJECT_ID }}
         
 

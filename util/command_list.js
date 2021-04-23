@@ -9,6 +9,7 @@ export default {
   'convert <n>': 'converts n crowns to coins',
   'convert all': 'converts all crowns to coins',
   'equip <reactionId>': 'equip reaction',
-  'buy <item>': 'buys item from the shop',
+  'buy <item> [n]': 'buys item from the shop',
   boss: 'shows information on current boss',
+  leaderboard: 'show leaderboard',
 };

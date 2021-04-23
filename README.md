@@ -1,4 +1,4 @@
-[![Lint](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml/badge.svg)](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml)
+[![Lint](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml/badge.svg)](https://github.com/ajivoin/tug-of-war/actions/workflows/lint.yml) [![Deploy](https://github.com/ajivoin/tug-of-war/actions/workflows/deploy.yml/badge.svg)](https://github.com/ajivoin/tug-of-war/actions/workflows/deploy.yml)
 
 # tug-of-war
 
