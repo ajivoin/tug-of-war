@@ -121,12 +121,13 @@ client.on('message', (message) => {
             data.clearLastUserId();
           }
           if (Boss.instance) {
+            const { bossName } = Boss.instance.bossName;
             const isBossDead = Boss.instance.hit(message.author.id, () => {
               hasReacted = true;
               message.react('💓'); // crit
             });
             if (isBossDead) {
-              message.channel.send(`${Boss.instance.bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...`);
+              message.channel.send(`${bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...`);
               const user = data.getUser(userId);
               user.boss += 1;
             } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
