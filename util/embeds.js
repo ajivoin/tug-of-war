@@ -109,6 +109,11 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
       value: targetNumber,
       inline: true,
     },
+    {
+      name: 'Last Counter',
+      value: data.getLastUserId() ? utils.userIdToMention(data.getLastUserId()) : 'None',
+      inline: true,
+    },
   ];
 
   const embed = getCoreEmbed('Tug-of-War Information', '', fields);

@@ -74,4 +74,5 @@ export default {
   getEmoji,
   tokenize,
   generateLeaderboard,
+  userIdToMention,
 };
