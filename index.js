@@ -121,7 +121,7 @@ client.on('message', (message) => {
             data.clearLastUserId();
           }
           if (Boss.instance) {
-            const { bossName } = Boss.instance.bossName;
+            const bossName = `${Boss.instance.bossName}`;
             const isBossDead = Boss.instance.hit(message.author.id, () => {
               hasReacted = true;
               message.react('💓'); // crit
