@@ -127,7 +127,7 @@ export default class Boss {
     return new MessageEmbed()
       .setColor('#0099ff')
       .setTitle('Boss battle!')
-      .setDescription(`Count numbers to pet ${this.bossName}! All participants will receive a reward!`)
+      .setDescription(`Count numbers to pet the ${this.bossName}! All participants will receive a reward!`)
       .addField('Name', this.bossName, true)
       .addField('Level', this.levelText, true)
       .addField('Anger', `${this.health} 💢`, true)

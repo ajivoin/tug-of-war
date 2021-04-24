@@ -123,7 +123,7 @@ client.on('message', (message) => {
           if (Boss.instance) {
             const isBossDead = Boss.instance.hit(message.author.id, () => {
               hasReacted = true;
-              message.react('‼'); // crit
+              message.react('💓'); // crit
             });
             if (isBossDead) {
               message.channel.send(`${Boss.instance.bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...`);
