@@ -19,6 +19,7 @@ Single-server Discord bot that makes counting competitive.
 2. Invite your bot to a Discord server.
 3. Create a `#tug-of-war` channel.
 4. In `#tug-of-war`, write `t?bind` to get the bot in your channel.
+  - Due to a bug it may send a message that you need to bind twice. Ignore this, it works after the first one.
 
 ## Usage
 
