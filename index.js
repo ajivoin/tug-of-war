@@ -1,5 +1,5 @@
 // #region imports
-import Discord, {Intents} from 'discord.js';
+import Discord, { Intents } from 'discord.js';
 
 import utils from './util/utils';
 import constants from './util/constants';
@@ -13,7 +13,7 @@ import Boss from './util/bosses';
 // #endregion
 
 // Discord client
-const client = new Discord.Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]});
+const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
 client.commands = commands;
 
 client.once('ready', () => {
@@ -72,7 +72,7 @@ client.on('messageCreate', (message) => {
       if (!data.getChannelId()) {
         // unbound
         message.channel.send(
-          {content: `Bot must be bound to a channel with \`${prefix}bind #<channel-name>\`.`},
+          { content: `Bot must be bound to a channel with \`${prefix}bind #<channel-name>\`.` },
         );
         return;
       }
@@ -105,7 +105,7 @@ client.on('messageCreate', (message) => {
           data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
           message.react('👑');
           message.channel.send(
-            {content: `🤴 Congrats ${author}! New target: ±${data.getTargetNumber()}.`},
+            { content: `🤴 Congrats ${author}! New target: ±${data.getTargetNumber()}.` },
           );
           data.clearLastUserId();
         } else {
@@ -127,15 +127,15 @@ client.on('messageCreate', (message) => {
               message.react('💓'); // crit
             });
             if (isBossDead) {
-              message.channel.send({content: `${bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...`});
+              message.channel.send({ content: `${bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...` });
               const user = data.getUser(userId);
               user.boss += 1;
             } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
-              message.channel.send({embeds: [Boss.instance.embed]});
+              message.channel.send({ embeds: [Boss.instance.embed] });
             }
           } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
             Boss.instantiate();
-            message.channel.send({embeds: [Boss.instance.embed]});
+            message.channel.send({ embeds: [Boss.instance.embed] });
           }
           if (Math.random() <= constants.COIN_RATE) {
             const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
