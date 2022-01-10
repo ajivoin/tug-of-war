@@ -131,7 +131,6 @@ export default class Boss {
       .addField('Name', this.bossName, true)
       .addField('Level', this.levelText, true)
       .addField('Anger', `${this.health} 💢`, true)
-      .attachFiles([this.imagePath])
       .setImage(`attachment://${this.imageName}`);
   }
 

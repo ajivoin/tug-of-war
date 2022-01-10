@@ -55,12 +55,12 @@ const userEmbed = (user, name) => {
   const fields = [
     {
       name: 'Counts',
-      value: user.count,
+      value: user.count.toString(),
       inline: true,
     },
     {
       name: 'Mistakes',
-      value: user.miscount,
+      value: user.miscount.toString(),
       inline: true,
     },
     {
@@ -70,12 +70,12 @@ const userEmbed = (user, name) => {
     },
     {
       name: 'Wins',
-      value: user.wins,
+      value: user.wins.toString(),
       inline: true,
     },
     {
       name: 'Bosses Defeated',
-      value: user.boss,
+      value: user.boss.toString(),
       inline: true,
     },
     {
@@ -101,12 +101,12 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
   const fields = [
     {
       name: 'Current Number',
-      value: currentNumber,
+      value: `${currentNumber}`,
       inline: true,
     },
     {
       name: 'Target Number',
-      value: targetNumber,
+      value: `${targetNumber}`,
       inline: true,
     },
     {
@@ -120,7 +120,7 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
   if (boss) {
     // embed.addField('\u200b', '\u200b'); // blank link
     embed.addField('\u200b', '**Boss Information**');
-    embed.addFields(boss.embed.fields).attachFiles([boss.imagePath]).setThumbnail(`attachment://${boss.imageName}`);
+    embed.addFields(boss.embed.fields).setThumbnail(`attachment://${boss.imageName}`);
   }
   return embed;
 };

@@ -14,46 +14,46 @@ import Boss from './bosses';
  * @param {Discord.Message} message
  */
 const helpFunction = (message) => {
-  message.channel.send(helpEmbed);
+  message.channel.send({embeds: [helpEmbed]});
 };
 
 const help = new Command('help', commands.help, _.debounce(helpFunction, 10 * 1000, true));
 
 const infoFunction = (message) => {
   message.channel.send(
-    embeds.infoEmbed(data.getCurrentNumber(), `±${data.getTargetNumber()}`, Boss.instance),
+    {embeds: [embeds.infoEmbed(data.getCurrentNumber(), `±${data.getTargetNumber()}`, Boss.instance)], files: [Boss.instance?.imagePath || '']},
   );
 };
 
 const info = new Command('info', commands.info, _.debounce(infoFunction, 1 * 2500, true));
 
 const leaderboardFunction = (message) => {
-  message.channel.send(embeds.generateLeaderboardEmbed());
+  message.channel.send({embeds: [embeds.generateLeaderboardEmbed()]});
 };
 
 const leaderboard = new Command('leaderboard', commands.leaderboard, _.debounce(leaderboardFunction, 10 * 1000, true));
 
 const inventoryFunction = (message) => {
-  message.channel.send(embeds.inventoryEmbedForUser(data.getUser(message.author.id)));
+  message.channel.send({embeds: [embeds.inventoryEmbedForUser(data.getUser(message.author.id))]});
 };
 
 const inventory = new Command('inventory', commands.inventory, inventoryFunction);
 
 const userFunction = (message) => {
   const user = message.author;
-  message.channel.send(embeds.userEmbed(data.getUser(user.id), message.member.displayName));
+  message.channel.send({embeds: [embeds.userEmbed(data.getUser(user.id), message.member.displayName)]});
 };
 
 const user = new Command('user', commands.user, userFunction);
 
 const shopFunction = (message) => {
-  message.channel.send(shopEmbed);
+  message.channel.send({embeds: [shopEmbed]});
 };
 
 const shopCmd = new Command('shop', commands.shop, _.debounce(shopFunction, 10 * 1000, true));
 
 const balanceFunction = (message) => {
-  message.channel.send(`${message.author}: ${data.getCrowns(message.author.id)} Crowns; ${data.getCoins(message.author.id)}c`);
+  message.channel.send({content: `${message.author}: ${data.getCrowns(message.author.id)} Crowns; ${data.getCoins(message.author.id)}c`});
 };
 
 const balance = new Command('balance', commands.balance, balanceFunction);
@@ -100,8 +100,8 @@ const convertFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
   handleConvert(userId, tokens[1],
-    (msg) => { message.channel.send(`${message.author}: ${msg}`); },
-    (errorMsg) => { message.channel.send(`${message.author}: ${errorMsg}`); });
+    (msg) => { message.channel.send({content: `${message.author}: ${msg}`}); },
+    (errorMsg) => { message.channel.send({content: `${message.author}: ${errorMsg}`}); });
 };
 
 const convert = new Command('convert', commands.convert, convertFunction);
@@ -119,8 +119,8 @@ const equipFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
   setReactEmoji(userId, tokens[1],
-    (msg) => { message.channel.send(`${message.author}: ${msg}`); },
-    (errorMsg) => { message.channel.send(`${message.author}: ${errorMsg}`); });
+    (msg) => { message.channel.send({content: `${message.author}: ${msg}`}); },
+    (errorMsg) => { message.channel.send({content: `${message.author}: ${errorMsg}`}); });
 };
 
 const equip = new Command('equip', commands.equip, _.debounce(equipFunction, true));
@@ -130,8 +130,8 @@ const buyFunction = (message) => {
   const tokens = utils.tokenize(message.content.substr(prefix));
   if (tokens[1] === undefined) return;
   shop.buy(userId, tokens[1], tokens[2],
-    (msg) => { if (msg) message.channel.send(`${message.author}: ${msg}`); },
-    (errorMsg) => { if (errorMsg) message.channel.send(`${message.author}: ${errorMsg}`); });
+    (msg) => { if (msg) message.channel.send({content: `${message.author}: ${msg}`}); },
+    (errorMsg) => { if (errorMsg) message.channel.send({content: `${message.author}: ${errorMsg}`}); });
 };
 
 const buy = new Command('buy', commands.buy, buyFunction);
@@ -145,9 +145,9 @@ const debug = new AdminCommand('debug', '', debugFunction);
 
 const bossFunction = (message) => {
   if (Boss.instance) {
-    message.channel.send(Boss.instance.embed);
+    message.channel.send({embeds: [Boss.instance.embed]});
   } else {
-    message.channel.send('There is no boss right now. Count to lure one!');
+    message.channel.send({content: 'There is no boss right now. Count to lure one!'});
   }
 };
 
@@ -173,7 +173,7 @@ const givecrowns = new AdminCommand('givecrowns', '', giveCrownsFunction);
 
 const spawn = new AdminCommand('spawn', '', (message) => {
   const newBoss = Boss.instantiate();
-  message.channel.send(newBoss.embed);
+  message.channel.send({embeds: [newBoss.embed]});
 });
 
 const kill = new AdminCommand('kill', '', () => Boss.kill());
