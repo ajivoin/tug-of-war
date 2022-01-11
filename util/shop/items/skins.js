@@ -1,15 +1,15 @@
 export const skins = {
-  a: {
+  ily: {
     price: 0,
     description: '🤟 Welcome back everyone! I love you.',
     enabled: true,
-    emoji: '🤟'
+    emoji: '🤟',
   },
   high: {
     price: 1000,
     description: '😶‍🌫️ Why did I smoke this shit?',
     enabled: true,
-    emoji: '😶‍🌫️'
+    emoji: '😶‍🌫️',
   },
   doge: {
     price: 1000,
