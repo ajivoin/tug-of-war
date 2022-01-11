@@ -51,7 +51,7 @@ export const skins = {
     price: 0,
     description: '',
     enabled: false,
-    emoji: '✅',
+    emoji: '👑',
   },
   trees: {
     price: 420,

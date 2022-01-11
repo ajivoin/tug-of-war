@@ -103,9 +103,9 @@ client.on('messageCreate', (message) => {
           data.incrementWins(userId);
           data.addCrowns(userId, constants.CROWN_MULTIPLIER * (1 + data.getRoyalty(userId)));
           data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
-          message.react('👑');
+          message.react(data.getReaction(userId));
           message.channel.send(
-            { content: `🤴 Congrats ${author}! New target: ±${data.getTargetNumber()}.` },
+            { content: `👑 Congrats ${author}! New target: ±${data.getTargetNumber()}.` },
           );
           data.clearLastUserId();
         } else {
@@ -149,10 +149,7 @@ client.on('messageCreate', (message) => {
             } else if (Math.abs(data.getCurrentNumber()) === 100) {
               message.react('💯');
             } else {
-              message.react(data.getReaction(userId)).catch((err) => {
-                message.react(constants.REACT_CORRECT);
-                console.error(err);
-              });
+              message.react(constants.REACT_CORRECT);
             }
           }
         }
