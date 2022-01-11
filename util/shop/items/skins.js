@@ -7,7 +7,7 @@ export const skins = {
   },
   high: {
     price: 1000,
-    description: '😶‍🌫️ Why did I smoke this shit?',
+    description: "😶‍🌫️ Why'd I smoke this shit?",
     enabled: true,
     emoji: '😶‍🌫️',
   },
