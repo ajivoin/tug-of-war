@@ -1,7 +1,7 @@
 {
   "name": "tug-of-war",
-  "version": "0.6.0",
-  "description": "Discord counting bot mixed with tug of war",
+  "version": "0.6.1",
+  "description": "Single-server Discord counting bot mixed with tug of war",
   "main": "index.js",
   "scripts": {
     "start": "babel-node --experimental-modules --es-module-specifier-resolution=node .",
