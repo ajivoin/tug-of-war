@@ -1,20 +1,32 @@
 export const skins = {
+  a: {
+    price: 0,
+    description: '🤟 Welcome back everyone! I love you.',
+    enabled: true,
+    emoji: '🤟'
+  },
+  high: {
+    price: 1000,
+    description: '😶‍🌫️ Why did I smoke this shit?',
+    enabled: true,
+    emoji: '😶‍🌫️'
+  },
   doge: {
     price: 1000,
     description: '🐶 TO THE MOON!',
-    enabled: true,
+    enabled: false,
     emoji: '🐶',
   },
   moon: {
     price: 2000,
     description: '🌙 Wtf is a doge coin?',
-    enabled: true,
+    enabled: false,
     emoji: '🌙',
   },
   satellite: {
     price: 5000,
     description: '🛰 Space is pretty cool.',
-    enabled: true,
+    enabled: false,
     emoji: '🛰',
   },
   test: {
@@ -62,13 +74,13 @@ export const skins = {
   tulip: {
     price: 500,
     description: '🌷 One lip, tulip, red lip, blue lip.',
-    enabled: false,
+    enabled: true,
     emoji: '🌷',
   },
   blossom: {
     price: 1000,
     description: '🌸 Spring has sprung!',
-    enabled: true,
+    enabled: false,
     emoji: '🌸',
   },
   goat: {
@@ -80,7 +92,7 @@ export const skins = {
   pancake: {
     price: 1000,
     description: '🥞 Breakfast is served.',
-    enabled: false,
+    enabled: true,
     emoji: '🥞',
   },
   pizza: {
@@ -92,38 +104,38 @@ export const skins = {
   ufo: {
     price: 1337,
     description: '🛸 Somewhere out there...',
-    enabled: true,
+    enabled: false,
     emoji: '🛸',
   },
   chipmunk: {
     price: 1000,
     description: '🐿 This skin is nuts!',
-    enabled: true,
+    enabled: false,
     emoji: '🐿',
   },
   /* FLEX */
   flex: {
     price: 1000,
     description: '💪 Do you even lift?',
-    enabled: false,
+    enabled: true,
     emoji: '💪',
   },
   megaflex: {
     price: 2500,
     description: '🌌 We get it. You lift.',
-    enabled: false,
+    enabled: true,
     emoji: '🌌',
   },
   ultraflex: {
     price: 5000,
     description: '🚀 Gives ability to throw competition into space.',
-    enabled: false,
+    enabled: true,
     emoji: '🚀',
   },
   hyperflex: {
     price: 10000,
     description: '🍆',
-    enabled: false,
+    enabled: true,
     emoji: '🍆',
   },
   diamond: {
@@ -160,7 +172,7 @@ export const skins = {
   rage: {
     price: 1000,
     description: '🤬 @!#?@!.',
-    enabled: true,
+    enabled: false,
     emoji: '🤬',
   },
   monke: {
@@ -178,7 +190,7 @@ export const skins = {
   sparkle: {
     price: 800,
     description: '✨ Shining bright!',
-    enabled: false,
+    enabled: true,
     emoji: '✨',
   },
   bug: {
