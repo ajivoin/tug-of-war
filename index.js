@@ -31,7 +31,7 @@ client.once('ready', () => {
 
 const bind = (messageObj, callback, errorCb) => {
   const tokens = utils.tokenize(messageObj.content);
-  if (messageObj.member.hasPermission('MANAGE_GUILD') && tokens.length > 1) {
+  if (messageObj.member.permissions.has('MANAGE_GUILD') && tokens.length > 1) {
     const channelId = tokens[1].trim().replace(/\D/g, '');
     client.channels
       .fetch(channelId)
