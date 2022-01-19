@@ -188,6 +188,7 @@ const cmds = {
   help,
   i: info,
   info,
+  ls: info,
   inv: inventory,
   inventory,
   u: user,
