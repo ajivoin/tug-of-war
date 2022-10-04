@@ -9,7 +9,7 @@ export const skins = {
     price: 3110,
     description: '💀 Spooky scary skeletons.',
     enabled: true,
-    emoji: '💀'
+    emoji: '💀',
   },
   ily: {
     price: 0,
