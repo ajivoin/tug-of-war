@@ -1,14 +1,26 @@
 export const skins = {
+  pumpkin: {
+    price: 1031,
+    description: '🎃 Happy Halloween!',
+    enabled: true,
+    emoji: '🎃',
+  },
+  skeleton: {
+    price: 3110,
+    description: '💀 Spooky scary skeletons.',
+    enabled: true,
+    emoji: '💀'
+  },
   ily: {
     price: 0,
     description: '🤟 Welcome back everyone! I love you.',
-    enabled: true,
+    enabled: false,
     emoji: '🤟',
   },
   high: {
     price: 1000,
     description: "😶‍🌫️ Why'd I smoke this shit?",
-    enabled: true,
+    enabled: false,
     emoji: '😶‍🌫️',
   },
   doge: {
@@ -56,7 +68,7 @@ export const skins = {
   trees: {
     price: 420,
     description: '🍁 Blaze it.',
-    enabled: false,
+    enabled: true,
     emoji: '🍁',
   },
   blazeit: {
@@ -74,7 +86,7 @@ export const skins = {
   tulip: {
     price: 500,
     description: '🌷 One lip, tulip, red lip, blue lip.',
-    enabled: true,
+    enabled: false,
     emoji: '🌷',
   },
   blossom: {
@@ -148,7 +160,7 @@ export const skins = {
   sauropod: {
     price: 2000,
     description: '🦕 How is this for extinction?',
-    enabled: true,
+    enabled: false,
     emoji: '🦕',
   },
   trex: {
