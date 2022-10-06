@@ -175,7 +175,7 @@ const givecrowns = new AdminCommand('givecrowns', '', giveCrownsFunction);
 
 const spawn = new AdminCommand('spawn', '', (message) => {
   const newBoss = Boss.instantiate();
-  message.channel.send({ embeds: [newBoss.embed], files: newBoss.files });
+  message.channel.send({ embeds: [newBoss.embed] });
 });
 
 const kill = new AdminCommand('kill', '', () => Boss.kill());

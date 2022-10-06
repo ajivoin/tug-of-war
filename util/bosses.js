@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { AttachmentBuilder, MessageEmbed } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 
 import utils from './utils';
 import data from './data';
@@ -150,8 +150,6 @@ export default class Boss {
   }
 
   get embed() {
-    const file = new AttachmentBuilder(this.imagePath);
-    this.files = [file];
     return new MessageEmbed()
       .setColor('#0099ff')
       .setTitle('Boss battle!')
