@@ -37,33 +37,59 @@ import constants from './constants';
 //     'util/boss_images/13_moon.png',
 //   ],
 // ];
+// const IMAGE_PATH = [
+//   [
+//     'util/boss_images/17_snail.png',
+//     'util/boss_images/19_bloon.png',
+//     'util/boss_images/24_blurtle.png',
+//   ],
+//   [
+//     'util/boss_images/21_scorpion.png',
+//     'util/boss_images/30_monke.png',
+//     'util/boss_images/20_crab.png',
+//   ],
+//   [
+//     'util/boss_images/27_poodle.png',
+//     'util/boss_images/25_whale.png',
+//     'util/boss_images/29_fox.png',
+//   ],
+//   [
+//     'util/boss_images/16_crocodile.png',
+//     'util/boss_images/23_octopus.png',
+//   ],
+//   [
+//     'util/boss_images/2_monster.png',
+//     'util/boss_images/26_eagle.png',
+//   ],
+//   [
+//     'util/boss_images/22_whale.png',
+//     'util/boss_images/4_dragon.png',
+//   ],
+// ];
 const IMAGE_PATH = [
   [
-    'util/boss_images/17_snail.png',
-    'util/boss_images/19_bloon.png',
-    'util/boss_images/24_blurtle.png',
+    'util/boss_images/503_roach.png',
+    'util/boss_images/505_worm.png',
   ],
   [
-    'util/boss_images/21_scorpion.png',
-    'util/boss_images/30_monke.png',
-    'util/boss_images/20_crab.png',
+    'util/boss_images/501_bat.png',
+    'util/boss_images/502_owl.png',
+    'util/boss_images/504_spider.png',
   ],
   [
-    'util/boss_images/27_poodle.png',
-    'util/boss_images/25_whale.png',
-    'util/boss_images/29_fox.png',
+    'util/boss_images/500_troll.png',
+    'util/boss_images/506_skeleton.png',
+    'util/boss_images/507_ogre.png',
+    'util/boss_images/510_zombie.png',
   ],
   [
-    'util/boss_images/16_crocodile.png',
-    'util/boss_images/23_octopus.png',
+    'util/boss_images/508_ghost.png',
+    'util/boss_images/509_alien.png',
+    'util/boss_images/512_cat.png',
+    'util/boss_images/513_jack.png',
   ],
   [
-    'util/boss_images/2_monster.png',
-    'util/boss_images/26_eagle.png',
-  ],
-  [
-    'util/boss_images/22_whale.png',
-    'util/boss_images/4_dragon.png',
+    'util/boss_images/511_floater.png',
   ],
 ];
 
@@ -73,7 +99,7 @@ const BOSS_REWARDS_POOL = [
   { crowns: 45 },
   { crowns: 60 },
   { crowns: 75 },
-  { crowns: 125 },
+  { crowns: 100 },
 ];
 const BOSS_HEALTH_MULTIPLIER = 100 * constants.BASE_DAMAGE;
 
@@ -111,7 +137,7 @@ export default class Boss {
         Boss.instance.imagePath = boss.imagePath;
         Boss.instance.imageName = boss.imageName;
         Boss.instance.bossName = boss.bossName;
-        Boss.instance.levelText = '⭐'.repeat(boss.level);
+        Boss.instance.levelText = '🦴'.repeat(boss.level);
       }
     }
   }
@@ -151,7 +177,7 @@ export default class Boss {
     this.participants = {};
     this.active = true;
     this.imagePath = _.sample(IMAGE_PATH[bp]);
-    [,, this.imageName] = this.imagePath.split('/');
+    [, , this.imageName] = this.imagePath.split('/');
     const [, bossName] = this.imageName.split(/[_|.]/);
     this.bossName = bossName[0].toUpperCase() + bossName.slice(1);
   }
