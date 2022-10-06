@@ -147,7 +147,7 @@ const debug = new AdminCommand('debug', '', debugFunction);
 
 const bossFunction = (message) => {
   if (Boss.instance) {
-    message.channel.send({ embeds: [Boss.instance.embed] });
+    message.channel.send(Boss.instance.embed);
   } else {
     message.channel.send({ content: 'There is no boss right now. Count to lure one!' });
   }
@@ -175,7 +175,7 @@ const givecrowns = new AdminCommand('givecrowns', '', giveCrownsFunction);
 
 const spawn = new AdminCommand('spawn', '', (message) => {
   const newBoss = Boss.instantiate();
-  message.channel.send({ embeds: [newBoss.embed] });
+  message.channel.send(newBoss.embed);
 });
 
 const kill = new AdminCommand('kill', '', () => Boss.kill());

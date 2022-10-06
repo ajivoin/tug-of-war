@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import { MessageEmbed } from 'discord.js';
+import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
 import utils from './utils';
 import data from './data';
@@ -150,14 +150,27 @@ export default class Boss {
   }
 
   get embed() {
-    return new MessageEmbed()
+    const file = new AttachmentBuilder(this.imagePath);
+    const embedBuilder = new EmbedBuilder()
       .setColor('#0099ff')
       .setTitle('Boss battle!')
       .setDescription(`Count numbers to pet the ${this.bossName}! All participants will receive a reward!`)
-      .addField('Name', this.bossName, true)
-      .addField('Level', this.levelText, true)
-      .addField('Anger', `${this.health} 💢`, true)
+      .addFields([
+        {
+          name: 'Name',
+          value: this.bossName,
+        },
+        {
+          name: 'Level',
+          value: this.levelText,
+        },
+        {
+          name: 'Anger',
+          value: `${this.health} 💢`,
+        },
+      ])
       .setImage(`attachment://${this.imageName}`);
+    return { embeds: [embedBuilder], files: [file] };
   }
 
   constructor() {
