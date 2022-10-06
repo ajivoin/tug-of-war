@@ -1,4 +1,4 @@
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 
 import commands from './command_list';
 import shopSkins, { skins } from './shop/items/skins';
@@ -8,7 +8,7 @@ import constants from './constants';
 import data from './data';
 import utils from './utils';
 
-const getCoreEmbed = (title, description, fields) => new MessageEmbed()
+const getCoreEmbed = (title, description, fields) => new EmbedBuilder()
   .setColor('#0099ff')
   .setTitle(title)
   .setDescription(description)
@@ -35,9 +35,9 @@ const generateShopEmbed = () => {
     `Purchase items with \`${prefix}buy <item name>\`.`,
     fields,
   );
-  embed.addField('\u200b', '\u200b'); // blank link
+  // embed.addField('\u200b', '\u200b'); // blank link
   embed.addFields(
-    ...Object.keys(shopSkins).map((item) => ({
+    Object.keys(shopSkins).map((item) => ({
       name: `${item} (${shopSkins[item].price}c)`,
       value: shopSkins[item].description,
       inline: true,
@@ -130,12 +130,12 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
     },
   ];
 
-  const embed = getCoreEmbed('Tug-of-War Information', '', fields);
+  const embed = getCoreEmbed('Tug-of-War Information', 'Information on current status of TOW', fields);
   if (boss) {
     // embed.addField('\u200b', '\u200b'); // blank link
-    embed.addField('\u200b', '**Boss Information**');
+    embed.addFields([{ name: '\u200b', value: '**Boss Information**' }]);
     embed
-      .addFields(boss.embed.fields)
+      .addFields(boss.embed.embeds[0].data.fields)
       .setThumbnail(`attachment://${boss.imageName}`);
   }
   return embed;
@@ -148,7 +148,7 @@ const generateLeaderboardEmbed = (prop = 'wins') => {
     (acc, [mention, score], i) => `${acc}${i + 1}. ${mention}: ${score}\n`,
     '',
   );
-  return getCoreEmbed('Leaderboard', '', [
+  return getCoreEmbed('Leaderboard', `Leaderboard for ${prop}`, [
     {
       name: prop.toUpperCase(),
       value: textContents,

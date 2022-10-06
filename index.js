@@ -1,5 +1,5 @@
 // #region imports
-import Discord, { Intents } from 'discord.js';
+import Discord, { GatewayIntentBits } from 'discord.js';
 
 import utils from './util/utils';
 import constants from './util/constants';
@@ -13,7 +13,9 @@ import Boss from './util/bosses';
 // #endregion
 
 // Discord client
-const client = new Discord.Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] });
+const client = new Discord.Client({
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions]
+});
 client.commands = commands;
 
 client.once('ready', () => {
@@ -26,7 +28,7 @@ client.once('ready', () => {
   }
   Boss.load();
   console.log('Logged in.');
-  client.user.setActivity(`${prefix}help`, { type: 'LISTENING' });
+  client.user.setActivity(`${prefix}help`, { type: Discord.ActivityType.Listening });
 });
 
 const bind = (messageObj, callback, errorCb) => {
@@ -111,7 +113,7 @@ client.on('messageCreate', (message) => {
         } else {
           let hasReacted = false;
           if (Math.random() <= constants.ACROBATICS_RATE
-              * (data.getAcrobatics(userId) ?? 0)) {
+            * (data.getAcrobatics(userId) ?? 0)) {
             hasReacted = true;
             message.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
