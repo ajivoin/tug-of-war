@@ -16,9 +16,10 @@ Single-server Discord bot that makes counting competitive.
 
 1. Generate an OAuth invite link on the [Discord Developer Portal](https://discord.com/developers/applications/).
     * In the OAuth tab, select the `bot` scope and these permissions: `send messages, embed links, attach files, read message history, add reactions` (permissions value of `116800`).
+    * In the bot tab, check the `Message Content Intent` option below `Privileged Gateway Intents` section.
 2. Invite your bot to a Discord server.
 3. Create a `#tug-of-war` channel.
-4. In `#tug-of-war`, write `t?bind` to get the bot in your channel.
+4. In `#tug-of-war`, write `t?bind #tug-of-war` to get the bot in your channel.
   - Due to a bug it may send a message that you need to bind twice. Ignore this, it works after the first one. (See [#27](https://github.com/ajivoin/tug-of-war/issues/27))
 
 ## Usage
