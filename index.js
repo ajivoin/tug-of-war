@@ -31,11 +31,11 @@ client.once('ready', () => {
   client.user.setActivity(`${prefix}help`, { type: Discord.ActivityType.Listening });
 });
 
-const bind = (messageObj, callback, errorCb) => {
+const bind = async (messageObj, callback, errorCb) => {
   const tokens = utils.tokenize(messageObj.content);
   if (messageObj.member.permissions.has('MANAGE_GUILD') && tokens.length > 1) {
     const channelId = tokens[1].trim().replace(/\D/g, '');
-    client.channels
+    await client.channels
       .fetch(channelId)
       .catch((e) => {
         if (errorCb) {
@@ -51,7 +51,7 @@ const bind = (messageObj, callback, errorCb) => {
   } else if (errorCb) errorCb();
 };
 
-client.on('messageCreate', (message) => {
+client.on('messageCreate', async (message) => {
   try {
     const { author } = message;
     if (author.bot) return; // message from bot
@@ -69,7 +69,7 @@ client.on('messageCreate', (message) => {
     if (message.content.startsWith(prefix)) {
       const command = tokens[0].substr(prefix.length);
       if (command === 'bind') {
-        bind(message);
+        await bind(message);
       }
       if (!data.getChannelId()) {
         // unbound
