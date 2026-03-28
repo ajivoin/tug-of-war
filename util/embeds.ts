@@ -1,29 +1,31 @@
 import { EmbedBuilder } from 'discord.js';
 
-import commands from './command_list';
-import shopSkins, { skins } from './shop/items/skins';
-import enabledPowerups from './shop/items/powerups';
-import { prefix } from '../config';
-import constants from './constants';
-import data from './data';
-import utils from './utils';
+import commandList from './command_list.js';
+import shopSkins, { skins } from './shop/items/skins.js';
+import enabledPowerups from './shop/items/powerups.js';
+import { prefix } from '../config.js';
+import constants from './constants.js';
+import data from './data.js';
+import utils from './utils.js';
+import { UserData } from './types.js';
+import Boss from './bosses.js';
 
-const getCoreEmbed = (title, description, fields) => new EmbedBuilder()
+const getCoreEmbed = (title: string, description: string, fields: { name: string; value: string; inline?: boolean }[]): EmbedBuilder => new EmbedBuilder()
   .setColor('#0099ff')
   .setTitle(title)
   .setDescription(description)
   .addFields(...fields);
 
-const generateHelpEmbed = () => {
-  const fields = Object.keys(commands).map((cmd) => ({
+const generateHelpEmbed = (): EmbedBuilder => {
+  const fields = Object.keys(commandList).map((cmd) => ({
     name: `${prefix}${cmd}`,
-    value: commands[cmd],
+    value: commandList[cmd],
     inline: true,
   }));
   return getCoreEmbed('Help', 'Information on available commands.', fields);
 };
 
-const generateShopEmbed = () => {
+const generateShopEmbed = (): EmbedBuilder => {
   const fields = Object.keys(enabledPowerups).map((item) => ({
     name: `${item} (${enabledPowerups[item].price})`,
     value: enabledPowerups[item].description,
@@ -35,7 +37,6 @@ const generateShopEmbed = () => {
     `Purchase items with \`${prefix}buy <item name>\`.`,
     fields,
   );
-  // embed.addField('\u200b', '\u200b'); // blank link
   embed.addFields(
     Object.keys(shopSkins).map((item) => ({
       name: `${item} (${shopSkins[item].price}c)`,
@@ -46,11 +47,11 @@ const generateShopEmbed = () => {
   return embed;
 };
 
-const inventoryEmbedForUser = (user) => {
+const inventoryEmbedForUser = (user: UserData): EmbedBuilder => {
   const { reactions } = user;
   const fields = Object.keys(reactions).map((skin) => ({
     name: `${skin}${reactions[skin] ? ' (enabled)' : ''}`,
-    value: skins[skin].emoji || '',
+    value: skins[skin]?.emoji || '',
     inline: true,
   }));
 
@@ -61,7 +62,7 @@ const inventoryEmbedForUser = (user) => {
   );
 };
 
-const userEmbed = (user, name) => {
+const userEmbed = (user: UserData, name: string): EmbedBuilder => {
   const fields = [
     {
       name: 'Counts',
@@ -75,9 +76,7 @@ const userEmbed = (user, name) => {
     },
     {
       name: 'Accuracy',
-      value: `${((100 * user.count) / (user.count + user.miscount)).toFixed(
-        1,
-      )}%`,
+      value: `${((100 * user.count) / (user.count + user.miscount)).toFixed(1)}%`,
       inline: true,
     },
     {
@@ -109,7 +108,7 @@ const userEmbed = (user, name) => {
   return getCoreEmbed(name, `Statistics for ${name}.`, fields);
 };
 
-const infoEmbed = (currentNumber, targetNumber, boss) => {
+const infoEmbed = (currentNumber: number, targetNumber: string, boss: Boss | null): EmbedBuilder => {
   const fields = [
     {
       name: 'Current Number',
@@ -124,7 +123,7 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
     {
       name: 'Last Counter',
       value: data.getLastUserId()
-        ? utils.userIdToMention(data.getLastUserId())
+        ? utils.userIdToMention(data.getLastUserId() as string)
         : 'None',
       inline: true,
     },
@@ -132,16 +131,15 @@ const infoEmbed = (currentNumber, targetNumber, boss) => {
 
   const embed = getCoreEmbed('Tug-of-War Information', 'Information on current status of TOW', fields);
   if (boss) {
-    // embed.addField('\u200b', '\u200b'); // blank link
     embed.addFields([{ name: '\u200b', value: '**Boss Information**' }]);
     embed
-      .addFields(boss.embed.embeds[0].data.fields)
+      .addFields(boss.embed.embeds[0].data.fields ?? [])
       .setThumbnail(`attachment://${boss.imageName}`);
   }
   return embed;
 };
 
-const generateLeaderboardEmbed = (prop = 'wins') => {
+const generateLeaderboardEmbed = (prop: keyof UserData = 'wins'): EmbedBuilder => {
   const users = data.getAllUsers();
   const leaderboardContents = utils.generateLeaderboard(users, prop);
   const textContents = leaderboardContents.reduce(

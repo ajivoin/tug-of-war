@@ -1,4 +1,6 @@
-export const powerups = {
+import { PowerupConfig } from '../../types.js';
+
+export const powerups: Record<string, PowerupConfig> = {
   crowncard: {
     price: 110,
     description: '💳 Convert coins back into a crown at a premium.',
@@ -64,7 +66,7 @@ export const powerups = {
   },
 };
 
-const enabledPowerups = {};
+const enabledPowerups: Record<string, PowerupConfig> = {};
 
 Object.keys(powerups).forEach((key) => {
   if (powerups[key].enabled) {

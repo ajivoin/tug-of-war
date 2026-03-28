@@ -1,4 +1,4 @@
-export default {
+const constants = {
   REACT_CORRECT: '✅',
   REACT_INCORRECT: '👎',
   REACT_TIMEOUT: '⏳',
@@ -22,4 +22,6 @@ export default {
   MAX_ACRO_LEVEL: 5,
   ROYALTY_GAIN: 1,
   MAX_ROYALTY_LEVEL: 4,
-};
+} as const;
+
+export default constants;

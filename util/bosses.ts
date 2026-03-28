@@ -1,71 +1,11 @@
 import _ from 'underscore';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
-import utils from './utils';
-import data from './data';
-import constants from './constants';
+import utils from './utils.js';
+import data from './data.js';
+import constants from './constants.js';
+import { BossReward, PersistedBoss } from './types.js';
 
-// const IMAGE_PATH = [ // old images
-//   [
-//     'util/boss_images/0_sunglasses.png',
-//     'util/boss_images/5_clown.png',
-//     'util/boss_images/6_poop.png',
-//   ],
-//   [
-//     'util/boss_images/1_ogre.png',
-//     'util/boss_images/2_monster.png',
-//     'util/boss_images/3_ghost.png',
-//   ],
-//   [
-//     'util/boss_images/9_cowboy.png',
-//     'util/boss_images/10_bezos.png',
-//     'util/boss_images/15_rock.png',
-//     // 'util/boss_images/11_santa.png',
-//     // 'util/boss_images/14_snowman.png',
-//   ],
-//   [
-//     'util/boss_images/7_devil.png',
-//     'util/boss_images/8_goblin.png',
-//     'util/boss_images/401_prankster.png',
-//   ],
-//   [
-//     'util/boss_images/4_dragon.png',
-//     'util/boss_images/7_devil.png',
-//   ],
-//   [
-//     'util/boss_images/12_sun.png',
-//     'util/boss_images/13_moon.png',
-//   ],
-// ];
-// const IMAGE_PATH = [
-//   [
-//     'util/boss_images/17_snail.png',
-//     'util/boss_images/19_bloon.png',
-//     'util/boss_images/24_blurtle.png',
-//   ],
-//   [
-//     'util/boss_images/21_scorpion.png',
-//     'util/boss_images/30_monke.png',
-//     'util/boss_images/20_crab.png',
-//   ],
-//   [
-//     'util/boss_images/27_poodle.png',
-//     'util/boss_images/25_whale.png',
-//     'util/boss_images/29_fox.png',
-//   ],
-//   [
-//     'util/boss_images/16_crocodile.png',
-//     'util/boss_images/23_octopus.png',
-//   ],
-//   [
-//     'util/boss_images/2_monster.png',
-//     'util/boss_images/26_eagle.png',
-//   ],
-//   [
-//     'util/boss_images/22_whale.png',
-//     'util/boss_images/4_dragon.png',
-//   ],
-// ];
 const IMAGE_PATH = [
   [
     'util/boss_images/503_roach.png',
@@ -93,7 +33,7 @@ const IMAGE_PATH = [
   ],
 ];
 
-const BOSS_REWARDS_POOL = [
+const BOSS_REWARDS_POOL: BossReward[] = [
   { crowns: 15 },
   { crowns: 30 },
   { crowns: 45 },
@@ -104,13 +44,13 @@ const BOSS_REWARDS_POOL = [
 const BOSS_HEALTH_MULTIPLIER = 100 * constants.BASE_DAMAGE;
 
 export default class Boss {
-  static instance;
+  static instance: Boss | null = null;
 
-  static REWARDS_POOL = BOSS_REWARDS_POOL;
+  static REWARDS_POOL: BossReward[] = BOSS_REWARDS_POOL;
 
-  static HEALTH_MULTIPLIER = BOSS_HEALTH_MULTIPLIER;
+  static HEALTH_MULTIPLIER: number = BOSS_HEALTH_MULTIPLIER;
 
-  static BOSS_BREAKPOINTS = [
+  static BOSS_BREAKPOINTS: number[] = [
     0.30,
     0.55,
     0.80,
@@ -119,11 +59,31 @@ export default class Boss {
     1.0,
   ];
 
-  static kill() {
-    Boss.instance.handleWin(null);
+  active: boolean = false;
+
+  health: number = 0;
+
+  level: number = 0;
+
+  totalHealth: number = 0;
+
+  participants: Record<string, number> = {};
+
+  rewards: BossReward = {};
+
+  imagePath: string = '';
+
+  imageName: string = '';
+
+  bossName: string = '';
+
+  levelText: string = '';
+
+  static kill(): void {
+    Boss.instance?.handleWin(null);
   }
 
-  static load() {
+  static load(): void {
     if (!Boss.instance) {
       const boss = data.getBoss();
       if (boss) {
@@ -142,14 +102,14 @@ export default class Boss {
     }
   }
 
-  static instantiate() {
+  static instantiate(): Boss {
     if (!Boss.instance) {
       Boss.instance = new Boss();
     }
     return Boss.instance;
   }
 
-  get embed() {
+  get embed(): { embeds: EmbedBuilder[]; files: AttachmentBuilder[] } {
     const file = new AttachmentBuilder(this.imagePath);
     const embedBuilder = new EmbedBuilder()
       .setColor('#0099ff')
@@ -189,41 +149,56 @@ export default class Boss {
     this.totalHealth = this.health;
     this.participants = {};
     this.active = true;
-    this.imagePath = _.sample(IMAGE_PATH[bp]);
+    this.imagePath = _.sample(IMAGE_PATH[bp]) as string;
     [, , this.imageName] = this.imagePath.split('/');
     const [, bossName] = this.imageName.split(/[_|.]/);
     this.bossName = bossName[0].toUpperCase() + bossName.slice(1);
   }
 
-  calculateReward(userId) {
+  toPersisted(): PersistedBoss {
+    return {
+      active: this.active,
+      health: this.health,
+      level: this.level,
+      participants: this.participants,
+      rewards: this.rewards,
+      totalHealth: this.totalHealth,
+      imagePath: this.imagePath,
+      imageName: this.imageName,
+      bossName: this.bossName,
+      levelText: this.levelText,
+    };
+  }
+
+  calculateReward(userId: string): BossReward {
     const ratio = this.participants[userId] / this.totalHealth;
-    const result = {};
-    Object.keys(this.rewards).forEach((reward) => {
-      result[reward] = Math.ceil(ratio * this.rewards[reward]);
+    const result: BossReward = {};
+    (Object.keys(this.rewards) as (keyof BossReward)[]).forEach((reward) => {
+      result[reward] = Math.ceil(ratio * (this.rewards[reward] ?? 0));
     });
     return result;
   }
 
-  distributeRewards() {
+  distributeRewards(): void {
     Object.keys(this.participants).forEach((userId) => {
       const reward = this.calculateReward(userId);
-      if (utils.hasProperty(reward, 'crowns')) {
+      if (utils.hasProperty(reward, 'crowns') && reward.crowns !== undefined) {
         data.addCrowns(userId, reward.crowns);
       }
-      if (utils.hasProperty(reward, 'coins')) {
+      if (utils.hasProperty(reward, 'coins') && reward.coins !== undefined) {
         data.addCoins(userId, reward.coins);
       }
     });
   }
 
-  handleWin(userId) {
+  handleWin(userId: string | null): void {
     this.distributeRewards();
     if (userId) data.addCrowns(userId, 5 + data.getRoyalty(userId)); // bonus for last hit
     this.active = false;
     Boss.instance = null;
   }
 
-  bomb(userId) {
+  bomb(userId: string): boolean {
     const user = this.participants[userId];
     if (user) {
       this.participants[userId] += constants.BOMB_DAMAGE;
@@ -236,11 +211,11 @@ export default class Boss {
       data.persistBoss(null);
       return true;
     }
-    data.persistBoss(Boss.instance);
+    data.persistBoss(this.toPersisted());
     return false;
   }
 
-  hit(userId, critCallback) {
+  hit(userId: string, critCallback: () => void): boolean {
     const crit = Math.random() < (constants.CRIT_RATE
       + (data.getCritBonus(userId) ?? 0) * constants.CRIT_BONUS);
     const damage = constants.BASE_DAMAGE * (crit ? constants.CRIT_MULTIPLIER : 1);
@@ -252,12 +227,11 @@ export default class Boss {
     }
     this.health -= damage;
     if (this.health <= 0) {
-      // winner!
       this.handleWin(userId);
       return true;
     }
     if (crit) critCallback();
-    data.persistBoss(Boss.instance);
+    data.persistBoss(this.toPersisted());
     return false;
   }
 }
