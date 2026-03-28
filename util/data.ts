@@ -1,130 +1,86 @@
 import fs from 'fs';
 import utils from './utils.js';
 import { prefix } from '../config.js';
+import {
+  UserData, DataSchema, PersistedBoss, Callback, ErrorCallback,
+} from './types.js';
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
-let data;
+// Definite assignment: data.json is read synchronously before any event fires
+let data!: DataSchema;
 fs.stat('./data.json', (err) => {
   if (err) {
     data = utils.getDataSchema();
     console.log('Using new data base.');
   } else {
-    data = JSON.parse(fs.readFileSync('./data.json'));
+    data = JSON.parse(fs.readFileSync('./data.json').toString()) as DataSchema;
     console.log('Read in data');
   }
 });
 
-const persistBoss = (boss) => {
+const persistBoss = (boss: PersistedBoss | null): void => {
   data.boss = boss;
 };
 
-const getBoss = () => data.boss;
+const getBoss = (): PersistedBoss | null => data.boss;
 
-/**
- * Writes data to disk.
- */
-const persistData = () => {
+const persistData = (): void => {
   fs.writeFileSync('data.json', JSON.stringify(data));
   console.log('Data saved.');
 };
 
 setInterval(persistData, FIVE_MINUTES);
 
-/**
- * @returns {Number} Target number
- */
-const getTargetNumber = () => data.win;
+const getTargetNumber = (): number => data.win;
 
-/**
- * @returns {Number} Current number
- */
-const getCurrentNumber = () => data.number;
+const getCurrentNumber = (): number => data.number;
 
-/**
- * @returns {string} Correct answer emoji
- */
-const getCorrectEmoji = () => data.correctEmoji;
+const getCorrectEmoji = (): string => data.correctEmoji;
 
-/**
- * @returns {string} Incorrect answer emoji
- */
-const getIncorrectEmoji = () => data.incorrectEmoji;
+const getIncorrectEmoji = (): string => data.incorrectEmoji;
 
-/**
- * @returns {string} Timeout emoji
- */
-const getTimeoutEmoji = () => data.timeoutEmoji;
+const getTimeoutEmoji = (): string => data.timeoutEmoji;
 
-/**
- * @param {string} userId
- * @returns {boolean} `true` if database has `userId`.
- */
-const hasUser = (userId) => utils.hasProperty(data.users, userId);
+const hasUser = (userId: string): boolean => utils.hasProperty(data.users, userId);
 
-/**
- * @param {string} userId
- * @param {function?} errorCallback
- * @returns {object} Read-only user object
- */
+const getUserWritable = (userId: string): UserData => data.users[userId];
 
-const getUserWritable = (userId) => data.users[userId];
+const getUser = (userId: string): UserData => getUserWritable(userId);
 
-const getUser = (userId) => getUserWritable(userId);
+const getCount = (userId: string): number => getUser(userId).count;
 
-const getCount = (userId) => getUser(userId).count;
+const getWins = (userId: string): number => getUser(userId).wins;
 
-const getWins = (userId) => getUser(userId).wins;
+const getMiscount = (userId: string): number => getUser(userId).miscount;
 
-const getMiscount = (userId) => getUser(userId).miscount;
+const getCritBonus = (userId: string): number => getUser(userId).critBonus ?? 0;
 
-const getCritBonus = (userId) => getUser(userId).critBonus ?? 0;
+const setCritBonus = (userId: string, value: number): void => { getUser(userId).critBonus = value; };
 
-const setCritBonus = (userId, value) => { getUser(userId).critBonus = value; };
+const getAcrobatics = (userId: string): number => getUser(userId).acrobatics ?? 0;
 
-const getAcrobatics = (userId) => getUser(userId).acrobatics ?? 0;
+const setAcrobatics = (userId: string, value: number): void => { getUser(userId).acrobatics = value; };
 
-const setAcrobatics = (userId, value) => { getUser(userId).acrobatics = value; };
+const getRoyalty = (userId: string): number => getUser(userId).royalty ?? 0;
 
-const getRoyalty = (userId) => getUser(userId).royalty ?? 0;
+const setRoyalty = (userId: string, value: number): void => { getUser(userId).royalty = value; };
 
-const setRoyalty = (userId, value) => { getUser(userId).royalty = value; };
-
-/**
- * @param {string} userId
- * @param {function?} errorCallback
- * @returns {Number} Coins
- */
-const getCoins = (userId, errorCallback) => {
-  const user = getUser(userId, errorCallback);
-  if (user) {
-    return user.coins;
-  }
+const getCoins = (userId: string, errorCallback?: ErrorCallback): number | undefined => {
+  const user = getUser(userId);
+  if (user) return user.coins;
   if (errorCallback) errorCallback(`User with ID ${userId} has no coins attribute.`);
   return undefined;
 };
 
-/**
- * @param {string} userId
- * @param {function?} errorCallback
- * @returns {Number} Crowns
- */
-const getCrowns = (userId, errorCallback) => {
-  const user = getUser(userId, errorCallback);
-  if (user) {
-    return user.crowns;
-  }
+const getCrowns = (userId: string, errorCallback?: ErrorCallback): number | undefined => {
+  const user = getUser(userId);
+  if (user) return user.crowns;
   if (errorCallback) errorCallback(`User with ID ${userId} has no crowns attribute.`);
   return undefined;
 };
 
-/**
- * @param {string} userId
- * @param {Number} nCoins
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const addCoins = (userId, nCoins, callback, errorCallback) => {
+const addCoins = (userId: string, nCoins: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   const user = getUserWritable(userId);
   if (user) {
     const coins = Math.max(0, nCoins);
@@ -135,13 +91,7 @@ const addCoins = (userId, nCoins, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} userId
- * @param {Number} nCrowns
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const addCrowns = (userId, nCrowns, callback, errorCallback) => {
+const addCrowns = (userId: string, nCrowns: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   const user = getUserWritable(userId);
   if (user) {
     const crowns = Math.max(0, nCrowns);
@@ -152,13 +102,7 @@ const addCrowns = (userId, nCrowns, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} userId
- * @param {Number} nCoins
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const removeCoins = (userId, nCoins, callback, errorCallback) => {
+const removeCoins = (userId: string, nCoins: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   const user = getUserWritable(userId);
   if (user) {
     const coins = Math.max(0, nCoins);
@@ -170,13 +114,7 @@ const removeCoins = (userId, nCoins, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} userId
- * @param {Number} nCrowns
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const removeCrowns = (userId, nCrowns, callback, errorCallback) => {
+const removeCrowns = (userId: string, nCrowns: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   const user = getUserWritable(userId);
   if (user) {
     const crowns = Math.max(0, nCrowns);
@@ -187,13 +125,8 @@ const removeCrowns = (userId, nCrowns, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {Number} newTarget
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const setTargetNumber = (newTarget, callback, errorCallback) => {
-  if (Number.isInteger) {
+const setTargetNumber = (newTarget: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+  if (Number.isInteger(newTarget)) {
     data.win = newTarget;
     if (callback) callback(`Target updated to ${newTarget}`);
   } else if (errorCallback) {
@@ -201,12 +134,7 @@ const setTargetNumber = (newTarget, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {Number} amount
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const addToNumber = (amount, callback, errorCallback) => {
+const addToNumber = (amount: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (Number.isInteger(amount)) {
     data.number += amount;
     if (callback) callback(`Added ${amount} to the current number.`);
@@ -215,28 +143,17 @@ const addToNumber = (amount, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {function?} callback
- */
-const incrementNumber = (callback) => {
+const incrementNumber = (callback?: Callback): void => {
   data.number += 1;
   if (callback) callback(`Incremented number to ${data.number}.`);
 };
 
-/**
- * @param {function?} callback
- */
-const decrementNumber = (callback) => {
+const decrementNumber = (callback?: Callback): void => {
   data.number -= 1;
   if (callback) callback(`Decremented number to ${data.number}.`);
 };
 
-/**
- * @param {Number} number
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const setCurrentNumber = (number, callback, errorCallback) => {
+const setCurrentNumber = (number: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (Number.isInteger(number)) {
     data.number = number;
     if (callback) callback(`Number set to ${number}.`);
@@ -245,12 +162,7 @@ const setCurrentNumber = (number, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} userId
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const setLastUserId = (userId, callback, errorCallback) => {
+const setLastUserId = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (userId !== null && userId !== undefined) {
     data.last = userId;
     if (callback) callback(`Last user set to ${userId}.`);
@@ -259,19 +171,11 @@ const setLastUserId = (userId, callback, errorCallback) => {
   }
 };
 
-const clearLastUserId = () => { data.last = null; };
+const clearLastUserId = (): void => { data.last = null; };
 
-/**
- * @returns {string}
- */
-const getLastUserId = () => data.last;
+const getLastUserId = (): string | null => data.last;
 
-/**
- * @param {string} channelId
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const setChannelId = (channelId, callback, errorCallback) => {
+const setChannelId = (channelId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (channelId !== null && channelId !== undefined) {
     data.channel = channelId;
     if (callback) callback(`Channel set to ${channelId}.`);
@@ -280,29 +184,22 @@ const setChannelId = (channelId, callback, errorCallback) => {
   }
 };
 
-/**
- * @param {string} userId
- */
-const disableReactions = (userId) => {
+const disableReactions = (userId: string): void => {
   const user = getUserWritable(userId);
   Object.keys(user.reactions).forEach((reaction) => { user.reactions[reaction] = false; });
 };
 
-/**
- * @param {string} userId
- * @param {string} reactionId
- */
-const enableReaction = (userId, reactionId) => {
+const enableReaction = (userId: string, reactionId: string): void => {
   const user = getUserWritable(userId);
   user.reactions[reactionId] = true;
 };
 
-const selectReaction = (userId, reactionId) => {
+const selectReaction = (userId: string, reactionId: string): void => {
   disableReactions(userId);
   enableReaction(userId, reactionId);
 };
 
-const getUserReactionsMessage = (userId) => {
+const getUserReactionsMessage = (userId: string): string => {
   let output = 'Your reactions:\n```\n';
   const user = getUser(userId);
   output += Object.keys(user.reactions).reduce((acc, react) => `${acc}${react}: ${utils.getEmoji(react)}\n`, '');
@@ -311,53 +208,32 @@ const getUserReactionsMessage = (userId) => {
   return output;
 };
 
-/**
- * @param {string} userId
- * @returns {string} Emoji
- */
-const getReaction = (userId) => {
+const getReaction = (userId: string): string => {
   const user = getUser(userId);
   const found = Object.keys(user.reactions).find((reaction) => user.reactions[reaction]);
-  return utils.getEmoji(found) || data.correctEmoji;
+  return utils.getEmoji(found ?? '') ?? data.correctEmoji;
 };
 
-const hasReaction = (userId, reactionId) => utils.hasProperty(getUser(userId).reactions, reactionId);
+const hasReaction = (userId: string, reactionId: string): boolean => utils.hasProperty(getUser(userId).reactions, reactionId);
 
-/**
- * @returns {string}
- */
-const getChannelId = () => data.channel;
+const getChannelId = (): string | null => data.channel;
 
-/**
- * @param {string} userId
- */
-const incrementCount = (userId) => {
+const incrementCount = (userId: string): void => {
   const user = getUserWritable(userId);
   user.count += 1;
 };
 
-/**
- * @param {string} userId
- */
-const incrementMiscount = (userId) => {
+const incrementMiscount = (userId: string): void => {
   const user = getUserWritable(userId);
   user.miscount += 1;
 };
 
-/**
- * @param {string} userId
- */
-const incrementWins = (userId) => {
+const incrementWins = (userId: string): void => {
   const user = getUserWritable(userId);
   user.wins += 1;
 };
 
-/**
- * @param {string} userId
- * @param {function?} callback
- * @param {function?} errorCallback
- */
-const createUser = (userId, callback, errorCallback) => {
+const createUser = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (!utils.hasProperty(data.users, userId)) {
     data.users[userId] = utils.createUser();
     if (callback) callback(`New user with ID ${userId}.`);
@@ -366,7 +242,7 @@ const createUser = (userId, callback, errorCallback) => {
   }
 };
 
-const getAllUsers = () => data.users ?? {};
+const getAllUsers = (): Record<string, UserData> => data.users ?? {};
 
 export default {
   // getters

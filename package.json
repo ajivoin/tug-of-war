@@ -4,7 +4,8 @@
   "description": "Single-server Discord counting bot mixed with tug of war",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "tsx index.ts",
+    "typecheck": "tsc --noEmit",
     "test": "test",
     "lint": "eslint .",
     "lint-f": "eslint --fix ."
@@ -24,9 +25,16 @@
     "underscore": "^1.13.1"
   },
   "devDependencies": {
+    "@types/node": "^25.5.0",
+    "@types/underscore": "^1.13.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.32.0"
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-import": "^2.32.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
   },
   "type": "module"
 }

@@ -4,8 +4,9 @@ import utils from '../utils.js';
 import data from '../data.js';
 import constants from '../constants.js';
 import Boss from '../bosses.js';
+import { Callback, ErrorCallback } from '../types.js';
 
-const teleport = (cb) => {
+const teleport = (cb?: Callback): void => {
   let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);
   if (Math.random() < 0.5) {
     distance = -distance;
@@ -14,17 +15,17 @@ const teleport = (cb) => {
   if (cb) cb(`🧙‍♂️ Teleport! Current number is now ${data.getCurrentNumber()}.`);
 };
 
-const reroll = (cb) => {
+const reroll = (cb?: Callback): void => {
   data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
   if (cb) cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
 };
 
-const zeroOut = (cb) => {
+const zeroOut = (cb?: Callback): void => {
   data.setCurrentNumber(0);
   if (cb) cb('💩 Zero! The current number is now 0.');
 };
 
-const fliparoo = (callback) => {
+const fliparoo = (callback?: Callback): void => {
   const currentNum = data.getCurrentNumber();
   const currentTarget = data.getTargetNumber();
   data.setCurrentNumber(Math.sign(currentNum) * currentTarget);
@@ -32,8 +33,7 @@ const fliparoo = (callback) => {
   if (callback) callback('😵 Fliparoo! Current number and target are now swapped!');
 };
 
-const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
-  // check if user owns react
+const buyReactSkin = (userId: string, reactionId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (
     !data.hasReaction(userId, reactionId)
     && utils.hasProperty(enabledSkins, reactionId)
@@ -44,19 +44,19 @@ const buyReactSkin = (userId, reactionId, callback, errorCallback) => {
   } else if (errorCallback) errorCallback("You already have this reaction or it doesn't exist.");
 };
 
-const sneak = (callback) => {
+const sneak = (callback?: Callback): void => {
   data.clearLastUserId();
   const direction = Math.sign(data.getTargetNumber() - data.getCurrentNumber());
   data.addToNumber(direction);
-  callback();
+  if (callback) callback(`🤫 Sneaked! Current number is now ${data.getCurrentNumber()}.`);
 };
 
-const deposit = (userId, callback, quantity = 1) => {
+const deposit = (userId: string, callback?: Callback, quantity = 1): void => {
   data.addCrowns(userId, quantity);
   if (callback) callback(`💳 You have purchased a Crown Gift Card! (+${quantity} 👑)`);
 };
 
-const sqrt = (callback) => {
+const sqrt = (callback?: Callback): void => {
   let num = data.getCurrentNumber();
   const sign = Math.sign(num);
   num = sign * Math.floor(Math.sqrt(Math.abs(num)));
@@ -64,7 +64,7 @@ const sqrt = (callback) => {
   if (callback) callback(`👩‍🏫 Square Root! The current number is now ${num}.`);
 };
 
-const bomb = (userId, callback, errorCallback) => {
+const bomb = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (Boss.instance) {
     const name = Boss.instance.bossName;
     const isDead = Boss.instance.bomb(userId);
@@ -73,11 +73,12 @@ const bomb = (userId, callback, errorCallback) => {
     } else if (callback) {
       callback(`💣 ${name} was bombed!`);
     }
+    return;
   }
   if (errorCallback) errorCallback('There is no active boss right now.');
 };
 
-const crit = (userId, callback) => {
+const crit = (userId: string, callback: Callback): boolean => {
   const currentCritBonus = data.getCritBonus(userId);
   if (!currentCritBonus) {
     data.setCritBonus(userId, 1);
@@ -93,7 +94,7 @@ const crit = (userId, callback) => {
   return false;
 };
 
-const acrobatics = (userId, callback) => {
+const acrobatics = (userId: string, callback: Callback): boolean => {
   const currentAcrobatics = data.getAcrobatics(userId);
   if (!currentAcrobatics) {
     data.setAcrobatics(userId, 1);
@@ -109,7 +110,7 @@ const acrobatics = (userId, callback) => {
   return false;
 };
 
-const royalty = (userId, callback) => {
+const royalty = (userId: string, callback: Callback): boolean => {
   const currentRoyalty = data.getRoyalty(userId);
   if (!currentRoyalty) {
     data.setRoyalty(userId, 1);
@@ -125,20 +126,20 @@ const royalty = (userId, callback) => {
   return false;
 };
 
-const buy = (userId, item, quant, callback, errorCallback) => {
+const buy = (userId: string, item: string, quant: string | undefined, callback?: Callback, errorCallback?: ErrorCallback): void => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
     let quantity = 1;
     if (enabledPowerups[item].quantified) {
       if (quant && quant.toLowerCase() === 'max') {
-        quantity = Math.floor(data.getCoins(userId) / price);
+        quantity = Math.floor((data.getCoins(userId) ?? 0) / price);
         if (quantity === 0) quantity = 1;
-      } else if (!Number.isNaN(Number.parseInt(quant, 10))) {
-        quantity = Number.parseInt(quant, 10);
+      } else if (!Number.isNaN(Number.parseInt(quant ?? '', 10))) {
+        quantity = Number.parseInt(quant ?? '1', 10);
       }
       price *= quantity;
     }
-    if (data.getCoins(userId) < price) {
+    if ((data.getCoins(userId) ?? 0) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
       return;
     }
@@ -163,7 +164,7 @@ const buy = (userId, item, quant, callback, errorCallback) => {
       case 'nice':
         data.setCurrentNumber(69);
         data.clearLastUserId();
-        callback('Nice 😎.');
+        if (callback) callback('Nice 😎.');
         break;
       case 'sneak':
         sneak(callback);
@@ -179,21 +180,20 @@ const buy = (userId, item, quant, callback, errorCallback) => {
         bomb(userId, callback);
         break;
       case 'crit':
-        if (!crit(userId, callback)) data.addCoins(userId, price);
+        if (callback && !crit(userId, callback)) data.addCoins(userId, price);
         break;
       case 'acrobatics':
-        if (!acrobatics(userId, callback)) data.addCoins(userId, price);
+        if (callback && !acrobatics(userId, callback)) data.addCoins(userId, price);
         break;
       case 'royalty':
-        if (!royalty(userId, callback)) data.addCoins(userId, price);
+        if (callback && !royalty(userId, callback)) data.addCoins(userId, price);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);
     }
   } else if (utils.hasProperty(enabledSkins, item)) {
-    // handle skins
     const { price } = enabledSkins[item];
-    if (data.getCoins(userId) < price) {
+    if ((data.getCoins(userId) ?? 0) < price) {
       if (errorCallback) errorCallback("You don't have enough coins.");
       return;
     }

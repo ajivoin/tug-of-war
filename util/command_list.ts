@@ -1,4 +1,4 @@
-export default {
+const commands: Record<string, string> = {
   help: 'shows all commands',
   info: 'shows the current number and target number',
   inventory: 'shows your inventory',
@@ -13,3 +13,5 @@ export default {
   boss: 'shows information on current boss',
   leaderboard: 'show leaderboard',
 };
+
+export default commands;

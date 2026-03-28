@@ -1,4 +1,6 @@
-export const skins = {
+import { SkinConfig } from '../../types.js';
+
+export const skins: Record<string, SkinConfig> = {
   pumpkin: {
     price: 1031,
     description: '🎃 Happy Halloween!',
@@ -273,7 +275,7 @@ export const skins = {
   },
 };
 
-const enabledSkins = {};
+const enabledSkins: Record<string, SkinConfig> = {};
 
 Object.keys(skins).forEach((key) => {
   if (skins[key].enabled) {

@@ -1,5 +1,6 @@
-// #region imports
-import Discord, { GatewayIntentBits, PermissionFlagsBits } from 'discord.js';
+import {
+  Client, GatewayIntentBits, PermissionFlagsBits, ActivityType, Message,
+} from 'discord.js';
 
 import utils from './util/utils.js';
 import constants from './util/constants.js';
@@ -7,16 +8,10 @@ import data from './util/data.js';
 import commands from './util/commands.js';
 import { token, prefix } from './config.js';
 import Boss from './util/bosses.js';
-// #endregion
 
-// #region constants
-// #endregion
-
-// Discord client
-const client = new Discord.Client({
+const client = new Client({
   intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent, GatewayIntentBits.GuildMessageReactions],
 });
-client.commands = commands;
 
 client.once('ready', () => {
   if (
@@ -28,21 +23,17 @@ client.once('ready', () => {
   }
   Boss.load();
   console.log('Logged in.');
-  client.user.setActivity(`${prefix}help`, { type: Discord.ActivityType.Listening });
+  client.user?.setActivity(`${prefix}help`, { type: ActivityType.Listening });
 });
 
-const bind = async (messageObj, callback, errorCb) => {
+const bind = async (messageObj: Message<true>, callback?: () => void, errorCb?: () => void): Promise<void> => {
   const tokens = utils.tokenize(messageObj.content);
-  if (messageObj.member.permissions.has(PermissionFlagsBits.ManageGuild) && tokens.length > 1) {
+  if (messageObj.member?.permissions.has(PermissionFlagsBits.ManageGuild) && tokens.length > 1) {
     const channelId = tokens[1].trim().replace(/\D/g, '');
     await client.channels
       .fetch(channelId)
-      .catch((e) => {
-        if (errorCb) {
-          errorCb(e);
-        } else {
-          console.error(e);
-        }
+      .catch((e: unknown) => {
+        console.error(e);
       })
       .then(() => {
         data.setChannelId(channelId);
@@ -54,59 +45,50 @@ const bind = async (messageObj, callback, errorCb) => {
 client.on('messageCreate', async (message) => {
   try {
     const { author } = message;
-    if (author.bot) return; // message from bot
-    if (!message.guild) return; // DM
+    if (author.bot) return;
+    if (!message.inGuild()) return; // narrows to Message<true>
+    const guildMessage = message; // Message<true> after inGuild() guard
     const userId = author.id;
     if (!data.hasUser(userId)) {
       data.createUser(userId);
     }
-    const tokens = utils.tokenize(message.content);
-    if (message.content.toLowerCase() === 'blaze it') {
+    const tokens = utils.tokenize(guildMessage.content);
+    if (guildMessage.content.toLowerCase() === 'blaze it') {
       data.selectReaction(userId, 'blazeit');
     }
-    // #region command
-    // explicity check for bind first
-    if (message.content.startsWith(prefix)) {
+    if (guildMessage.content.startsWith(prefix)) {
       const command = tokens[0].slice(prefix.length);
       if (command === 'bind') {
-        await bind(message);
+        await bind(guildMessage);
       }
       if (!data.getChannelId()) {
-        // unbound
-        message.channel.send(
+        guildMessage.channel.send(
           { content: `Bot must be bound to a channel with \`${prefix}bind #<channel-name>\`.` },
         );
         return;
       }
-      // wrong channel, allows bind first though
-      if (message.channel.id !== data.getChannelId()) return;
+      if (guildMessage.channel.id !== data.getChannelId()) return;
 
-      // heavy-lifting for commands
-      client.commands.get(command)?.execute(message);
+      commands.get(command)?.execute(guildMessage);
     }
-    // #endregion
 
     const number = parseInt(tokens[0], 10);
 
-    if (data.getChannelId() === message.channel.id && !Number.isNaN(number)) {
+    if (data.getChannelId() === guildMessage.channel.id && !Number.isNaN(number)) {
       if (data.getLastUserId() === userId) {
-        message.react('⏳');
+        guildMessage.react('⏳');
         data.incrementMiscount(userId);
         data.removeCoins(userId, constants.COIN_LOSS);
         return;
       }
       if (Math.abs(number - data.getCurrentNumber()) === 1) {
-        // increment user count
-        data.incrementCount(userId);
-
-        // check if win
         data.setCurrentNumber(number);
         if (Math.abs(number) === data.getTargetNumber()) {
           data.incrementWins(userId);
           data.addCrowns(userId, constants.CROWN_MULTIPLIER * (1 + data.getRoyalty(userId)));
           data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
-          message.react(data.getReaction(userId));
-          message.channel.send(
+          guildMessage.react(data.getReaction(userId));
+          guildMessage.channel.send(
             { content: `👑 Congrats ${author}! New target: ±${data.getTargetNumber()}.` },
           );
           data.clearLastUserId();
@@ -115,43 +97,44 @@ client.on('messageCreate', async (message) => {
           if (Math.random() <= constants.ACROBATICS_RATE
             * (data.getAcrobatics(userId) ?? 0)) {
             hasReacted = true;
-            message.react(constants.ACROBATICS_EMOJI);
+            guildMessage.react(constants.ACROBATICS_EMOJI);
             data.clearLastUserId();
           } else if (Math.abs(Math.abs(number) - data.getTargetNumber()) > 1) {
             data.setLastUserId(userId);
           } else {
             data.clearLastUserId();
           }
-          if (Boss.instance) {
-            const bossName = `${Boss.instance.bossName}`;
-            const isBossDead = Boss.instance.hit(message.author.id, () => {
+          const activeBoss = Boss.instance;
+          if (activeBoss) {
+            const bossName = `${activeBoss.bossName}`;
+            const isBossDead = activeBoss.hit(guildMessage.author.id, () => {
               hasReacted = true;
-              message.react('💓'); // crit
+              guildMessage.react('💓');
             });
             if (isBossDead) {
-              message.channel.send({ content: `${bossName} was calmed down by ${message.author}! Paying rewards to everyone who helped...` });
-              const user = data.getUser(userId);
-              user.boss += 1;
-            } else if (Boss.instance.health % Boss.HEALTH_MULTIPLIER === 0) {
-              message.channel.send({ embeds: [Boss.instance.embed] });
+              guildMessage.channel.send({ content: `${bossName} was calmed down by ${guildMessage.author}! Paying rewards to everyone who helped...` });
+              const userRecord = data.getUser(userId);
+              userRecord.boss += 1;
+            } else if (activeBoss.health % Boss.HEALTH_MULTIPLIER === 0) {
+              guildMessage.channel.send({ embeds: [activeBoss.embed.embeds[0]] });
             }
           } else if (Math.random() < constants.BOSS_SPAWN_RATE) {
-            Boss.instantiate();
-            message.channel.send({ embeds: [Boss.instance.embed] });
+            const newBoss = Boss.instantiate();
+            guildMessage.channel.send(newBoss.embed);
           }
           if (Math.random() <= constants.COIN_RATE) {
             const gain = constants.COIN_GAIN * utils.getRandomInt(2, 10);
             data.addCoins(userId, gain);
-            message.react('💰');
+            guildMessage.react('💰');
             hasReacted = true;
           }
           if (!hasReacted) {
             if (Math.abs(data.getCurrentNumber()) === 69) {
-              message.react('😎');
+              guildMessage.react('😎');
             } else if (Math.abs(data.getCurrentNumber()) === 100) {
-              message.react('💯');
+              guildMessage.react('💯');
             } else {
-              message.react(constants.REACT_CORRECT);
+              guildMessage.react(constants.REACT_CORRECT);
             }
           }
         }
@@ -159,7 +142,7 @@ client.on('messageCreate', async (message) => {
         data.setLastUserId(userId);
         data.incrementMiscount(userId);
         data.removeCoins(userId, constants.COIN_LOSS);
-        message.react(constants.REACT_INCORRECT);
+        guildMessage.react(constants.REACT_INCORRECT);
       }
     }
   } catch (err) {
@@ -167,9 +150,8 @@ client.on('messageCreate', async (message) => {
   }
 });
 
-// ensures data write when server killed
 process.on('SIGINT', () => {
-  data.persistBoss(Boss.instance);
+  data.persistBoss(Boss.instance ? Boss.instance.toPersisted() : null);
   data.persistData();
   process.exit(0);
 });
