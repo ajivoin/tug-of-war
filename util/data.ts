@@ -66,107 +66,143 @@ const getRoyalty = (userId: string): number => getUser(userId).royalty ?? 0;
 
 const setRoyalty = (userId: string, value: number): void => { getUser(userId).royalty = value; };
 
-const getCoins = (userId: string, errorCallback?: ErrorCallback): number | undefined => {
+const getCoins = (userId: string, errorCallback: ErrorCallback = () => {}): number | undefined => {
   const user = getUser(userId);
   if (user) return user.coins;
-  if (errorCallback) errorCallback(`User with ID ${userId} has no coins attribute.`);
+  errorCallback(`User with ID ${userId} has no coins attribute.`);
   return undefined;
 };
 
-const getCrowns = (userId: string, errorCallback?: ErrorCallback): number | undefined => {
+const getCrowns = (userId: string, errorCallback: ErrorCallback = () => {}): number | undefined => {
   const user = getUser(userId);
   if (user) return user.crowns;
-  if (errorCallback) errorCallback(`User with ID ${userId} has no crowns attribute.`);
+  errorCallback(`User with ID ${userId} has no crowns attribute.`);
   return undefined;
 };
 
-const addCoins = (userId: string, nCoins: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const addCoins = (
+  userId: string,
+  nCoins: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   const user = getUserWritable(userId);
   if (user) {
     const coins = Math.max(0, nCoins);
     user.coins += coins;
-    if (callback) callback(`Added ${coins}c to user with ID ${userId}.`);
-  } else if (errorCallback) {
+    callback(`Added ${coins}c to user with ID ${userId}.`);
+  } else {
     errorCallback(`User with ID ${userId} not found.`);
   }
 };
 
-const addCrowns = (userId: string, nCrowns: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const addCrowns = (
+  userId: string,
+  nCrowns: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   const user = getUserWritable(userId);
   if (user) {
     const crowns = Math.max(0, nCrowns);
     user.crowns += crowns;
-    if (callback) callback(`Added ${crowns}c to user with ID ${userId}.`);
-  } else if (errorCallback) {
+    callback(`Added ${crowns}c to user with ID ${userId}.`);
+  } else {
     errorCallback(`User with ID ${userId} not found.`);
   }
 };
 
-const removeCoins = (userId: string, nCoins: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const removeCoins = (
+  userId: string,
+  nCoins: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   const user = getUserWritable(userId);
   if (user) {
     const coins = Math.max(0, nCoins);
     user.coins -= coins;
     if (user.coins < 0) user.coins = 0;
-    if (callback) callback(`Removed ${coins}c to user with ID ${userId}.`);
-  } else if (errorCallback) {
+    callback(`Removed ${coins}c to user with ID ${userId}.`);
+  } else {
     errorCallback(`User with ID ${userId} not found.`);
   }
 };
 
-const removeCrowns = (userId: string, nCrowns: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const removeCrowns = (
+  userId: string,
+  nCrowns: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   const user = getUserWritable(userId);
   if (user) {
     const crowns = Math.max(0, nCrowns);
     user.crowns -= crowns;
-    if (callback) callback(`Removed ${crowns}c to user with ID ${userId}.`);
-  } else if (errorCallback) {
+    callback(`Removed ${crowns}c to user with ID ${userId}.`);
+  } else {
     errorCallback(`User with ID ${userId} not found.`);
   }
 };
 
-const setTargetNumber = (newTarget: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const setTargetNumber = (
+  newTarget: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (Number.isInteger(newTarget)) {
     data.win = newTarget;
-    if (callback) callback(`Target updated to ${newTarget}`);
-  } else if (errorCallback) {
+    callback(`Target updated to ${newTarget}`);
+  } else {
     errorCallback(`Could not set target to ${newTarget}`);
   }
 };
 
-const addToNumber = (amount: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const addToNumber = (
+  amount: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (Number.isInteger(amount)) {
     data.number += amount;
-    if (callback) callback(`Added ${amount} to the current number.`);
-  } else if (errorCallback) {
+    callback(`Added ${amount} to the current number.`);
+  } else {
     errorCallback(`Could not add ${amount} to the current number.`);
   }
 };
 
-const incrementNumber = (callback?: Callback): void => {
+const incrementNumber = (callback: Callback = () => {}): void => {
   data.number += 1;
-  if (callback) callback(`Incremented number to ${data.number}.`);
+  callback(`Incremented number to ${data.number}.`);
 };
 
-const decrementNumber = (callback?: Callback): void => {
+const decrementNumber = (callback: Callback = () => {}): void => {
   data.number -= 1;
-  if (callback) callback(`Decremented number to ${data.number}.`);
+  callback(`Decremented number to ${data.number}.`);
 };
 
-const setCurrentNumber = (number: number, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const setCurrentNumber = (
+  number: number,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (Number.isInteger(number)) {
     data.number = number;
-    if (callback) callback(`Number set to ${number}.`);
-  } else if (errorCallback) {
+    callback(`Number set to ${number}.`);
+  } else {
     errorCallback(`Could not set number to ${number}.`);
   }
 };
 
-const setLastUserId = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const setLastUserId = (
+  userId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (userId !== null && userId !== undefined) {
     data.last = userId;
-    if (callback) callback(`Last user set to ${userId}.`);
-  } else if (errorCallback) {
+    callback(`Last user set to ${userId}.`);
+  } else {
     errorCallback(`Could not set last user to ${userId}.`);
   }
 };
@@ -175,11 +211,15 @@ const clearLastUserId = (): void => { data.last = null; };
 
 const getLastUserId = (): string | null => data.last;
 
-const setChannelId = (channelId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const setChannelId = (
+  channelId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (channelId !== null && channelId !== undefined) {
     data.channel = channelId;
-    if (callback) callback(`Channel set to ${channelId}.`);
-  } else if (errorCallback) {
+    callback(`Channel set to ${channelId}.`);
+  } else {
     errorCallback(`Could not set channel to ${channelId}.`);
   }
 };
@@ -233,11 +273,15 @@ const incrementWins = (userId: string): void => {
   user.wins += 1;
 };
 
-const createUser = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const createUser = (
+  userId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (!utils.hasProperty(data.users, userId)) {
     data.users[userId] = utils.createUser();
-    if (callback) callback(`New user with ID ${userId}.`);
-  } else if (errorCallback) {
+    callback(`New user with ID ${userId}.`);
+  } else {
     errorCallback(`User with ID ${userId} already exists.`);
   }
 };

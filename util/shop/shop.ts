@@ -6,76 +6,87 @@ import constants from '../constants.js';
 import Boss from '../bosses.js';
 import { Callback, ErrorCallback } from '../types.js';
 
-const teleport = (cb?: Callback): void => {
+const teleport = (cb: Callback = () => {}): void => {
   let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);
   if (Math.random() < 0.5) {
     distance = -distance;
   }
   data.addToNumber(distance);
-  if (cb) cb(`🧙‍♂️ Teleport! Current number is now ${data.getCurrentNumber()}.`);
+  cb(`🧙‍♂️ Teleport! Current number is now ${data.getCurrentNumber()}.`);
 };
 
-const reroll = (cb?: Callback): void => {
+const reroll = (cb: Callback = () => {}): void => {
   data.setTargetNumber(utils.getRandomInt(0, constants.WIN));
-  if (cb) cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
+  cb(`🎲 Reroll! Target number is now ±${data.getTargetNumber()}.`);
 };
 
-const zeroOut = (cb?: Callback): void => {
+const zeroOut = (cb: Callback = () => {}): void => {
   data.setCurrentNumber(0);
-  if (cb) cb('💩 Zero! The current number is now 0.');
+  cb('💩 Zero! The current number is now 0.');
 };
 
-const fliparoo = (callback?: Callback): void => {
+const fliparoo = (callback: Callback = () => {}): void => {
   const currentNum = data.getCurrentNumber();
   const currentTarget = data.getTargetNumber();
   data.setCurrentNumber(Math.sign(currentNum) * currentTarget);
   data.setTargetNumber(Math.abs(currentNum));
-  if (callback) callback('😵 Fliparoo! Current number and target are now swapped!');
+  callback('😵 Fliparoo! Current number and target are now swapped!');
 };
 
-const buyReactSkin = (userId: string, reactionId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const buyReactSkin = (
+  userId: string,
+  reactionId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (
     !data.hasReaction(userId, reactionId)
     && utils.hasProperty(enabledSkins, reactionId)
   ) {
     data.selectReaction(userId, reactionId);
     const emoji = utils.getEmoji(reactionId);
-    if (callback) callback(`${emoji} You bought a reaction skin!`);
-  } else if (errorCallback) errorCallback("You already have this reaction or it doesn't exist.");
+    callback(`${emoji} You bought a reaction skin!`);
+  } else {
+    errorCallback("You already have this reaction or it doesn't exist.");
+  }
 };
 
-const sneak = (callback?: Callback): void => {
+const sneak = (callback: Callback = () => {}): void => {
   data.clearLastUserId();
   const direction = Math.sign(data.getTargetNumber() - data.getCurrentNumber());
   data.addToNumber(direction);
-  if (callback) callback(`🤫 Sneaked! Current number is now ${data.getCurrentNumber()}.`);
+  callback(`🤫 Sneaked! Current number is now ${data.getCurrentNumber()}.`);
 };
 
-const deposit = (userId: string, callback?: Callback, quantity = 1): void => {
+const deposit = (userId: string, callback: Callback = () => {}, quantity = 1): void => {
   data.addCrowns(userId, quantity);
-  if (callback) callback(`💳 You have purchased a Crown Gift Card! (+${quantity} 👑)`);
+  callback(`💳 You have purchased a Crown Gift Card! (+${quantity} 👑)`);
 };
 
-const sqrt = (callback?: Callback): void => {
+const sqrt = (callback: Callback = () => {}): void => {
   let num = data.getCurrentNumber();
   const sign = Math.sign(num);
   num = sign * Math.floor(Math.sqrt(Math.abs(num)));
   data.setCurrentNumber(num);
-  if (callback) callback(`👩‍🏫 Square Root! The current number is now ${num}.`);
+  callback(`👩‍🏫 Square Root! The current number is now ${num}.`);
 };
 
-const bomb = (userId: string, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const bomb = (
+  userId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (Boss.instance) {
     const name = Boss.instance.bossName;
     const isDead = Boss.instance.bomb(userId);
     if (isDead) {
-      if (callback) callback(`⚔ ${name} defeated!`);
-    } else if (callback) {
+      callback(`⚔ ${name} defeated!`);
+    } else {
       callback(`💣 ${name} was bombed!`);
     }
     return;
   }
-  if (errorCallback) errorCallback('There is no active boss right now.');
+  errorCallback('There is no active boss right now.');
 };
 
 const crit = (userId: string, callback: Callback): boolean => {
@@ -126,7 +137,13 @@ const royalty = (userId: string, callback: Callback): boolean => {
   return false;
 };
 
-const buy = (userId: string, item: string, quant: string | undefined, callback?: Callback, errorCallback?: ErrorCallback): void => {
+const buy = (
+  userId: string,
+  item: string,
+  quant: string | undefined,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): void => {
   if (utils.hasProperty(enabledPowerups, item)) {
     let { price } = enabledPowerups[item];
     let quantity = 1;
@@ -140,7 +157,7 @@ const buy = (userId: string, item: string, quant: string | undefined, callback?:
       price *= quantity;
     }
     if ((data.getCoins(userId) ?? 0) < price) {
-      if (errorCallback) errorCallback("You don't have enough coins.");
+      errorCallback("You don't have enough coins.");
       return;
     }
     data.removeCoins(userId, price);
@@ -164,7 +181,7 @@ const buy = (userId: string, item: string, quant: string | undefined, callback?:
       case 'nice':
         data.setCurrentNumber(69);
         data.clearLastUserId();
-        if (callback) callback('Nice 😎.');
+        callback('Nice 😎.');
         break;
       case 'sneak':
         sneak(callback);
@@ -180,13 +197,13 @@ const buy = (userId: string, item: string, quant: string | undefined, callback?:
         bomb(userId, callback);
         break;
       case 'crit':
-        if (callback && !crit(userId, callback)) data.addCoins(userId, price);
+        if (!crit(userId, callback)) data.addCoins(userId, price);
         break;
       case 'acrobatics':
-        if (callback && !acrobatics(userId, callback)) data.addCoins(userId, price);
+        if (!acrobatics(userId, callback)) data.addCoins(userId, price);
         break;
       case 'royalty':
-        if (callback && !royalty(userId, callback)) data.addCoins(userId, price);
+        if (!royalty(userId, callback)) data.addCoins(userId, price);
         break;
       default:
         console.error(`ERROR: Unexpected default case: ${userId} buys ${item}.`);
@@ -194,7 +211,7 @@ const buy = (userId: string, item: string, quant: string | undefined, callback?:
   } else if (utils.hasProperty(enabledSkins, item)) {
     const { price } = enabledSkins[item];
     if ((data.getCoins(userId) ?? 0) < price) {
-      if (errorCallback) errorCallback("You don't have enough coins.");
+      errorCallback("You don't have enough coins.");
       return;
     }
     data.removeCoins(userId, price);

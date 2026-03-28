@@ -31,10 +31,14 @@ const createUser = (): UserData => ({
   reactions: { default: true },
 });
 
-const getEmoji = (reactionId: string, callback?: Callback, errorCallback?: ErrorCallback): string | undefined => {
+const getEmoji = (
+  reactionId: string,
+  callback: Callback = () => {},
+  errorCallback: ErrorCallback = () => {},
+): string | undefined => {
   const emoji = skins[reactionId]?.emoji;
-  if (emoji && callback) callback(`Emoji found for ${reactionId}`);
-  else if (!emoji && errorCallback) errorCallback(`Emoji not found for ${reactionId}.`);
+  if (emoji) callback(`Emoji found for ${reactionId}`);
+  else errorCallback(`Emoji not found for ${reactionId}.`);
   return emoji;
 };
 
