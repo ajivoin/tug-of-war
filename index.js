@@ -1,12 +1,12 @@
 // #region imports
-import Discord, { GatewayIntentBits } from 'discord.js';
+import Discord, { GatewayIntentBits, PermissionFlagsBits } from 'discord.js';
 
-import utils from './util/utils';
-import constants from './util/constants';
-import data from './util/data';
-import commands from './util/commands';
-import { token, prefix } from './config';
-import Boss from './util/bosses';
+import utils from './util/utils.js';
+import constants from './util/constants.js';
+import data from './util/data.js';
+import commands from './util/commands.js';
+import { token, prefix } from './config.js';
+import Boss from './util/bosses.js';
 // #endregion
 
 // #region constants
@@ -33,7 +33,7 @@ client.once('ready', () => {
 
 const bind = async (messageObj, callback, errorCb) => {
   const tokens = utils.tokenize(messageObj.content);
-  if (messageObj.member.permissions.has('MANAGE_GUILD') && tokens.length > 1) {
+  if (messageObj.member.permissions.has(PermissionFlagsBits.ManageGuild) && tokens.length > 1) {
     const channelId = tokens[1].trim().replace(/\D/g, '');
     await client.channels
       .fetch(channelId)
@@ -67,7 +67,7 @@ client.on('messageCreate', async (message) => {
     // #region command
     // explicity check for bind first
     if (message.content.startsWith(prefix)) {
-      const command = tokens[0].substr(prefix.length);
+      const command = tokens[0].slice(prefix.length);
       if (command === 'bind') {
         await bind(message);
       }

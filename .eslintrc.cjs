@@ -1,18 +1,19 @@
 module.exports = {
-  parser: '@babel/eslint-parser',
   env: {
     browser: false,
-    commonjs: true,
-    es2021: true,
+    es2022: true,
+    node: true,
   },
   extends: [
     'airbnb-base',
   ],
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
+    sourceType: 'module',
   },
   rules: {
     'no-console': 'off',
-    'max-len': ["error", {"code": 160}]
+    'max-len': ['error', { code: 160 }],
+    'import/extensions': ['error', 'ignorePackages', { js: 'always' }],
   },
 };

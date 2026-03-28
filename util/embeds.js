@@ -1,12 +1,12 @@
 import { EmbedBuilder } from 'discord.js';
 
-import commands from './command_list';
-import shopSkins, { skins } from './shop/items/skins';
-import enabledPowerups from './shop/items/powerups';
-import { prefix } from '../config';
-import constants from './constants';
-import data from './data';
-import utils from './utils';
+import commands from './command_list.js';
+import shopSkins, { skins } from './shop/items/skins.js';
+import enabledPowerups from './shop/items/powerups.js';
+import { prefix } from '../config.js';
+import constants from './constants.js';
+import data from './data.js';
+import utils from './utils.js';
 
 const getCoreEmbed = (title, description, fields) => new EmbedBuilder()
   .setColor('#0099ff')

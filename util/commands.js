@@ -1,14 +1,14 @@
 import _ from 'underscore';
-import utils from './utils';
-import shop from './shop/shop';
-import constants from './constants';
-import embeds, { shopEmbed, helpEmbed } from './embeds';
-import Command from './Command';
-import AdminCommand from './AdminCommand';
-import commands from './command_list';
-import data from './data';
-import { prefix } from '../config';
-import Boss from './bosses';
+import utils from './utils.js';
+import shop from './shop/shop.js';
+import constants from './constants.js';
+import embeds, { shopEmbed, helpEmbed } from './embeds.js';
+import Command from './Command.js';
+import AdminCommand from './AdminCommand.js';
+import commands from './command_list.js';
+import data from './data.js';
+import { prefix } from '../config.js';
+import Boss from './bosses.js';
 
 /**
  * @param {Discord.Message} message
@@ -101,9 +101,12 @@ const handleConvert = (userId, arg, callback, errorCb) => {
 const convertFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
-  handleConvert(userId, tokens[1],
+  handleConvert(
+    userId,
+    tokens[1],
     (msg) => { message.channel.send({ content: `${message.author}: ${msg}` }); },
-    (errorMsg) => { message.channel.send({ content: `${message.author}: ${errorMsg}` }); });
+    (errorMsg) => { message.channel.send({ content: `${message.author}: ${errorMsg}` }); },
+  );
 };
 
 const convert = new Command('convert', commands.convert, convertFunction);
@@ -120,9 +123,12 @@ const setReactEmoji = (userId, reactionId, callback, errorCb) => {
 const equipFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
-  setReactEmoji(userId, tokens[1],
+  setReactEmoji(
+    userId,
+    tokens[1],
     (msg) => { message.channel.send({ content: `${message.author}: ${msg}` }); },
-    (errorMsg) => { message.channel.send({ content: `${message.author}: ${errorMsg}` }); });
+    (errorMsg) => { message.channel.send({ content: `${message.author}: ${errorMsg}` }); },
+  );
 };
 
 const equip = new Command('equip', commands.equip, _.debounce(equipFunction, true));
@@ -131,9 +137,13 @@ const buyFunction = (message) => {
   const userId = message.author.id;
   const tokens = utils.tokenize(message.content.substr(prefix));
   if (tokens[1] === undefined) return;
-  shop.buy(userId, tokens[1], tokens[2],
+  shop.buy(
+    userId,
+    tokens[1],
+    tokens[2],
     (msg) => { if (msg) message.channel.send({ content: `${message.author}: ${msg}` }); },
-    (errorMsg) => { if (errorMsg) message.channel.send({ content: `${message.author}: ${errorMsg}` }); });
+    (errorMsg) => { if (errorMsg) message.channel.send({ content: `${message.author}: ${errorMsg}` }); },
+  );
 };
 
 const buy = new Command('buy', commands.buy, buyFunction);
