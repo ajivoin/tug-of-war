@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createStore } from '../../src/store/store.ts';
 import { createState, type BossState } from '../../src/store/schema.ts';
 import { buy } from '../../src/shop/shop.ts';
+import { renderPurchase } from '../../src/ui/messages.ts';
 import { constants } from '../../src/game/constants.ts';
 
 const boss = (health: number): BossState => ({
@@ -120,6 +121,21 @@ describe('shop', () => {
     assert.equal(result.ok, false);
     assert.equal(result.error.code, 'ALREADY_OWNED');
     assert.equal(store.getCoins('u'), afterFirst, 'no double charge');
+  });
+
+  test('sneak moves the number but announces nothing', () => {
+    const store = createStore(createState());
+    store.ensureUser('u');
+    store.addCoins('u', 100000);
+    store.setNumber(52);
+    store.setTarget(100);
+    const before = store.getCoins('u');
+    const result = buy(store, 'u', 'sneak');
+    assert.equal(result.ok, true);
+    assert.equal(result.value.kind, 'silent');
+    assert.equal(store.getNumber(), 53, 'the number still moves toward the target');
+    assert.ok(store.getCoins('u') < before, 'and the buyer is still charged');
+    assert.equal(renderPurchase(result), '', 'nothing is rendered for the channel');
   });
 
   test('a disabled catalog item is not purchasable', () => {

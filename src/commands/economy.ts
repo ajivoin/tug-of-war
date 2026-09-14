@@ -61,7 +61,9 @@ const buyCommand: Command = {
     const item = ctx.args[0];
     if (!item) return;
     ctx.store.ensureUser(ctx.userId);
-    await ctx.reply(renderPurchase(buy(ctx.store, ctx.userId, item, ctx.args[1])));
+    const message = renderPurchase(buy(ctx.store, ctx.userId, item, ctx.args[1]));
+    // An empty render means the purchase announces nothing (e.g. sneak).
+    if (message) await ctx.reply(message);
   },
 };
 

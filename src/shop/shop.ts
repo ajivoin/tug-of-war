@@ -19,7 +19,9 @@ export type PurchaseEffect =
   | { kind: 'upgrade'; upgrade: string; level: number }
   | { kind: 'skin'; skin: string; emoji: string }
   | { kind: 'crowns'; amount: number }
-  | { kind: 'boss-damaged'; bossName: string; killed: boolean };
+  | { kind: 'boss-damaged'; bossName: string; killed: boolean }
+  /** Applied, but announces nothing — the point of sneak is that nobody sees it. */
+  | { kind: 'silent' };
 
 const UPGRADES = {
   crit: { get: 'getCritBonus', set: 'setCritBonus', max: constants.MAX_CRIT_LEVEL },
@@ -88,7 +90,7 @@ const applyPowerup = (
     case 'sneak': {
       store.clearLastUserId();
       store.addToNumber(Math.sign(store.getTarget() - store.getNumber()));
-      return ok({ kind: 'number-changed' as const, label: '🤫 Sneak!', number: store.getNumber() });
+      return ok({ kind: 'silent' as const });
     }
 
     case 'sqrt': {

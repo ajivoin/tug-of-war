@@ -33,6 +33,8 @@ const purchaseEffect = (effect: PurchaseEffect): string => {
       return `💳 You have purchased a Crown Gift Card! (+${effect.amount} 👑)`;
     case 'boss-damaged':
       return effect.killed ? `⚔ ${effect.bossName} defeated!` : `💣 ${effect.bossName} was bombed!`;
+    case 'silent':
+      return '';
     default:
       return 'Done.';
   }
