@@ -1,9 +1,9 @@
-import enabledPowerups from './items/powerups';
-import enabledSkins from './items/skins';
-import utils from '../utils';
-import data from '../data';
-import constants from '../constants';
-import Boss from '../bosses';
+import enabledPowerups from './items/powerups.js';
+import enabledSkins from './items/skins.js';
+import utils from '../utils.js';
+import data from '../data.js';
+import constants from '../constants.js';
+import Boss from '../bosses.js';
 
 const teleport = (cb) => {
   let distance = utils.getRandomInt(constants.TP_MIN, constants.TP_MAX);

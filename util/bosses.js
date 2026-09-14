@@ -1,9 +1,9 @@
 import _ from 'underscore';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 
-import utils from './utils';
-import data from './data';
-import constants from './constants';
+import utils from './utils.js';
+import data from './data.js';
+import constants from './constants.js';
 
 // const IMAGE_PATH = [ // old images
 //   [
