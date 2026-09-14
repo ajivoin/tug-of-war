@@ -6,6 +6,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+// B2: util/data.js assigns state inside an async fs.stat callback, which goes
+// to the libuv threadpool. A macrotask tick does not reliably win that race
+// under parallel test load, so poll until state actually exists.
+const waitForLegacyLoad = async (mod) => {
+  for (let i = 0; i < 400; i += 1) {
+    // Throws while the module-level `data` is still undefined - that IS the race.
+    try {
+      if (mod.getCurrentNumber() !== undefined) return;
+    } catch { /* not loaded yet */ }
+    await new Promise((r) => { setTimeout(r, 5); });
+  }
+  throw new Error('legacy data.js never finished loading');
+};
+
 let tmpDir;
 let data;
 
@@ -14,8 +28,7 @@ before(async () => {
   process.env.DATA_FILE = path.join(tmpDir, 'data.json');
   process.env.DISCORD_TOKEN = 'test-token';
   data = (await import('../../util/data.js')).default;
-  // B2: data.js assigns state inside an async fs.stat callback.
-  await new Promise(setImmediate);
+  await waitForLegacyLoad(data);
 });
 
 after(() => fs.rmSync(tmpDir, { recursive: true, force: true }));
