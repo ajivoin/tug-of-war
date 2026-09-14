@@ -1,4 +1,5 @@
 import { constants } from '../game/constants.ts';
+import { resolveBossImage, bossImageName } from '../game/boss-images.ts';
 import { getRandomInt } from '../lib/random.ts';
 
 export interface User {
@@ -92,6 +93,8 @@ const parseBoss = (raw: unknown): BossState | null => {
   // B7 defense: a dead boss must never survive a restart and pay rewards twice.
   if (health <= 0) return null;
   if (typeof raw.bossName !== 'string' || typeof raw.imagePath !== 'string') return null;
+  // Saves predating the asset move carry a path that no longer resolves.
+  const imagePath = resolveBossImage(raw.imagePath);
   return {
     level: num(raw.level, 1),
     health,
@@ -102,8 +105,8 @@ const parseBoss = (raw: unknown): BossState | null => {
     participants: isRecord(raw.participants)
       ? Object.fromEntries(Object.entries(raw.participants).map(([k, v]) => [k, num(v, 0)]))
       : {},
-    imagePath: raw.imagePath,
-    imageName: str(raw.imageName, ''),
+    imagePath,
+    imageName: str(raw.imageName, '') || bossImageName(imagePath),
     bossName: raw.bossName,
   };
 };

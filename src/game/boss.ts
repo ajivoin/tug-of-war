@@ -1,14 +1,10 @@
 import path from 'node:path';
 import { constants } from './constants.ts';
+import { bossImage as image } from './boss-images.ts';
 import { sample } from '../lib/random.ts';
 import { ok, err, type Result } from '../lib/result.ts';
 import type { BossState } from '../store/schema.ts';
 import type { Store } from '../store/store.ts';
-
-// Resolved from this module rather than the working directory, so the bot no
-// longer depends on being launched from the repository root.
-const ASSETS = path.join(import.meta.dirname, '..', '..', 'assets', 'boss-images');
-const image = (name: string): string => path.join(ASSETS, name);
 
 // Retired rosters are kept as a catalog of seasonal content, matching the
 // convention used for disabled shop items.
