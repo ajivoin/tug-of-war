@@ -6,40 +6,105 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm install       # install dependencies
-npm start          # run the bot (node index.js, native ESM)
-npm run lint        # eslint .
-npm run lint-f       # eslint --fix .
+npm start          # run the bot (node src/index.ts, native ESM + TypeScript)
+npm test           # node --test
+npm run typecheck   # tsc --noEmit
+npm run lint         # eslint .
+npm run lint-f        # eslint --fix .
 ```
 
-There is no test suite (`npm test` is a placeholder that just runs the string `test` as a shell command and will fail if invoked). There is no build step — Node 24 runs the ESM source directly; no transpiler. Requires Node ≥24 (`engines` in `package.json`), since native ESM resolution requires the explicit `.js` extensions used on every relative import throughout the codebase.
+**There is no build step.** Node 24 strips TypeScript types natively, so
+`node src/index.ts` runs the source directly — no transpiler, no `dist/`.
+Because Node strips types without checking them, `npm run typecheck` is a
+separate gate; it is not in the path between you and running the bot. CI runs
+lint, typecheck, and test.
 
-Before running locally, copy `config.example.js` to `config.js` and set a real bot `token`. `config.js` is gitignored; CI touches an empty `config.js` just to satisfy the import during lint.
+This imposes one constraint: **erasable syntax only**. No `enum`, no
+`namespace`, no constructor parameter properties — those emit runtime code
+rather than vanishing. Use `as const` objects instead. `erasableSyntaxOnly` in
+`tsconfig.json` enforces this at compile time, so violations surface from `tsc`
+rather than as a runtime `SyntaxError`.
+
+Relative imports carry the `.ts` extension (`import { x } from './lib/result.ts'`)
+— Node resolves the literal path.
+
+Requires Node >= 24 (`engines` in `package.json`). Copy `.env.example` to `.env`
+and set a real `DISCORD_TOKEN` before running; `.env` is gitignored.
 
 ## Architecture
 
-This is a single-server Discord bot (discord.js v14) built around one gameplay loop: a shared counting game ("tug of war") layered with an RPG-lite economy (coins/crowns), a shop, cosmetic reaction skins, and periodic "boss" mini-events. There is exactly one instance of the game state per bot process — it is not multi-guild aware (see "Single-channel, single-guild state" below).
+A single-server Discord bot (discord.js v14) built around one gameplay loop: a
+shared counting game ("tug of war") layered with an RPG-lite economy
+(coins/crowns), a shop, cosmetic reaction skins, and periodic "boss"
+mini-events. There is exactly one instance of game state per bot process — it is
+not multi-guild aware.
 
-- **`index.js`** — entry point. Owns the Discord client and the single `messageCreate` handler, which does double duty:
-  1. Command dispatch: messages starting with `prefix` (`t?`) are tokenized and routed through `client.commands` (see `util/commands.js`). `bind` is special-cased before the "must be bound to a channel" / "wrong channel" guards so a fresh server can still bind.
-  2. The core counting game: any bare integer sent in the bound channel is checked against `data.getCurrentNumber()`. Correct-in-sequence numbers advance the count, roll for coin drops / boss spawns / boss damage / acrobatics, and check for a win against the hidden target (`data.getTargetNumber()`); wrong numbers or the same user posting twice in a row reset progress and cost coins.
-  Both flows share the same catch-all `try/catch`, so a thrown error anywhere in message handling is logged, not fatal.
+Two rules hold the structure together:
 
-- **`util/data.js`** — the entire persistence layer: a module-level in-memory object (schema from `utils.getDataSchema()`), loaded synchronously from `data.json` on startup and flushed back to disk every 5 minutes and on `SIGINT`. All game state (current number, target number, last counter, bound channel, per-user stats, boss) is read/written exclusively through this module's getters/setters — nothing else touches `data.json` or the in-memory object directly. There is no database; scaling beyond one process/one guild would require replacing this module.
+1. **Domain code returns values; it does not talk to Discord.** `game/`,
+   `store/`, and `shop/` must not import `discord.js`. They return
+   `Result<T, E>` with structured error codes, and `ui/messages.ts` renders
+   English. This is what makes the domain testable without mocking Discord.
+2. **All mutable state lives behind an injected `Store`.** Nothing imports a
+   global. `index.ts` constructs the one instance and threads it through
+   `CommandContext`.
 
-- **Command system (`util/Command.js`, `util/AdminCommand.js`, `util/commands.js`, `util/command_list.js`)** — commands are plain objects (`new Command(name, description, executeFn, aliases?)`), not discord.js slash commands — this bot only uses classic prefix commands via `messageCreate`, no `interactionCreate`/application command registration. `AdminCommand` wraps `execute` with a `MANAGE_GUILD` permission check. `util/commands.js` builds every command instance and the `cmds` lookup table (including short aliases like `h`/`?`/`help`); `util/command_list.js` is just the `name -> description` map used to render `t?help`.
+### Layers
 
-- **`util/bosses.js`** — a boss is a singleton (`Boss.instance`) spawned probabilistically while counting. Level is rolled from `BOSS_BREAKPOINTS`, which selects an image from `IMAGE_PATH` (files under `util/boss_images/`, not shown by `ls` but referenced by path) and scales health/rewards. Damage comes from ordinary counting (`hit`) or the `bomb` shop item; on death, `distributeRewards()` pays every participant proportional to damage dealt. Boss state is persisted through `data.persistBoss`/`data.getBoss` so a boss survives a process restart.
+- **`src/index.ts`** — bootstrap only: load state, build the client, register
+  the handler, log in, handle `SIGINT`/`SIGTERM`.
+- **`src/bot/`** — the only place that touches discord.js message plumbing.
+  `router.ts` owns `messageCreate` and does double duty: dispatching prefix
+  commands, and running bare integers through the counting loop. `bind` is
+  handled before the bound-channel guards so a fresh server can recover.
+  `context.ts` defines `CommandContext` and `Command`.
+- **`src/game/`** — the rules. `counting.ts` is the core loop and returns a
+  `CountOutcome` with a list of effects rather than reacting to messages;
+  `boss.ts` operates on `BossState` through the store with no singleton;
+  `economy.ts` handles crowns/coins/convert; `constants.ts` holds every tunable
+  number as `as const`.
+- **`src/commands/`** — one file per command group plus `registry.ts`, which
+  builds the name/alias lookup and generates the help embed from it, so help
+  cannot drift from reality. `adminOnly` commands are gated on
+  `PermissionFlagsBits.ManageGuild`.
+- **`src/store/`** — `schema.ts` defines `GameState`/`User`/`BossState` and
+  `parseState`, which normalizes any prior on-disk shape and fills defaults.
+  `store.ts` is the facade: reads return frozen objects, all mutation goes
+  through named methods. `json-file.ts` is the filesystem backend and is
+  deliberately isolated — it is the entire surface a database migration would
+  replace.
+- **`src/shop/`** — `shop.ts`'s `buy()` resolves the item, prices it, applies
+  the effect, and charges **only on success**. That ordering makes a failed
+  purchase that still took coins unrepresentable. `powerups.ts` and `skins.ts`
+  are flat catalogs with an `enabled` flag; disabled entries are retained as a
+  catalog of retired/seasonal items rather than deleted.
+- **`src/ui/`** — `embeds.ts` builds every embed; `messages.ts` maps `Result`
+  values to user-facing strings.
+- **`src/lib/`** — `result.ts`, `random.ts`, `text.ts`, `rate-limit.ts`.
 
-- **`util/shop/`** — `shop.js` implements `buy(userId, item, quantity, callback, errorCallback)`, dispatching on item name to either a powerup effect (teleport, reroll, zero, fliparoo, sneak, sqrt, crit/acrobatics/royalty permanent upgrades, boss bomb) or a cosmetic skin purchase. `shop/items/powerups.js` and `shop/items/skins.js` are flat catalogs with an `enabled` flag; only `enabled: true` entries are exported (filtered into `enabledPowerups`/`enabledSkins`) and shown in the shop/inventory embeds — disabled entries are kept in the source as a catalog of retired/seasonal/joke items rather than deleted.
+### Embed field limits
 
-- **`util/embeds.js`** — builds every `EmbedBuilder` response (help, shop, inventory, user stats, info, leaderboard) from current `data`/command-list state. `helpEmbed`/`shopEmbed` are computed once at module load, not regenerated per invocation.
-
-- **`util/constants.js`** — every tunable gameplay number (win range, coin/crit/acrobatics rates, damage values, multipliers) lives here; adjusting game balance should go through this file rather than inline literals.
+Discord rejects embeds with more than 25 fields. `buildEmbeds` returns
+`EmbedBuilder[]`, chunking at that limit, and inventory and shop skins render
+as description lists rather than one field per item. Do not reintroduce
+one-field-per-catalog-entry rendering — the skin catalog has 45 entries and a
+user owning 26 of them previously crashed `t?inventory` in production.
 
 ### Single-channel, single-guild state
 
-`data.js` stores one `channel` id and one game state, globally — not keyed by guild. `t?bind #channel` (admin-only, via `MANAGE_GUILD`) sets it. The bot is designed to run against a single Discord server; adding multi-guild support would mean namespacing all of `data.js`'s state by guild id.
+`GameState` stores one `channel` id and one game state, globally — not keyed by
+guild. `t?bind #channel` (admin-only) sets it. Adding multi-guild support would
+mean namespacing all of `store/` by guild id.
 
 ### Style
 
-ESLint config extends `airbnb-base` via `.eslintrc.cjs`, with `no-console` disabled, `max-len` relaxed to 160, and `import/extensions` set to require (not forbid) extensions on relative imports — the opposite of airbnb-base's default, needed because native ESM resolution requires them. Run `npm run lint-f` to auto-fix before committing.
+ESLint 9 flat config (`eslint.config.js`) with `typescript-eslint` recommended +
+stylistic, `no-console` off, and `max-len` at 160. Run `npm run lint-f` to
+auto-fix before committing.
+
+### Testing
+
+`node:test`, no framework. Domain modules take a `Store` and, where behavior is
+probabilistic, an injectable `rng` — so coin drops, crits, acrobatics, and boss
+spawns are all deterministic in tests. Adjusting game balance should go through
+`game/constants.ts` rather than inline literals.

@@ -12,3 +12,7 @@ data/
 .eslintcache
 Dockerfile
 .dockerignore
+docs
+test
+tsconfig.json
+eslint.config.js

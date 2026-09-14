@@ -22,6 +22,18 @@ The bot is configured entirely through environment variables:
 3. Copy `.env.example` to `.env` and set `DISCORD_TOKEN`. (`.env` is gitignored.)
 4. Run `npm start`.
 
+The source is TypeScript, but there is **no build step** — Node 24 strips types
+natively, so `npm start` runs `src/index.ts` directly. Node strips without
+checking, so type errors surface from `npm run typecheck` rather than at run
+time.
+
+| Script | What it does |
+| --- | --- |
+| `npm start` | Runs the bot. |
+| `npm test` | `node --test` — the full suite, no framework. |
+| `npm run typecheck` | `tsc --noEmit`. |
+| `npm run lint` | ESLint 9 flat config. `npm run lint-f` auto-fixes. |
+
 ## Discord setup
 
 1. Generate an OAuth invite link on the [Discord Developer Portal](https://discord.com/developers/applications/).
