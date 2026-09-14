@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { enabledPowerups } from '../shop/powerups.ts';
 import { enabledSkins, skins, type Skin } from '../shop/skins.ts';
@@ -109,6 +110,14 @@ export const userEmbed = (user: Readonly<User>, name: string): EmbedBuilder[] =>
   });
 };
 
+/**
+ * A boss whose art file is gone renders as text rather than throwing: handing
+ * discord.js a missing path fails the whole send, taking `t?info` with it.
+ */
+const bossArt = (boss: BossState): AttachmentBuilder | null => (
+  fs.existsSync(boss.imagePath) ? new AttachmentBuilder(boss.imagePath) : null
+);
+
 export const bossFields = (boss: BossState): EmbedField[] => [
   { name: 'Name', value: boss.bossName },
   { name: 'Level', value: levelText(boss.level) },
@@ -121,8 +130,9 @@ export const bossEmbed = (boss: BossState): { embeds: EmbedBuilder[]; files: Att
     description: `Count numbers to pet the ${boss.bossName}! All participants will receive a reward!`,
     fields: bossFields(boss),
   });
-  embeds[0]!.setImage(`attachment://${boss.imageName}`);
-  return { embeds, files: [new AttachmentBuilder(boss.imagePath)] };
+  const art = bossArt(boss);
+  if (art) embeds[0]!.setImage(`attachment://${boss.imageName}`);
+  return { embeds, files: art ? [art] : [] };
 };
 
 export const infoEmbed = (store: Store): { embeds: EmbedBuilder[]; files: AttachmentBuilder[] } => {
@@ -145,9 +155,10 @@ export const infoEmbed = (store: Store): { embeds: EmbedBuilder[]; files: Attach
     fields,
   });
 
-  if (boss) {
+  const art = boss ? bossArt(boss) : null;
+  if (boss && art) {
     embeds[0]!.setThumbnail(`attachment://${boss.imageName}`);
-    return { embeds, files: [new AttachmentBuilder(boss.imagePath)] };
+    return { embeds, files: [art] };
   }
   return { embeds, files: [] };
 };

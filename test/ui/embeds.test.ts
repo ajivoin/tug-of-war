@@ -1,5 +1,6 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import { createStore } from '../../src/store/store.ts';
 import { createState } from '../../src/store/schema.ts';
 import {
@@ -68,7 +69,7 @@ describe('embeds', () => {
       totalHealth: 1000,
       rewards: { crowns: 30, coins: 0 },
       participants: {},
-      imagePath: '/x/501_bat.png',
+      imagePath: path.join(import.meta.dirname, '..', '..', 'assets', 'boss-images', '501_bat.png'),
       imageName: '501_bat.png',
       bossName: 'Bat',
     });
@@ -78,6 +79,24 @@ describe('embeds', () => {
     assert.equal(files.length, 1);
     assert.equal(first.data.thumbnail?.url, 'attachment://501_bat.png');
     assert.ok(first.data.fields?.some((f) => f.value === 'Bat'));
+  });
+
+  test('infoEmbed degrades to text when the boss art file is missing', () => {
+    const store = createStore(createState());
+    store.setBoss({
+      level: 2,
+      health: 500,
+      totalHealth: 1000,
+      rewards: { crowns: 30, coins: 0 },
+      participants: {},
+      imagePath: '/nope/does-not-exist.png',
+      imageName: 'does-not-exist.png',
+      bossName: 'Bat',
+    });
+    const { embeds, files } = infoEmbed(store);
+    assert.equal(files.length, 0, 'a missing file must not be handed to discord.js');
+    assert.equal(embeds[0]?.data.thumbnail, undefined);
+    assert.ok(embeds[0]?.data.fields?.some((f) => f.value === 'Bat'), 'the boss is still reported');
   });
 
   test('infoEmbed carries no attachment when there is no boss', () => {

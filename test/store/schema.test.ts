@@ -1,5 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { parseState, createUser, createState } from '../../src/store/schema.ts';
 
 describe('parseState', () => {
@@ -43,6 +45,27 @@ describe('parseState', () => {
     assert.ok(state.boss);
     assert.equal(state.boss.bossName, 'Troll');
     assert.equal(state.boss.health, 30000);
+  });
+
+  test('rebases a boss image path written before the assets moved', () => {
+    const state = parseState({
+      ...createState(),
+      boss: {
+        level: 3,
+        rewards: { crowns: 45 },
+        health: 30000,
+        totalHealth: 30000,
+        participants: {},
+        // What the pre-TypeScript bot persisted. The directory no longer exists,
+        // and discord.js threw ENOENT on every t?info until the boss died.
+        imagePath: 'util/boss_images/21_scorpion.png',
+        bossName: 'Scorpion',
+      },
+    });
+    assert.ok(state.boss);
+    assert.ok(fs.existsSync(state.boss.imagePath), `missing ${state.boss.imagePath}`);
+    assert.equal(path.basename(state.boss.imagePath), '21_scorpion.png');
+    assert.equal(state.boss.imageName, '21_scorpion.png', 'derived when the save has no imageName');
   });
 
   test('B7 defense: a boss with non-positive health is discarded on load', () => {
