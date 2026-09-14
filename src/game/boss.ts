@@ -29,6 +29,10 @@ export const BOSS_IMAGES: readonly (readonly string[])[] = [
   [image('500_troll.png'), image('506_skeleton.png'), image('507_ogre.png'), image('510_zombie.png')],
   [image('508_ghost.png'), image('509_alien.png'), image('512_cat.png'), image('513_jack.png')],
   [image('511_floater.png')],
+  // Tier 6 (odds > 0.99). Promoted from the retired rosters, where these were
+  // the final tier. Before this existed the index ran off the end of the array
+  // and ~1% of spawns threw.
+  [image('12_sun.png'), image('13_moon.png'), image('4_dragon.png')],
 ];
 
 export const REWARDS_POOL: readonly { crowns: number; coins: number }[] = [

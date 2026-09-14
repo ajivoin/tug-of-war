@@ -206,7 +206,12 @@ Tier 2 — outright breakage found in review:
   the following `.split('/')` throws a `TypeError`, swallowed by `index.js`'s
   catch-all — roughly **1% of boss spawns fail silently**. Both retired rosters
   had six tiers; this broke when the active roster was cut to five. Verified by
-  forcing `Math.random` to 0.995. Fixed by clamping the tier index.
+  forcing `Math.random` to 0.995. Fixed by clamping the tier index, and tier 6
+  was then given its own roster (`12_sun`, `13_moon`, `4_dragon`, promoted from
+  the retired rosters where they were the final tier) so the rarest boss is
+  visually distinct rather than a duplicate of tier 5. Health, rewards, and
+  spawn odds are unchanged; the clamp remains as a safety net if the rosters
+  and breakpoints ever diverge again.
 - **B12** `util/bosses.js:140` vs `:167` — the constructor renders `levelText`
   as `⭐`/`💀` but `Boss.load()` renders it as `🦴`, so a boss silently changed
   its level display after a process restart. `levelText` is now derived from

@@ -4,7 +4,8 @@ import fs from 'node:fs';
 import { createStore } from '../../src/store/store.ts';
 import { createState, type BossState } from '../../src/store/schema.ts';
 import {
-  spawnBoss, hitBoss, bombBoss, calculateReward, distributeRewards, rollBoss, BOSS_IMAGES,
+  spawnBoss, hitBoss, bombBoss, calculateReward, distributeRewards, rollBoss,
+  BOSS_IMAGES, BOSS_BREAKPOINTS,
 } from '../../src/game/boss.ts';
 import { constants } from '../../src/game/constants.ts';
 
@@ -105,6 +106,18 @@ describe('boss', () => {
       assert.ok(boss.health > 0, `odds=${odds} produced no health`);
       assert.ok(fs.existsSync(boss.imagePath), `odds=${odds} -> missing ${boss.imagePath}`);
     });
+  });
+
+  test('tier 6 has its own art, distinct from tier 5', () => {
+    const tier5 = rollBoss(() => 0.97);
+    const tier6 = rollBoss(() => 0.995);
+    assert.equal(tier5.level, 5);
+    assert.equal(tier6.level, 6);
+    assert.notEqual(tier6.imagePath, tier5.imagePath, 'the rarest boss must look distinct');
+  });
+
+  test('BOSS_IMAGES covers every breakpoint, so the clamp is a safety net not a crutch', () => {
+    assert.equal(BOSS_IMAGES.length, BOSS_BREAKPOINTS.length);
   });
 
   test('every image referenced by BOSS_IMAGES exists on disk', () => {
