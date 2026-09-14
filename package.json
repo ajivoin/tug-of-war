@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --env-file-if-exists=.env src/index.ts",
-    "test": "node --test",
+    "test": "node --test --test-force-exit",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint-f": "eslint --fix ."

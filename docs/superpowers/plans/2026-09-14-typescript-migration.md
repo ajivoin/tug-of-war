@@ -478,7 +478,7 @@ describe('legacy embeds', () => {
 - [ ] **Step 3: Run both**
 
 ```bash
-node --test --test-force-exit test/legacy/
+npm test
 ```
 Expected: PASS for all of Tasks 2-4.
 
@@ -680,7 +680,7 @@ This test is deleted in Task 13 along with `util/`.
 - [ ] **Step 10: Run the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add -A
 git commit -m "feat: add lib primitives and port constants to TypeScript"
 ```
@@ -1196,7 +1196,7 @@ Expected: PASS. Note this runs **without** `--test-force-exit` — proof that ha
 - [ ] **Step 6: Run the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add src/store test/store
 git commit -m "feat: add injected store with sync loading, frozen reads, and B1/B2/B3 fixes"
 ```
@@ -1323,7 +1323,7 @@ Expected: PASS, all six tests.
 - [ ] **Step 5: Run the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add -A
 git commit -m "feat: move boss state into the store, fixing the B7 double-payout defect"
 ```
@@ -1447,7 +1447,7 @@ Structure `buy` as: resolve the item, compute the price, check affordability, ap
 - [ ] **Step 4: Run to verify it passes, then the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add src/shop src/game/economy.ts test/shop test/game/economy.test.ts
 git commit -m "feat: port shop and economy to Result-returning TypeScript, fixing B6"
 ```
@@ -1527,7 +1527,7 @@ Keep the `#0099ff` colour and the existing titles so the bot looks unchanged.
 - [ ] **Step 3: Run to verify it passes, then the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add src/ui test/ui
 git commit -m "feat: port embeds to TypeScript, fixing the B10 field overflow crash"
 ```
@@ -1639,7 +1639,7 @@ The B9 fix: rate limits are declared per command as `rateLimitMs`, applied by th
 - [ ] **Step 4: Run to verify both pass, then the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add src/commands src/bot/context.ts test/commands
 git commit -m "feat: port commands to TypeScript, reviving admin commands (B4) and fixing B8/B9"
 ```
@@ -1771,7 +1771,7 @@ Port the logic from `index.js:75-165` exactly — same order of checks, same con
 - [ ] **Step 3: Run to verify it passes, then the full gate and commit**
 
 ```bash
-npm run lint && npm run typecheck && node --test --test-force-exit
+npm run lint && npm run typecheck && npm test
 git add src/game/counting.ts test/game/counting.test.ts
 git commit -m "feat: extract the counting loop into a tested, Discord-free module"
 ```
