@@ -16,12 +16,9 @@
     "noImplicitOverride": true,
     "exactOptionalPropertyTypes": true,
 
-    "allowJs": true,
-    "checkJs": false,
-
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "eslint.config.js"],
+  "include": ["src/**/*.ts", "test/**/*.ts"],
   "exclude": ["node_modules"]
 }

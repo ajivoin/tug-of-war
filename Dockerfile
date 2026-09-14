@@ -8,8 +8,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-# Source. Boss images are referenced by paths relative to the working directory
-# (util/boss_images/...), so the app must run from /app.
+# Source. Node 24 strips TypeScript types natively, so there is no build step
+# and no dist/ - the .ts files are what runs. Boss images resolve relative to
+# the module via import.meta.dirname, not the working directory.
 COPY . .
 
 # data.json defaults to the working directory; point DATA_FILE at a mounted
@@ -20,4 +21,4 @@ VOLUME /data
 
 USER node
 
-CMD ["node", "index.js"]
+CMD ["node", "src/index.ts"]

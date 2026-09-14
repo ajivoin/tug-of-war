@@ -4,14 +4,14 @@ on:
   push:
     branches: [ main ]
     paths:
-    - '**.js'
     - '**.ts'
+    - '**.js'
     - '**.json'
   pull_request:
     branches: [ main ]
     paths:
-    - '**.js'
     - '**.ts'
+    - '**.js'
     - '**.json'
 
 jobs:

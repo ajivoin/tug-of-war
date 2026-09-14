@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --env-file-if-exists=.env src/index.ts",
-    "test": "node --test --test-force-exit",
+    "test": "node --test",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "lint-f": "eslint --fix ."
@@ -24,8 +24,7 @@
   },
   "homepage": "https://github.com/ajivoin/tug-of-war#readme",
   "dependencies": {
-    "discord.js": "^14.27.0",
-    "underscore": "^1.13.1"
+    "discord.js": "^14.27.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

@@ -2,13 +2,18 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['node_modules/**', 'data.json', '*.bak', 'util/**', 'test/legacy/**', 'index.js', 'config.js'] },
+  { ignores: ['node_modules/**', 'data.json', '*.bak'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   ...tseslint.configs.stylistic,
   {
     languageOptions: {
-      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+      parserOptions: {
+        // eslint.config.js itself is outside tsconfig's include, so it is linted
+        // without type information rather than failing to resolve.
+        projectService: { allowDefaultProject: ['eslint.config.js'] },
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
     rules: {
       'no-console': 'off',

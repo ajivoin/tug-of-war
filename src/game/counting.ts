@@ -12,7 +12,6 @@ export type CountEffect =
   | { kind: 'milestone'; emoji: string };
 
 export type CountOutcome =
-  | { kind: 'ignored' }
   | { kind: 'repeat-counter' }
   | { kind: 'wrong-number' }
   | { kind: 'counted'; effects: CountEffect[] }
