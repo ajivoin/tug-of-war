@@ -200,6 +200,17 @@ Tier 2 — outright breakage found in review:
 - **B9** `util/commands.js:135` — `_.debounce(equipFunction, true)` passes `true`
   as the wait in ms. `equip` is effectively undebounced and fires on the
   trailing edge instead of immediately.
+- **B11** `util/bosses.js:123-130` — `BOSS_BREAKPOINTS` has six entries but the
+  active `IMAGE_PATH` roster has five tiers, so `odds > 0.99` sets `bp = 5` and
+  `IMAGE_PATH[5]` is `undefined`. `_.sample(undefined)` returns `undefined` and
+  the following `.split('/')` throws a `TypeError`, swallowed by `index.js`'s
+  catch-all — roughly **1% of boss spawns fail silently**. Both retired rosters
+  had six tiers; this broke when the active roster was cut to five. Verified by
+  forcing `Math.random` to 0.995. Fixed by clamping the tier index.
+- **B12** `util/bosses.js:140` vs `:167` — the constructor renders `levelText`
+  as `⭐`/`💀` but `Boss.load()` renders it as `🦴`, so a boss silently changed
+  its level display after a process restart. `levelText` is now derived from
+  level rather than stored, so the two cannot disagree.
 - **B10** `util/embeds.js:15` — `getCoreEmbed` builds an unbounded field list;
   Discord caps embeds at 25 fields. `inventoryEmbedForUser` emits one field per
   owned reaction against a 45-skin catalog, so it throws
