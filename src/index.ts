@@ -3,11 +3,14 @@ import { config } from './config.ts';
 import { createClient } from './bot/client.ts';
 import { handleMessage } from './bot/router.ts';
 import { createStore } from './store/store.ts';
-import { loadState } from './store/json-file.ts';
+import { createState } from './store/schema.ts';
+import { migrateLegacyStateIfNeeded } from './store/legacy-import.ts';
 import { getRandomInt } from './lib/random.ts';
 import { constants } from './game/constants.ts';
 
-const store = createStore(loadState(config.dataFile), { file: config.dataFile });
+migrateLegacyStateIfNeeded(config.legacyDataFile, config.dataFile);
+
+const store = createStore(createState(), { file: config.dataFile });
 const client = createClient();
 
 client.once('clientReady', () => {
