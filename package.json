@@ -4,7 +4,7 @@
   "description": "Single-server Discord counting bot mixed with tug of war",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --env-file-if-exists=.env index.js",
     "test": "test",
     "lint": "eslint .",
     "lint-f": "eslint --fix ."

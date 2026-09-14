@@ -3,14 +3,15 @@ import utils from './utils.js';
 import { prefix } from '../config.js';
 
 const FIVE_MINUTES = 1000 * 60 * 5;
+const DATA_FILE = process.env.DATA_FILE || 'data.json';
 
 let data;
-fs.stat('./data.json', (err) => {
+fs.stat(DATA_FILE, (err) => {
   if (err) {
     data = utils.getDataSchema();
     console.log('Using new data base.');
   } else {
-    data = JSON.parse(fs.readFileSync('./data.json'));
+    data = JSON.parse(fs.readFileSync(DATA_FILE));
     console.log('Read in data');
   }
 });
@@ -25,7 +26,7 @@ const getBoss = () => data.boss;
  * Writes data to disk.
  */
 const persistData = () => {
-  fs.writeFileSync('data.json', JSON.stringify(data));
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data));
   console.log('Data saved.');
 };
 
