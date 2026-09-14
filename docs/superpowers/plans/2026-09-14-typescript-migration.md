@@ -231,11 +231,19 @@ describe('legacy data', () => {
     assert.equal(data.getTargetNumber(), 'not a number');
   });
 
-  test('B3: getCoins errorCallback is never invoked for a missing user', () => {
-    let called = false;
-    const result = data.getCoins('nonexistent', () => { called = true; });
+  test('B3: getCoins returns undefined for a missing user and reports via the outer branch', () => {
+    let message = null;
+    const result = data.getCoins('nonexistent', (m) => { message = m; });
     assert.equal(result, undefined);
-    assert.equal(called, false, 'documents that the errorCallback is dead');
+    // The OUTER errorCallback fires. What is dead is the one threaded into
+    // getUser(userId, errorCallback) - getUser takes one parameter.
+    assert.match(message, /has no coins attribute/);
+  });
+
+  test('B3: getUser ignores the second argument entirely', () => {
+    let called = false;
+    data.getUser('nonexistent', () => { called = true; });
+    assert.equal(called, false, 'the argument getCoins threads in is dead');
   });
 
   test('selectReaction disables all others', () => {
