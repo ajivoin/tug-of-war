@@ -7,5 +7,6 @@ const required = (name: string): string => {
 export const config = {
   token: required('DISCORD_TOKEN'),
   prefix: process.env.PREFIX ?? 't?',
-  dataFile: process.env.DATA_FILE ?? 'data.json',
+  dataFile: process.env.DATA_FILE ?? 'data.db',
+  legacyDataFile: process.env.LEGACY_DATA_FILE ?? 'data.json',
 } as const;

@@ -12,7 +12,8 @@ The bot is configured entirely through environment variables:
 | --- | --- | --- | --- |
 | `DISCORD_TOKEN` | yes | — | Bot token from the [Discord Developer Portal](https://discord.com/developers/applications/). |
 | `PREFIX` | no | `t?` | Command prefix. |
-| `DATA_FILE` | no | `data.json` | Path to the persisted game state. |
+| `DATA_FILE` | no | `data.db` | Path to the SQLite database holding game state. |
+| `LEGACY_DATA_FILE` | no | `data.json` | Path to a pre-migration JSON save, imported into `DATA_FILE` once if `DATA_FILE` doesn't exist yet. |
 
 ## Development
 
@@ -78,7 +79,7 @@ docker compose pull && docker compose up -d
 ```
 
 Game state lives in the `/data` volume, so it survives restarts and image
-upgrades. The container stores it at `/data/data.json` by default.
+upgrades. The container stores it at `/data/data.db` (SQLite) by default.
 
 To migrate from an existing non-Docker install, copy the old `data.json` into
 the volume before first start:
@@ -89,7 +90,14 @@ docker run --rm -v tug-of-war-data:/data -v "$PWD":/backup alpine \
 ```
 
 (The container runs as the unprivileged `node` user, uid 1000, so the copied
-file has to be owned by it.)
+file has to be owned by it.) On its next start, the bot converts that
+`data.json` into `data.db` automatically and renames the original to
+`data.json.migrated` - nothing further to do.
+
+If you're upgrading an *existing* deployment that already has a `data.json`
+in its volume, no action is needed at all: `docker compose pull && docker
+compose up -d` finds `data.json` already there and runs the same one-time
+conversion on startup.
 
 ## Usage
 

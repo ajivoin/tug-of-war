@@ -105,5 +105,9 @@ dist
 
 config.json
 data.json
+data.json.migrated
+data.db
+data.db-shm
+data.db-wal
 data/
 *.bak
