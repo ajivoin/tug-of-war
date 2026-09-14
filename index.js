@@ -1,12 +1,12 @@
 // #region imports
 import Discord, { GatewayIntentBits } from 'discord.js';
 
-import utils from './util/utils';
-import constants from './util/constants';
-import data from './util/data';
-import commands from './util/commands';
-import { token, prefix } from './config';
-import Boss from './util/bosses';
+import utils from './util/utils.js';
+import constants from './util/constants.js';
+import data from './util/data.js';
+import commands from './util/commands.js';
+import { token, prefix } from './config.js';
+import Boss from './util/bosses.js';
 // #endregion
 
 // #region constants
@@ -18,7 +18,7 @@ const client = new Discord.Client({
 });
 client.commands = commands;
 
-client.once('ready', () => {
+client.once('clientReady', () => {
   if (
     data.getTargetNumber() === undefined
     || data.getTargetNumber() === null

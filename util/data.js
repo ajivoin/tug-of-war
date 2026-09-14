@@ -1,6 +1,6 @@
 import fs from 'fs';
-import utils from './utils';
-import { prefix } from '../config';
+import utils from './utils.js';
+import { prefix } from '../config.js';
 
 const FIVE_MINUTES = 1000 * 60 * 5;
 
@@ -321,9 +321,7 @@ const getReaction = (userId) => {
   return utils.getEmoji(found) || data.correctEmoji;
 };
 
-const hasReaction = (userId, reactionId) => utils.hasProperty(
-  getUser(userId).reactions, reactionId,
-);
+const hasReaction = (userId, reactionId) => utils.hasProperty(getUser(userId).reactions, reactionId);
 
 /**
  * @returns {string}

@@ -1,4 +1,4 @@
-import enabledPowerups from './powerups';
-import enabledSkins from './skins';
+import enabledPowerups from './powerups.js';
+import enabledSkins from './skins.js';
 
 export { enabledPowerups as powerups, enabledSkins as skins };
