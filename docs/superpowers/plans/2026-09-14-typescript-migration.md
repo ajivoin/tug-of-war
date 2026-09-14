@@ -1902,4 +1902,10 @@ gh pr create --title "TypeScript migration" --body "Implements docs/superpowers/
 | B7 boss double payout | Tasks 6, 8 | `boss.test.ts` — two B7 regressions; `schema.test.ts` — "dead boss discarded" |
 | B8 `substr(prefix)` | Task 11 | `args.test.ts` — five parsing tests |
 | B9 malformed debounce | Tasks 5, 11 | `rate-limit.test.ts` — four tests |
-| B10 embed field overflow | Task 10 | `embeds.test.ts` — two B10 regressions |
+| B10 embed field overflow | Task 10 | `embeds.test.ts` — three B10 regressions |
+| B11 boss spawn crash (~1% of spawns) | Task 8 | `boss.test.ts` — "every breakpoint tier rolls a valid boss" |
+| B12 `levelText` drift across restart | Task 8 | `levelText` derived from level, not stored |
+| B13 `NaN%` accuracy for a new user | Task 10 | `embeds.test.ts` — "accuracy does not divide by zero" |
+
+**Found during execution, not planning:** B11, B12, and B13. B11 was confirmed
+by forcing `Math.random` to 0.995 against the legacy code before fixing it.

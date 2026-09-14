@@ -211,6 +211,8 @@ Tier 2 — outright breakage found in review:
   as `⭐`/`💀` but `Boss.load()` renders it as `🦴`, so a boss silently changed
   its level display after a process restart. `levelText` is now derived from
   level rather than stored, so the two cannot disagree.
+- **B13** `util/embeds.js:76` — accuracy is `100 * count / (count + miscount)`,
+  which renders `NaN%` for a user with no attempts yet. Now renders `—`.
 - **B10** `util/embeds.js:15` — `getCoreEmbed` builds an unbounded field list;
   Discord caps embeds at 25 fields. `inventoryEmbedForUser` emits one field per
   owned reaction against a 45-skin catalog, so it throws
